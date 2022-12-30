@@ -1,0 +1,35 @@
+#include <crails/i18n.hpp>
+#include "../../../views/style.hpp"
+#include "../../../routes.hpp"
+
+const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+std::map<std::string, std::string> @tag_options;
+
+// END LINKING
+
+<label for="tags">Tags</label>
+<%= select_field("tags", tag_options, std::vector<std::string>(), {{"id","fileTagPicker"}}) %>
+
+<%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"}}) yields %>
+  <div id="upload-block">
+  </div>
+<% yields-end %>
+
+<table id="uploaded-files">
+</table>
+
+<script>
+  createUppy().then(uppy => {
+    createSelectField("#fileTagPicker").then(tagPicker => {
+      tagPicker.on("change", () => {
+        const options = document.querySelectorAll("#fileTagPicker > option:checked");
+        let tagValue = "";
+
+        for (let i = 0 ; i < options.length ; ++i)
+          tagValue += "%%" + options[i].value;
+        uppy.setMeta({ tags: tagValue });
+      });
+    });
+  });
+</script>

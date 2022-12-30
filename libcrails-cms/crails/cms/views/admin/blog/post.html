@@ -1,0 +1,59 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/blog/post.hpp"
+#include "../../../views/style.hpp"
+#include "../../../time.hpp"
+#include <iostream>
+
+const Crails::Cms::Style&          style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::LocalRoute      route = Crails::Cms::LocalRoute(vars);
+const Crails::Cms::BlogPost&       @model;
+std::map<std::string, std::string> @tag_options;
+bool                               @can_publish = false;
+
+Crails::FormBuilder<Crails::Cms::BlogPost> form = Crails::FormBuilder<Crails::Cms::BlogPost>(this, model);
+
+using namespace Crails::Cms;
+// END LINKING
+
+<%= form_for(model, route(), {{"class",style.form_classes() + "blog-post-form"},{"id","main-form"}}) yields %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("title") %>
+    <%= form.text_field("title", &Crails::Cms::BlogPost::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
+  <% yields-end %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("description") %>
+    <%= form.text_area("description", &Crails::Cms::BlogPost::get_description, {{"maxlength",std::to_string(Crails::Cms::Editable::description_length)}}) %>
+  <% yields-end %>
+  <%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
+    <%= form.label_for("thumbnail") %>
+    <%= form.text_field("thumbnail", &Crails::Cms::BlogPost::get_thumbnail_url) %>
+    <%= tag("button", {{"class",style.button_classes()}}) yields %>
+      <%= i18n::t("admin.image-library") %>
+    <% yields-end %>
+    <img />
+  <% yields-end %>
+  <% if (can_publish) do -%>
+    <%= style.form_group() yields %>
+      <%= form.label_for("published") %>
+      <%= form.boolean_field("published", &Crails::Cms::BlogPost::get_published) %>
+    <% yields-end %>
+  <% end -%>
+  <%= style.form_group() yields %>
+    <%= form.label_for("tags") %>
+    <%= form.select_field("tags", tag_options, &Crails::Cms::BlogPost::get_tags, {{"id","tagPicker"}}) %>
+  <% yields-end %>
+
+  <%= form.text_area("body", &Crails::Cms::BlogPost::get_body) %>
+<% yields-end %>
+
+<div class="<%= style.button_group_classes() %>">
+  <%= style.admin_submit_button("main-form") %>
+  <%= style.admin_preview_button(route.make("preview")) %>
+  <% if (model.is_persistent()) do %>
+    <%= style.admin_remove_button(*this, route.make(model.get_id())) %>
+  <% end %>
+</div>
+
+<script>proudcmsAdminCKEditor("<%= form.scoped_name("body") %>");</script>

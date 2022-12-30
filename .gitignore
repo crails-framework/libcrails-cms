@@ -1,0 +1,39 @@
+.bdep/
+node_modules/
+
+# Local default options files.
+#
+.build2/local/
+
+# Compiler/linker output.
+#
+*.d
+*.t
+*.i
+*.i.*
+*.ii
+*.ii.*
+*.o
+*.obj
+*.gcm
+*.pcm
+*.ifc
+*.so
+*.dll
+*.a
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.exe
+*.exe.dlls/
+*.exe.manifest
+*.pc
+
+# Build assets
+package-lock.json
+webpackage/build
+libcrails-cms/crails/cms/lib
+
+# Temporary files
+.*.swp

@@ -1,0 +1,28 @@
+#include <crails/i18n.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/attachment.hpp"
+
+const Crails::Cms::Attachment& @model;
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+std::string column_class = "pure-u-1-1";
+
+// END LINKING
+
+<%
+  if (model.get_type() == Crails::Cms::ImageAttachment)
+    column_class += " pure-u-sm-1-2";
+-%>
+
+<div class="pure-g">
+  <div class="<%= column_class %>">
+    <%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"}}) yields %>
+      <div id="upload-block">
+      </div>
+    <% yields-end %>
+  </div>
+  <div class="<%= column_class %>" style="text-align: center">
+    <%= tag("img", {{"src",model.get_miniature().get_url()},{"style","max-width:100%"}}) %>
+  </div>
+</div>
+
+<script>createUppyUpdater("<%= model.get_id() %>")</script>

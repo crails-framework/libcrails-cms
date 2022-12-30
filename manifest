@@ -1,0 +1,15 @@
+: 1
+name: libcrails-cms
+version: 2.0.0
+summary: Content Management Service using the Crails Framework
+license: BSD-3-Clause
+description-file: README.md
+url: https://github.com/crails-framework/libcrails-cms.git
+email: michael@unetresgrossebite.com
+depends: * build2 >= 0.15.0
+depends: * bpkg >= 0.15.0
+depends: { libcrails libcrails-design-patterns libcrails-controllers libcrails-renderer libcrails-html-views libcrails-i18n libcrails-semantics libcrails-logger } ^2.0.0
+depends: libcrails-http-client ^2.0.0
+depends: libcrails-fonticons ^2.0.0
+depends: libdatatree ^2.0.0
+depends: libbacktrace ^1.0.0

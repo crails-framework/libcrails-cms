@@ -1,0 +1,21 @@
+#include <crails/i18n.hpp>
+#include <crails/icons.hpp>
+#include "../../../lib/assets.hpp"
+const char* @yield;
+// END LINKING
+<html lang="<%= i18n::Settings::current_locale %>">
+  <head>
+    <title><%= i18n::t("admin.wizard-title") %></title>
+    <meta charset="utf-8">
+    <%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::pure_css}}) %>
+    <%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::proudcms_css}}) %>
+    <%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::admin_css}}) %>
+    <%= Crails::fonticon_cdn_header() %>
+  </head>
+  <body>
+    <h1><%= i18n::t("admin.wizard-title") %></h1>
+    <% if (yield != nullptr) do %>
+      <%= yield %>
+    <% end %>
+  </body>
+</html>

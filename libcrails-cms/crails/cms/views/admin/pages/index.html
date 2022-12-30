@@ -1,0 +1,46 @@
+#include <crails/i18n.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/page.hpp"
+#include "../../../time.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style* style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+std::vector<std::shared_ptr<Crails::Cms::Page>>& @models;
+const char* date_format = "%H:%M:%S %d-%m-%y";
+
+using namespace Crails::Cms;
+// END LINKING
+<div class="controls">
+  <%= link(route.make("new"), i18n::t("admin.new-page"), {{"class",style->button_classes()}}) %>
+</div>
+
+<table class="<%= style->table_classes() %>">
+  <tr>
+    <th><%= i18n::t("admin.page-title") %></th>
+    <th><%= i18n::t("admin.created-at") %></th>
+    <th><%= i18n::t("admin.updated-at") %></th>
+  </tr>
+  <% if (!models.size()) do -%>
+    <tr>
+      <td colspan="3"><%= i18n::t("admin.empty-table") %></td>
+    </tr>
+  <% end -%>
+  <% for (const auto& model : models) do %>
+    <tr>
+      <td>
+        <%= link(route.make(model->get_id())) yields %>
+          <%= model->get_title() %>
+        <% yields-end %>
+      </td>
+      <td>
+        <%= time_to_string(model->get_created_at(), date_format) %>
+      </td>
+      <td>
+        <%= time_to_string(model->get_updated_at(), date_format) %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= partial("paginator") %>

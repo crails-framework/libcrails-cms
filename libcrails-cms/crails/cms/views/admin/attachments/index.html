@@ -1,0 +1,71 @@
+#include <crails/i18n.hpp>
+#include <crails/icons.hpp>
+#include "../../../models/attachment.hpp"
+#include "../../../routes.hpp"
+#include "../../../views/style.hpp"
+
+using namespace std;
+using namespace Crails::Cms;
+
+const Crails::Cms::Style&  style  = Crails::Cms::Style::singleton::require();
+const LocalRoute route = LocalRoute(vars);
+vector<shared_ptr<Crails::Cms::Attachment>>& @models;
+std::map<std::string, std::string> @tag_options;
+std::string @tag;
+
+// END LINKING
+
+<div class="controls">
+  <div class="<%= style.button_group_classes() %>">
+    <%= link(route.make("new"), i18n::t("admin.new-attachment"), {{"class", style.button_classes()}}) %>
+  </div>
+
+  <div class="separator"></div>
+
+  <%= partial("admin/index_search_control", {{"action", route()}}) %>
+</div>
+
+<table class="<%= style.table_classes() %> attachment-index">
+  <tr>
+    <th><%= i18n::t("admin.name") %></th>
+    <th><%= i18n::t("admin.description") %></th>
+    <th><%= i18n::t("admin.mimetype") %></th>
+    <th><%= i18n::t("admin.preview") %></th>
+    <th></th>
+  </tr>
+  <% if (!models.size()) do -%>
+    <tr>
+      <td colspan="5"><%= i18n::t("admin.empty-table") %></td>
+    </tr>
+  <% end -%>
+  <% for (const auto& model : models) do -%>
+    <% auto attachment = model->as_attachment() %>
+    <% auto url = route.make(model->get_id()) %>
+    <tr>
+      <td><%= link(url, model->get_name()) %></td>
+      <td><%= model->get_description() %></td>
+      <td><%= attachment.get_mimetype() %></td>
+      <td class="miniature">
+        <% if (model->get_type() == Crails::Cms::ImageAttachment) do -%>
+          <%= Crails::HtmlTemplate::tag("img", {{"src",model->get_miniature().get_url()}}) %>
+        <% end else do -%>
+          <%= link(attachment.get_url(), i18n::t("admin.view"), {{"target","_blank"}}) %>
+        <% end -%>
+      </td>
+      <td class="controls">
+        <%= link(url + "/reupload", {{"class",style.button_classes()}}) yields %>
+          <i class="fa fa-file-upload"></i>
+        <% yields-end %><%=
+           link(url, {
+             {"class", style.danger_button_classes()},
+             {"method", "delete"},
+             {"confirm", i18n::t("admin.confirm-destroy")}
+           }) yields %>
+           <%= Crails::fonticon_tag(Crails::FontIcon::Destroy) %>
+        <% yields-end %>
+      </td>
+    </tr>
+  <% end -%>
+</table>
+
+<%= partial("paginator") %>

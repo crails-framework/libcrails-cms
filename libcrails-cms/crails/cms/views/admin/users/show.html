@@ -1,0 +1,51 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/user.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style* style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+const Crails::Cms::User& @model;
+Crails::FormBuilder<Crails::Cms::User> form = Crails::FormBuilder<Crails::Cms::User>(this, model);
+std::map<Crails::Cms::UserRole, std::string> role_options = {
+  {Crails::Cms::VisitorRole, "visitor"},
+  {Crails::Cms::MemberRole,  "member"},
+  {Crails::Cms::AuthorRole,  "author"},
+  {Crails::Cms::EditorRole,  "editor"},
+  {Crails::Cms::AdminRole,   "administrator"}
+};
+std::map<Crails::Odb::id_type, std::string>& @group_options;
+
+using namespace Crails::Cms;
+// END LINKING
+
+<%= form_for(model, route(), {{"class", style->form_classes()}}) yields %>
+  <%= style->form_group() yields %>
+    <%= form.label_for("email") %>
+    <%= form.text_field("email", &Crails::Cms::User::get_email) %>
+  <% yields-end %>
+
+  <%= style->form_group() yields %>
+    <%= form.label_for("password") %>
+    <%= form.password_field("password", std::string()) %>
+  <% yields-end %>
+
+  <%= style->form_group() yields %>
+    <%= form.label_for("password-confirm") %>
+    <%= form.password_field("password-confirm", std::string()) %>
+  <% yields-end %>
+
+  <%= style->form_group() yields %>
+    <%= form.label_for("role") %>
+    <%= form.select_field("role", role_options, &Crails::Cms::User::get_role) %>
+  <% yields-end %>
+
+  <%= style->form_group() yields %>
+    <%= form.label_for("groups") %>
+    <%= form.select_field("groups", group_options, &Crails::Cms::User::get_group_ids, {{"id","userGroupPicker"}}) %>
+  <% yields-end %>
+
+  <%= style->admin_submit_button() %>
+<% yields-end %>
+

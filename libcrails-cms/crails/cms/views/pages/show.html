@@ -1,0 +1,11 @@
+#include "../../../models/page.hpp"
+
+const Crails::Cms::Page& @page;
+bool @preview = false;
+
+// END LINKING
+
+<%= page.get_body() %>
+<% if (preview) do %>
+  <%= partial("preview_script") %>
+<% end %>

@@ -1,0 +1,7 @@
+project = libcrails-cms
+
+using version
+using config
+using test
+using install
+using dist

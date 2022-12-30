@@ -1,0 +1,6 @@
+$image-path-prefix: "/cms/assets/content-tools-";
+@import "../../node_modules/ContentTools/src/styles/content-tools.scss";
+
+.ct-tool--font-size:before {
+  content: "\ea61";
+}

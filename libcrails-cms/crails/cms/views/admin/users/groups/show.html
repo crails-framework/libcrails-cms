@@ -1,0 +1,23 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/user_group.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+const Crails::Cms::UserGroup& @model;
+Crails::FormBuilder<Crails::Cms::UserGroup> form = Crails::FormBuilder<Crails::Cms::UserGroup>(this, model);
+
+using namespace Crails::Cms;
+
+// END LINKING
+
+<%= form_for(model, route(), {{"class", style.form_classes()}}) yields %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("name") %>
+    <%= form.text_field("name", &Crails::Cms::UserGroup::get_name) %>
+  <% yields-end %>
+
+  <%= style.admin_submit_button() %>
+<% yields-end %>

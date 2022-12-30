@@ -1,0 +1,13 @@
+.attachment-index {
+  .miniature {
+    text-align: center;
+    img { height: 100px; }
+  }
+
+  .controls {
+    width: 100px;
+    padding: 0.5em;
+    text-align: right;
+    form { display: inline-block; }
+  }
+}

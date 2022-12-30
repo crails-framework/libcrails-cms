@@ -1,0 +1,52 @@
+#include <crails/html_form_builder.hpp>
+#include <crails/i18n.hpp>
+#include "../../../models/attachment.hpp"
+#include "../../../routes.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style&  style  = Crails::Cms::Style::singleton::require();
+const Crails::Cms::Attachment& @model;
+Crails::FormBuilder<const Crails::Cms::Attachment> form = Crails::FormBuilder<const Crails::Cms::Attachment>(this, model);
+std::map<std::string, std::string> @tag_options;
+const LocalRoute route = LocalRoute(vars);
+const std::string url = route.make(model.get_id());
+
+using namespace Crails::Cms;
+
+// END LINKING
+
+<div class="pure-g">
+  <div class="pure-u-1-1 pure-u-sm-1-2 pure-u-md-1-3">
+<%= form_for(model, route(), {{"class",style.form_classes()},{"style","margin-right:1em"}}) yields %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("name") %>
+    <%= form.text_field("name", &Crails::Cms::Attachment::get_name, {{"autocomplete","off"}}) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("description") %>
+    <%= form.text_field("description", &Crails::Cms::Attachment::get_description, {{"autocomplete","off"}}) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("tags") %>
+    <%= form.select_field("tags", tag_options, &Crails::Cms::Attachment::get_tags, {{"id","tagPicker"}}) %>
+  <% yields-end %>
+
+  <%= style.admin_submit_button() %>
+<% yields-end %>
+
+<%= link(url + "/reupload", {{"class", style.button_classes()},{"style","margin-bottom:1em"}}) yields %>
+  <i class="fa fa-file-upload"></i>
+  <%= i18n::t("admin.reupload") %>
+<% yields-end %>
+
+<%= style.admin_remove_button(*this, url) %>
+  </div>
+
+  <div class="pure-u-1-1 pure-u-sm-1-2 pure-u-md-2-3" style="text-align:center">
+    <% if (model.get_type() == Crails::Cms::ImageAttachment) do -%>
+      <%= tag("img", {{"src", model.as_image().get_url()},{"style","max-width:100%"}}) %>
+    <% end -%>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+#include <crails/i18n.hpp>
+#include <crails/icons.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/user_group.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+std::vector<std::shared_ptr<Crails::Cms::UserGroup>>& @models;
+
+using namespace Crails::Cms;
+// END LINKING
+<div class="controls">
+  <%= link(route.make("new"), i18n::t("admin.new-group"), {{"class",style.button_classes()}}) %>
+</div>
+
+<table class="<%= style.table_classes() %>">
+  <tr>
+    <th><%= i18n::t("admin.name") %></th>
+    <th></th>
+  </tr>
+  <% for (const auto& model : models) do -%>
+    <tr>
+      <td>
+        <%= link(route.make(model->get_id())) yields %>
+          <%= model->get_name() %>
+        <% yields-end -%>
+      </td>
+      <td class="controls">
+        <%= link(route.make(model->get_id()), {
+          {"class", style.danger_button_classes()},
+          {"method", "delete"},
+          {"confirm", i18n::t("admin-confirm-destroy")}
+	  }) yields %>
+          <%= Crails::fonticon_tag(Crails::FontIcon::Destroy) %>
+        <% yields-end %>
+      </td>
+    </tr>
+  <% end -%>
+</table>
+
+<%= partial("paginator") %>

@@ -1,0 +1,34 @@
+#include <crails/i18n.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/menu.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style* style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+std::vector<std::shared_ptr<Crails::Cms::Menu>>& @models;
+
+using namespace Crails::Cms;
+// END LINKING
+<div class="controls">
+  <%= link(route.make("new"), i18n::t("admin.new-menu"), {{"class", style->button_classes()}}) %>
+</div>
+
+<table class="<%= style->table_classes() %>">
+  <tr>
+    <th><%= i18n::t("admin.name") %></th>
+  </tr>
+  <% if (!models.size()) do -%>
+    <tr>
+      <td colspan="5"><%= i18n::t("admin.empty-table") %></td>
+    </tr>
+  <% end -%>
+  <% for (const auto& model : models) do %>
+    <tr>
+      <td>
+        <%= link(route.make(model->get_id())) yields %>
+          <%= model->get_name() %>
+        <% yields-end %>
+      </td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,6 @@
+$out_root/
+{
+  include libcrails-cms/
+}
+
+export $out_root/libcrails-cms/$import.target

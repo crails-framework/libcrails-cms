@@ -1,0 +1,25 @@
+#include "../../../models/settings.hpp"
+#include "../../../lib/assets.hpp"
+#include "../../../views/style.hpp"
+#include <crails/icons.hpp>
+
+const Crails::Cms::Style* @style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::Settings& @settings;
+
+// END LINKING
+<% if (style) do -%>
+  <script>
+    function crailscms_on_content_loaded(document) {<%= style->javascript_on_content_loaded() %>}
+    document.addEventListener("DOMContentLoaded", function() { crailscms_on_content_loaded(document); });
+  </script>
+<% end -%>
+<% if (settings.get_favicon().length()) do -%>
+  <%= tag("link", {{"rel", "icon"},{"href", settings.get_favicon()}}) %>
+<% end -%>
+
+<%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::pure_css}}) %>
+<%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::proudcms_css}}) %>
+<%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::admin_css}}) %>
+<%= Crails::fonticon_cdn_header() %>
+
+<%= tag("script", {{"src", CrailsCmsAssets::admin_js}}) %>

@@ -1,0 +1,10 @@
+#include <crails/datatree.hpp>
+
+DataTree& @flash;
+// END LINKING
+<% flash.as_data().each([&](Data flash) do %>
+  <div class="flash flash-<%= flash.get_key() %>">
+    <%= flash.as<std::string>() %>
+  </div>
+  <% return true %>
+<% end ) %>

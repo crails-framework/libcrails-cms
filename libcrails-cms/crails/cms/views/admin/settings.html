@@ -1,0 +1,73 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/style.hpp"
+#include "../../../views/layout.hpp"
+
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::Settings& @model;
+Crails::FormBuilder<Crails::Cms::Settings> form = Crails::FormBuilder<Crails::Cms::Settings>(this, model);
+std::map<Crails::Odb::id_type, std::string> @page_options;
+const Crails::Cms::Layout& proudcms_layout = model.get_layout();
+
+using namespace Crails::Cms;
+
+// END LINKING
+
+<%= form_for(model, route(), {
+  {"id", "main-form"},
+  {"class", style.form_classes()}
+}) yields %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("title") %>
+    <%= form.text_field("title", &Crails::Cms::Settings::get_title) %>
+  <% yields-end %>
+
+  <%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
+    <%= form.label_for("favicon") %>
+    <%= form.text_field("favicon", &Crails::Cms::Settings::get_favicon) %>
+    <%= tag("button", {{"class", style.button_classes()}}) yields %>
+      <%= i18n::t("admin.image-library") %>
+    <% yields-end %>
+    <img />
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("theme") %>
+    <%= form.select_field("theme",
+          Crails::Cms::Layouts::singleton::get()->get_theme_options(),
+          &Crails::Cms::Settings::get_theme) %>
+  <% yields-end -%>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("homepage") %>
+    <%= form.select_field("homepage", page_options, &Crails::Cms::Settings::get_homepage_id) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("public_url") %>
+    <%= form.text_field("public_url", &Crails::Cms::Settings::get_public_url) %>
+  <% yields-end %>
+
+  <% if (proudcms_layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
+    <%= style.form_group() yields %>
+      <%= form.label_for("footer") %>
+      <%= form.text_area("footer", model.get_footer()) %>
+    <% yields-end %>
+  <% end -%>
+
+  <div class="proudcms-page-editor" style="position:relative" data-sticky-container></div>
+<% yields-end %>
+
+<div class="<%= style.button_group_classes() %>">
+  <%= style.admin_submit_button("main-form") %>
+</div>
+
+<%= partial("admin/page_editor", {
+  {"proudcms_layout", &proudcms_layout},
+  {"form_id",         std::string("main-form")},
+  {"field_name",      form.scoped_name("footer")},
+  {"mode",            std::string("footer")}
+}) %>

@@ -1,0 +1,29 @@
+#include <crails/i18n.hpp>
+#include "../../../models/attachment.hpp"
+
+using namespace std;
+
+vector<shared_ptr<Crails::Cms::Attachment>>& @models;
+map<string,string> @tag_options;
+unsigned long @items_count;
+Data& @session;
+
+// END LINKING
+
+typedef vector<shared_ptr<Crails::Cms::Attachment>> List;
+
+json([&]()
+{
+  json("csrf-token", session["csrf-token"].defaults_to<string>(""));
+  json("count", items_count);
+  json_array<List, List::value_type>("files", models, [&](shared_ptr<Crails::Cms::Attachment> model)
+  {
+    json("name", model->get_name());
+    json("description", model->get_description());
+    json("mimetype", model->get_mimetype());
+    json("url", model->as_attachment().get_url());
+    if (model->get_type() == Crails::Cms::ImageAttachment)
+      json("miniature_url", model->get_miniature().get_url());
+  });
+  json_map("tag_options", tag_options);
+});

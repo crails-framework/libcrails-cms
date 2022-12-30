@@ -1,0 +1,70 @@
+#include <crails/i18n.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/blog/post.hpp"
+#include "../../../models/user.hpp"
+#include "../../../time.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style* style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+std::vector<std::shared_ptr<Crails::Cms::BlogPost>>& @models;
+std::map<std::string, std::string> @tag_options;
+std::string @tag;
+const char* date_format = "%H:%M:%S %d-%m-%y";
+
+using namespace Crails::Cms;
+// END LINKING
+
+<div class="controls">
+  <div class="<%= style->button_group_classes() %>">
+    <%= link(route.make("new"), i18n::t("admin.new-post"), {{"class", style->button_classes()}}) %>
+  </div>
+
+  <div class="separator"></div>
+
+  <%= partial("admin/index_search_control", {{"action", route()}}) %>
+</div>
+
+<table class="<%= style->table_classes() %>">
+  <tr>
+    <th><%= i18n::t("admin.title") %></th>
+    <th><%= i18n::t("admin.author") %></th>
+    <th><%= i18n::t("admin.created-at") %></th>
+    <th><%= i18n::t("admin.updated-at") %></th>
+    <th><%= i18n::t("admin.published-at") %></th>
+  </tr>
+  <% if (!models.size()) do -%>
+    <tr>
+      <td colspan="5"><%= i18n::t("admin.empty-table") %></td>
+    </tr>
+  <% end -%>
+  <% for (const auto& model : models) do %>
+    <tr>
+      <td>
+        <%= link(route.make(model->get_id())) yields %>
+          <%= model->get_title() %>
+        <% yields-end %>
+      </td>
+      <td>
+        <% if (model->get_author()) do -%>
+          <%= model->get_author()->get_email() %>
+        <% end -%>
+      </td>
+      <td>
+        <%= time_to_string(model->get_created_at(), date_format) %>
+      </td>
+      <td>
+        <%= time_to_string(model->get_updated_at(), date_format) %>
+      </td>
+      <td>
+        <% if (model->get_published()) do -%>
+          <%= time_to_string(model->get_publication_at(), date_format) %>
+        <% end else do -%>
+          N/A
+        <% end -%>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= partial("paginator") %>

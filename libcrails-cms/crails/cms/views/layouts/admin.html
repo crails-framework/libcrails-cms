@@ -1,0 +1,52 @@
+#include <crails/datatree.hpp>
+#include <crails/params.hpp>
+#include <crails/i18n.hpp>
+#include "../../../views/menu.hpp"
+#include "../../../views/admin_menu.hpp"
+
+Crails::Params& @params;
+DataTree& @flash;
+const char* @yield;
+std::string @page_title = "Le Titre";
+std::string @page_subtitle = "";
+const Crails::Cms::AdminMenu* menu = Crails::Cms::AdminMenu::singleton::get();
+// END LINKING
+<html lang="<%= i18n::Settings::current_locale %>">
+  <head>
+    <title><%= page_title %></title>
+    <meta charset="utf-8">
+
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+    <link href="https://releases.transloadit.com/uppy/v3.3.1/uppy.min.css" rel="stylesheet">
+
+    <%= partial("layouts/admin/head") %>
+    <%= partial("layouts/admin/routes") %>
+  </head>
+  <body class="admin">
+    <%= partial("icons") %>
+
+    <div id="layout">
+      <a href="#menu" id="menuLink" class="menu-link"><span></span></a>
+      <div id="menu">
+        <% if (menu) do -%>
+          <%= menu->render(this, params.as_data()) %>
+        <% end -%>
+      </div>
+
+      <div id="main">
+        <div class="header">
+          <h1><%= page_title %></h1>
+          <h2><%= page_subtitle %></h2>
+        </div>
+
+        <div class="content">
+          <%= partial("flash_view", {{"flash", &flash}}) %>
+
+          <% if (yield != nullptr) do %>
+            <%= yield %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

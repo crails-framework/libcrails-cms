@@ -1,0 +1,34 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../views/style.hpp"
+#include "../../../views/admin/users/groups/permission_rules.hpp"
+
+const Crails::Cms::Style&                    style = Crails::Cms::Style::singleton::require();
+const Crails::FormBuilderBase&               @form;
+std::map<Crails::Odb::id_type, std::string>& @group_options;
+std::vector<Crails::Odb::id_type>            @read_groups = {};
+std::vector<Crails::Odb::id_type>            @write_groups = {};
+std::vector<Crails::Odb::id_type>            @destroy_groups = {};
+
+bool @display_read_groups = true;
+bool @display_write_groups = false;
+bool @display_destroy_groups = false;
+
+std::vector<PermissionGroupRenderOptions> render_options = {
+  {"read_groups", display_read_groups, read_groups},
+  {"write_groups", display_write_groups, write_groups},
+  {"destroy_groups", display_destroy_groups, destroy_groups}
+};
+
+// END LINKING
+
+<% for (const auto& render_option : render_options) do -%>
+  <% if (render_option.should_display) do -%>
+    <%= style.form_group() yields %>
+      <!-- kewa ? -->
+      <%= form.label_for(render_option.name, i18n::t("admin." + render_option.name)) %>
+      <%= form.select_field(render_option.name, group_options, render_option.ids) %>
+      <!-- kemeuh ? -->
+    <% yields-end %>
+  <% end -%>
+<% end -%>

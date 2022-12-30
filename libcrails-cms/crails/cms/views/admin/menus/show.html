@@ -1,0 +1,72 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include <crails/icons.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/menu.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::Menu& @model;
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+Crails::FormBuilder<Crails::Cms::Menu> form = Crails::FormBuilder<Crails::Cms::Menu>(this, model);
+
+using namespace Crails::Cms;
+// END LINKING
+<%= form_for(model, route(), {{"class",style.form_classes()},{"id","menuForm"}}) yields %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("name") %>
+    <%= form.text_field("name", &Crails::Cms::Menu::get_name) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("data") %>
+    <input id="menuEditorOutput" type="hidden" name="<%= form.scoped_name("data") %>" />
+    <div class="pure-g">
+      <div class="pure-u-2-5">
+        <div class="l-box">
+          <ul id="myEditor" class="menu-editor"></ul>
+        </div>
+      </div>
+      <div class="pure-u-3-5">
+        <div class="l-box">
+          <%= partial("admin/menus/menu_editor") %>
+        </div>
+      </div>
+    </div>
+  <% yields-end %>
+<% yields-end %>
+
+<div class="<%= style.button_group_classes() %>">
+  <%= style.admin_submit_button("menuForm") %>
+  <% if (model.is_persistent()) do %>
+    <%= style.admin_remove_button(*this, "/admin/menus/" + std::to_string(model.get_id())) %>
+  <% end %>
+</div>
+
+<script>
+var menuEditor = new MenuEditor('myEditor', { 
+  maxLevel: 2,
+  labelEdit: '<%= Crails::fonticon_tag(Crails::FontIcon::Edit) %>',
+  labelRemove: '<%= Crails::fonticon_tag(Crails::FontIcon::Destroy) %>',
+  labelMoveUp: '<%= Crails::fonticon_tag(Crails::FontIcon::ChevronUp) %>',
+  labelMoveDown: '<%= Crails::fonticon_tag(Crails::FontIcon::ChevronDown) %>',
+  buttonGroupClass: '<%= style.button_group_classes() %>',
+  secondaryButtonClass: '<%= style.button_classes() + style.small_button_classes() %>',
+  primaryButtonClass: '<%= style.confirm_button_classes() + style.small_button_classes() %>',
+  dangerButtonClass: '<%= style.danger_button_classes() + style.small_button_classes() %>',
+  onChanged: function() { document.querySelector("#menuEditorOutput").value = menuEditor.getString(); },
+  listOptions: {
+    opener: {
+      as: 'html',
+      close: '<%= Crails::fonticon_tag(Crails::FontIcon::MinusBox) %>',
+      open: '<%= Crails::fonticon_tag(Crails::FontIcon::PlusBox) %>',
+      openerClass: '<%= style.button_classes() + style.small_button_classes() + "opener" %>'
+    }
+  }
+});
+menuEditor.setForm(document.querySelector("#menuForm"));
+menuEditor.setInputContainer(document.querySelector("#menuEditorForm"));
+menuEditor.setUpdateButton(document.querySelector("#btnUpdate"));
+menuEditor.setAddButton(document.querySelector("#btnAdd"));
+menuEditor.setData(<%= model.get_data_as_json() %>);
+</script>

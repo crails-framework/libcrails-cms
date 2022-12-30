@@ -1,0 +1,72 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include <crails/cms/views/layout.hpp>
+#include "../../../models/user.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style*    style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::User&     @user;
+const Crails::Cms::Settings& @settings;
+
+Crails::FormBuilder<Crails::Cms::User> user_form = Crails::FormBuilder<Crails::Cms::User>(this, user);
+Crails::FormBuilder<Crails::Cms::Settings> settings_form = Crails::FormBuilder<Crails::Cms::Settings>(this, settings);
+
+using namespace Crails::Cms;
+
+// END LINKING
+
+<%= form({
+  {"method", "post"},
+  {"action", "/admin/wizard"},
+  {"class", style->form_classes()}}) yields %>
+  <div class="wizard-part wizard-user">
+    <h3><%= i18n::t("admin.wizard.user") %></h3>
+
+    <%= style->form_group() yields %>
+      <%= user_form.label_for("email") %>
+      <%= user_form.text_field("email", &Crails::Cms::User::get_email) %>
+    <% yields-end %>
+
+    <%= style->form_group() yields %>
+      <%= user_form.label_for("password") %>
+      <%= user_form.password_field("password", std::string()) %>
+    <% yields-end %>
+
+    <%= style->form_group() yields %>
+      <%= user_form.label_for("password-confirm") %>
+      <%= user_form.password_field("password-confirm", std::string()) %>
+    <% yields-end %>
+  </div>
+
+  <div class="wizard-part wizard-settings">
+    <h3><%= i18n::t("admin.menu.settings") %></h3>
+
+    <%= style->form_group() yields %>
+      <%= settings_form.label_for("title") %>
+      <%= settings_form.text_field("title", &Crails::Cms::Settings::get_title) %>
+    <% yields-end %>
+
+    <%= style->form_group() yields %>
+      <%= settings_form.label_for("theme") %>
+      <%= settings_form.select_field("theme",
+            Crails::Cms::Layouts::singleton::get()->get_layout_options(),
+            &Crails::Cms::Settings::get_theme) %>
+    <% yields-end -%>
+    
+    <%= style->form_group() yields %>
+      <%= settings_form.label_for("public_url") %>
+      <%= settings_form.text_field("public_url", &Crails::Cms::Settings::get_public_url, {{"id","public-url-input"}}) %>
+    <% yields-end %>
+
+  </div>
+
+  <%= style->admin_submit_button() %>
+<% yields-end %>
+
+<script>
+  (function() {
+    const input = document.getElementById("public-url-input");
+    input.value = location.host;
+  })();
+</script>

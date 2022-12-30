@@ -1,0 +1,37 @@
+#include <crails/i18n.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/user.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style* style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+const Crails::Cms::LocalRoute group_route = Crails::Cms::LocalRoute(vars, "group_route");
+std::vector<std::shared_ptr<Crails::Cms::User>>& @models;
+
+using namespace Crails::Cms;
+// END LINKING
+<div class="controls">
+  <%= link(route.make("new"), i18n::t("admin.new-user"), {{"class", style->button_classes()}}) %>
+  <%= link(group_route(), i18n::t("admin.groups"), {{"class", style->button_classes()}}) %>
+</div>
+
+<table class="<%= style->table_classes() %>">
+  <tr>
+    <th><%= i18n::t("admin.email") %></th>
+    <th><%= i18n::t("admin.role") %></th>
+  </tr>
+  <% for (const auto& model : models) do %>
+    <tr>
+      <td>
+        <%= link(route.make(model->get_id())) yields %>
+          <%= model->get_email() %>
+        <% yields-end %>
+      </td>
+      <td>
+        role
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+<%= partial("paginator") %>
