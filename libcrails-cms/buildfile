@@ -1,0 +1,43 @@
+import intf_libs += libcrails%lib{crails}
+import intf_libs += libcrails-design-patterns%lib{crails-design-patterns}
+import intf_libs += libcrails-html-views%lib{crails-html-views}
+import intf_libs += libcrails-fonticons%lib{crails-fonticons}
+import intf_libs += libcrails-http-client%lib{crails-http-client}
+import intf_libs += libcrails-controllers%lib{crails-controllers}
+import intf_libs += libcrails-renderer%lib{crails-renderer}
+import intf_libs += libcrails-semantics%lib{crails-semantics}
+import intf_libs += libcrails-i18n%lib{crails-i18n}
+import intf_libs += libcrails-logger%lib{crails-logger}
+import intf_libs += libdatatree%lib{datatree}
+import intf_libs += libbacktrace%lib{backtrace}
+
+lib{crails-cms}: {hxx ixx txx cxx}{**} $impl_libs $intf_libs
+
+hxx{version}: in{version} $src_root/manifest
+
+hxx{export}@./: cxx.importable = false
+
+cxx.poptions =+ "-I$out_root" "-I$src_root"
+
+{hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_CMS_STATIC_BUILD
+{hbmis objs}{*}: cxx.poptions += -DLIBCRAILS_CMS_SHARED_BUILD
+
+lib{crails-cms}:
+{
+  cxx.export.poptions = "-I$out_root/libcrails-cms/" "-I$src_root/libcrails-cms/"
+  cxx.export.libs = $intf_libs
+}
+
+liba{crails-cms}: cxx.export.poptions += -DLIBCRAILS_CMS_STATIC
+libs{crails-cms}: cxx.export.poptions += -DLIBCRAILS_CMS_SHARED
+
+if $version.pre_release
+  lib{crails-cms}: bin.lib.version = "-$version.project_id"
+else
+  lib{crails-cms}: bin.lib.version = "-$version.major.$version.minor"
+
+{hxx ixx txx}{*}:
+{
+  install         = include/
+  install.subdirs = true
+}

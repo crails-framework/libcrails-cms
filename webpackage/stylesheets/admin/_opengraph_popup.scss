@@ -1,0 +1,16 @@
+.opengraph-popup {
+  form > div {
+    input, textarea { width: 100%; }
+
+    &[data-name="url"] {
+      button, input { display: inline-block; }
+      button { margin-left: 1em; }
+      input { width: auto; }
+    }
+
+    &[data-name="image:width"], &[data-name="image:height"] {
+      display: inline-block;
+      width: 50%;
+    }
+  }
+}

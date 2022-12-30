@@ -1,0 +1,46 @@
+#include "../../../views/layout.hpp"
+#include "../../../lib/assets.hpp"
+
+const Crails::Cms::Layout& @proudcms_layout;
+std::string @form_id;
+std::string @field_name;
+std::string @mode = "default";
+
+// END LINKING
+
+<% if (proudcms_layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
+  <%= tag("link", {{"rel","stylesheet"},{"type","text/css"},{"href",CrailsCmsAssets::content_tools_css}}) %>
+  <script>initializeContentTools()</script>
+<% end -%>
+
+<% for (const auto& stylesheet : proudcms_layout.get_editor_stylesheets()) do %>
+  <%= tag("link", {{"rel","stylesheet"},{"href",stylesheet}}) %>
+<% end %>
+
+<% for (const auto& javascript : proudcms_layout.get_editor_javascripts()) do %>
+  <%= tag("script", {{"src",javascript}}) %>
+<% end %>
+
+<script>
+<% switch (proudcms_layout.get_type()) do -%>
+<% case Crails::Cms::DocumentLayoutType: -%>
+
+  proudcmsAdminCKEditor("<%= field_name %>");
+
+<% break -%>
+<% case Crails::Cms::ComponentLayoutType: -%>
+
+  PageEditor.create(
+    <%= proudcms_layout.get_component_layout_name() %>,
+    document.querySelector("#<%= form_id %>"),
+    "<%= field_name %>",
+    "<%= mode %>"
+  ).then(function(pageEditor) {
+    window.pageEditor = pageEditor;
+    if (typeof crailscms_on_content_loaded == "function")
+      crailscms_on_content_loaded(pageEditor.root);
+  });
+
+<% break -%>
+<% end -%>
+</script>

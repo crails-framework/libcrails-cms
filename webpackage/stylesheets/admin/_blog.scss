@@ -1,0 +1,17 @@
+.blog-post-form {
+  > div:not(.thumbnail-form-group) > input {
+    width: 100%;
+  }
+  > div > textarea {
+    width: 100%;
+  }
+  > div > input[type="checkbox"] {
+    width: auto;
+    transform: scale(2) translateX(50%);
+  }
+
+  .thumbnail-form-group {
+    input { display: inline-block !important; }
+    img { float: right; margin: -1em 0 1em 1em; max-height: 10em; }
+  }
+}

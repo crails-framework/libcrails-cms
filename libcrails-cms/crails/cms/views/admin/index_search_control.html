@@ -1,0 +1,19 @@
+#include <crails/i18n.hpp>
+#include "../../../views/style.hpp"
+
+using namespace std;
+using namespace Crails::Cms;
+
+const Crails::Cms::Style* style = Crails::Cms::Style::singleton::get();
+Crails::Cms::ClassList form_classes = style->search_form_classes() + "proudcms-search";
+std::map<std::string, std::string> @tag_options;
+std::string @tag;
+std::string @action;
+
+// END LINKING
+
+<%= form({{"action", action},{"method", "get"},{"class", form_classes}}) yields %>
+  <%= text_field("search", "", {{"placeholder", i18n::t("admin.search") }}) %>
+  <%= select_field("tag", tag_options, tag, {{"id","tagPicker"},{"placeholder","tag"}}) %>
+  <%= style->admin_search_button() %>
+<% yields-end %>

@@ -1,0 +1,13 @@
+#include <crails/icons.hpp>
+
+const Crails::FontIconTheme& icons = Crails::FontIconTheme::singleton::require();
+
+// END LINKING
+<div style="display:none" id="icon-templates">
+  <span data-icon="search"><%= icons.tag(Crails::FontIcon::Search) %></span>
+  <span data-icon="up"><%= icons.tag(Crails::FontIcon::ChevronUp) %></span>
+  <span data-icon="down"><%= icons.tag(Crails::FontIcon::ChevronDown) %></span>
+  <span data-icon="settings"><%= icons.tag(Crails::FontIcon::Settings) %></span>
+  <span data-icon="remove"><%= icons.tag(Crails::FontIcon::Destroy) %></span>
+  <span data-icon="add"><%= icons.tag(Crails::FontIcon::Add) %></span>
+</div>

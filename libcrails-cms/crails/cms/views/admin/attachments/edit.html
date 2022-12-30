@@ -1,0 +1,18 @@
+#include <crails/i18n.hpp>
+#include "../../../routes.hpp"
+#include "../../../models/attachment.hpp"
+
+const Crails::Cms::Attachment& @model;
+const Crails::Cms::Routes& routes = Crails::Cms::Routes::singleton::require();
+
+// END LINKING
+
+<%= form({{"id","upload-form"},{"action", routes.get_attachments_admin_path("upload")},{"method","post"}}) yields %>
+  <div id="upload-block">
+  </div>
+<% yields-end %>
+
+<table id="uploaded-files">
+</table>
+
+<script>createUppyUpdater(<%= model.get_id() %>)</script>

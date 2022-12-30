@@ -1,0 +1,100 @@
+@import "vendor/admin";
+@import "admin/menu_editor";
+@import "admin/dialog";
+@import "admin/file_picker";
+@import "admin/attachment_index";
+@import "admin/page_editor";
+@import "admin/blog";
+@import "admin/opengraph_popup";
+
+// BEGIN ckeditor custom style
+.ck-content .image.image-style-left-side {
+  float: left;
+  margin-top: 0;
+  margin-right: var(--ck-image-style-spacing);
+  max-width: 50%;
+}
+
+.ck-editor__top {
+  margin: 1em 0 0 !important;
+}
+// END ckeditor
+
+form {
+  .aligned-inputs {
+    display: flex;
+    > div:first-of-type {
+      flex-grow: 1;
+    }
+    > div {
+      margin-right: 5px;
+    }
+  }
+}
+
+.pure-button-group {
+  > form { display: inline; }
+}
+
+.pure-menu-item {
+  height: auto;
+}
+
+#main {
+  .header {
+    margin-bottom: 1em;
+  }
+}
+
+.content {
+  > .controls {
+    display: flex;
+    margin: 0 0 1em;
+    width: 100%;
+    > .separator {
+      flex-grow: 1;
+    }
+  }
+
+  > table {
+    width: 100%;
+  }
+}
+
+label:first-letter {
+  text-transform: capitalize;
+}
+
+.l-box {
+  padding: 1em;
+}
+
+.pure-g {
+  :first-of-type {
+    .l-box { padding-left: 0; }
+  }
+  :last-of-type {
+    .l-box { padding-right: 0; }
+  }
+}
+
+.pure-button-add {
+  background-color: rgb(28, 184, 65);
+  color: white;
+}
+
+.pure-button-danger {
+  background-color: red;
+  color: white;
+}
+
+.pure-sm-button {
+  font-size: 70%;
+}
+
+.proudcms-search {
+  float: right;
+  .single {
+    display: inline-block;
+  }
+}

@@ -1,0 +1,24 @@
+#include "../../../models/settings.hpp"
+
+const Crails::Cms::Settings& @settings;
+
+// END LINKING
+<script>
+  (function(){
+    const prefix = "http://<%= settings.get_public_url() %>";
+    function traverseNode(node) {
+      for (let child of node.children)
+        traverseNode(child);
+      if (node.attributes.href && node.attributes.href.value[0] == '/') {
+        node.attributes.href.value = prefix + node.attributes.href.value;
+      } else if (node.attributes.src && node.attributes.src.value[0] == '/') {
+        node.attributes.src.value = prefix + node.attributes.src.value;
+      }
+      if (node.style && node.style.backgroundImage && node.style.backgroundImage.startsWith("url(\"/")) {
+        node.style.backgroundImage = `url("${prefix}${node.style.backgroundImage.substr(5)}`;
+      }
+    }
+    traverseNode(document.head);
+    traverseNode(document.body);
+  })();
+</script>

@@ -1,0 +1,40 @@
+#include <algorithm>
+#include <crails/params.hpp>
+#include <crails/url.hpp>
+#include "../../../views/style.hpp"
+
+using namespace Crails;
+using namespace std;
+
+const Crails::Cms::Style& @style = Crails::Cms::Style::singleton::get();
+unsigned int  @page;
+unsigned int  @items_per_page;
+unsigned long @items_count;
+unsigned int  page_count = items_count / items_per_page + 1;
+unsigned int  @page_range = 7;
+Params&       @params;
+string        additional_params;
+
+// END LINKING
+
+<% if (params["search"].exists()) do -%>
+  <% additional_params = "&search=" + Url::encode(params["search"].as<string>()) %>
+<% end -%>
+
+<% if (params["tag"].exists()) do -%>
+  <% additional_params += "&tag=" + Url::encode(params["tag"].as<string>()) %>
+<% end -%>
+
+<%= tag("div", {{"class", style.paginator_classes()},{"role","group"}}) yields %>
+  <% for (unsigned int i = 1 ; i <= page_count ; ++i) do -%>
+    <% if (i == page) do -%>
+      <button class="<%= style.active_button_classes() %>"><%= i %></button>
+      <% end else if (
+        i == 1 || i == page_count ||
+        abs(static_cast<long>(i) - static_cast<long>(page)) < page_range
+      ) do -%>
+      <% string url = "?page=" + to_string(i) + additional_params %>
+      <%= link(url, to_string(i), {{"class",style.button_classes()}}) %>
+    <% end -%>
+  <% end -%>
+<% yields-end %>

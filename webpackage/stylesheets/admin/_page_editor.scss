@@ -1,0 +1,48 @@
+.proudcms-page-editor {
+  margin-bottom: 2em;
+}
+
+.proudcms-page-editor-controls {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid black;
+  border-bottom: 1px dotted black;
+  background-color: white;
+  > .pure-menu-list {
+    border: 1px solid black;
+    border-bottom: 1px dotted black;
+    margin-bottom: -1px;
+    margin-top: -1px;
+    background: white;
+  }
+  .pure-menu-children {
+    box-shadow: #0000005f 0 0 5px;
+  }
+  &:hover {
+    overflow: initial;
+    z-index: 1000;
+  }
+}
+
+.proudcms-sticky-controls {
+  z-index: 100;
+}
+
+.page-property-editor {
+  h2 {
+    margin-top: 0;
+  }
+
+  .property {
+    margin: 1em 0;
+    > div {
+      display: flex;
+      input { flex-grow: 1; }
+    }
+  }
+}
+
+.ct-ignition {
+  display: none;
+  //left: 160px !important;
+}
