@@ -14,7 +14,11 @@
     }
   }
 
-  .collection-item {
+  ul {
+    list-style: none; margin: 0; padding: 0;
+  }
+
+  .candidate {
     position: relative;
     min-height: 6em;
     padding-left: 6em;
@@ -36,12 +40,17 @@
       left: 0.2em;
       top: 0.2em;
       bottom: 0.2em;
-      img {
+      img, video, audio {
         position: absolute;
-        max-width: 5em; max-height: 100%;
         top: 50%;
         transform: translateY(-50%);
         border: 1px solid #e0e0e0;
+      }
+      img, video {
+        max-width: 5em; max-height: 100%;
+      }
+      audio {
+        width: 245px;
       }
     }
 

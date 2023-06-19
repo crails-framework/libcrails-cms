@@ -21,6 +21,8 @@ export default class extends ContentTools.Tool {
 
   apply(element, selection, callback) {
     const picker = new FilePicker({
+      title:      i18n.t("admin.image-library"),
+      mimetype:   "image/*",
       filePicked: this.onFilePicked.bind(this, element, selection, callback),
       aborted:    this.onCanceled.bind(this, element, callback)
     });

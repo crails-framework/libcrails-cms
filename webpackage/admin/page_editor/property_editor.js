@@ -4,7 +4,9 @@ import FilePicker from "../file_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
 import Style from "../../style.js";
 
-const filePicker = new FilePicker();
+const filePicker = new FilePicker({
+  mimetype: "image/*"
+});
 
 function makeFilePickerInput(input) {
   const button = document.createElement("button");
@@ -13,10 +15,9 @@ function makeFilePickerInput(input) {
   button.textContent = i18n.t("admin.image-library");
   button.addEventListener("click", function(event) {
     event.preventDefault();
-    filePicker.plugin = {
-      filePicked: function(file) {
-        input.value = file.url;
-      }
+    filePicker.plugin.title = i18n.t("admin.image-library");
+    filePicker.plugin.filePicked = function(file) {
+      input.value = file.url;
     };
     filePicker.open();
   });

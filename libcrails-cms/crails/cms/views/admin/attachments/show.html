@@ -47,6 +47,14 @@ using namespace Crails::Cms;
   <div class="pure-u-1-1 pure-u-sm-1-2 pure-u-md-2-3" style="text-align:center">
     <% if (model.get_type() == Crails::Cms::ImageAttachment) do -%>
       <%= tag("img", {{"src", model.as_image().get_url()},{"style","max-width:100%"}}) %>
+    <% end else if (model.get_mimetype().find("audio/") == 0) do -%>
+      <audio controls>
+        <%= tag("source", {{"src", model.as_attachment().get_url()}, {"type", model.get_mimetype()}}) %>
+      </audio>
+    <% end else if (model.get_mimetype().find("video/") == 0) do -%>
+      <video controls>
+        <%= tag("source", {{"src", model.as_attachment().get_url()}, {"type", model.get_mimetype()}}) %>
+      </video>
     <% end -%>
   </div>
 </div>

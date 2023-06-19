@@ -4,6 +4,7 @@ import previewPost from "./admin/preview.js";
 import pageEditor from "./admin/page_editor.js";
 import ProudCmsDialog from "./admin/dialog.js";
 import imagePickerField from "./admin/image_picker_field.js";
+import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
 
 window.createUppy = createUppy;
@@ -56,9 +57,13 @@ window.initializeContentTools = function() {
 window.ProudCmsDialog = ProudCmsDialog;
 
 function initialize(event) {
-  // initialize image pickers
+  // initialize thumbnail pickers
   for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
-    imagePickerField(formGroup);
+    imagePickerField(formGroup, "miniature_url");
+  }
+  // initialize audio pickers
+  for (let formGroup of document.querySelectorAll(".audio-form-group")) {
+    audioPickerField(formGroup);
   }
   // initialize tomSelect
   createSelectField("#tagPicker");

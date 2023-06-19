@@ -30,6 +30,12 @@ form {
       margin-right: 5px;
     }
   }
+
+  .thumbnail-form-group, .audio-form-group {
+    input[type="text"] { display: inline-block; }
+    img { height: 75px; display: inline-block; }
+    img, audio { vertical-align: middle; }
+  }
 }
 
 .pure-button-group {

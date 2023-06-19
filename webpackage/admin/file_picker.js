@@ -21,6 +21,15 @@ function makeUrl(url, params) {
   return url;
 }
 
+function makeUrlParams(self, params) {
+  console.log("makeUrlParams", self, params);
+  if (!params)
+    params = {};
+  if (self.plugin && self.plugin.mimetype && !params.mimetype)
+    params.mimetype = self.plugin.mimetype.replaceAll('*', '');
+  return params;
+}
+
 export default class extends ProudCmsDialog {
   constructor(plugin) {
     super();
@@ -34,9 +43,10 @@ export default class extends ProudCmsDialog {
     });
   }
 
-  fetch(params) {
+  fetch(params = {}) {
     const headers = new Headers();
-    const url = makeUrl(attachmentsAdminPath(), params);
+    const urlParams = makeUrlParams(this, params);
+    const url = makeUrl(attachmentsAdminPath(), urlParams);
     headers.append("Accept", "application/json");
     return fetch(new Request(url), {
       method: 'GET', headers: headers
@@ -70,7 +80,7 @@ export default class extends ProudCmsDialog {
     this.popup.innerHTML = "";
     title.classList.add("popup-title");
     title.classList.add("pure-u-3-5");
-    title.textContent = i18n.t("admin.image-library");
+    title.textContent = this.plugin.title;
     this.popup.appendChild(title);
 
     Style.apply("button", uploadControl);
@@ -135,6 +145,24 @@ export default class extends ProudCmsDialog {
       const image = document.createElement("img");
       image.src = file.miniature_url;
       miniature.appendChild(image);
+    }
+    if (file.mimetype.startsWith("audio/")) {
+      const audio = document.createElement("audio");
+      const source = document.createElement("source");
+      source.src = file.url;
+      source.type = file.mimetype;
+      audio.controls = true;
+      audio.appendChild(source);
+      miniature.appendChild(audio);
+    }
+    else if (file.mimetype.startsWith("video/")) {
+      const video = document.createElement("video");
+      const source = document.createElement("source");
+      source.src = file.url;
+      source.type = file.mimetype;
+      video.controls = true;
+      video.appendChild(source);
+      miniature.appendChild(video);
     }
     item.addEventListener("click", this.onFilePicked.bind(this, file));
     return item;
