@@ -18,22 +18,23 @@ using namespace Crails::Cms;
 
 <%= form_for(model, route(), {{"class", style.form_classes()},{"id","main-form"}}) yields %>
   <div class="aligned-inputs">
-  <div class="<%= style.form_group_classes() %>">
-    <%= form.label_for("title") %>
-    <%= form.text_field("title", &Crails::Cms::Page::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
+    <div class="<%= style.form_group_classes() %>">
+      <%= form.label_for("title") %>
+      <%= form.text_field("title", &Crails::Cms::Page::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
+    </div>
+
+    <%= style.form_group() yields %>
+      <%= form.label_for("layout") %>
+      <%= form.select_field("layout",
+            Crails::Cms::Layouts::singleton::get()->get_layout_options(),
+            &Crails::Cms::Page::get_layout_name) %>
+    <% yields-end -%>
+
+    <%= style.form_group() yields %>
+      <%= form.label_for("slug") %>
+      <%= form.text_field("slug", &Crails::Cms::Page::get_slug, {{"maxlength",std::to_string(Crails::Cms::Editable::slug_length)}}) %>
+    <% yields-end -%>
   </div>
-
-  <%= style.form_group() yields %>
-    <%= form.label_for("layout") %>
-    <%= form.select_field("layout",
-          Crails::Cms::Layouts::singleton::get()->get_layout_options(),
-          &Crails::Cms::Page::get_layout_name) %>
-  <% yields-end -%>
-
-  <%= style.form_group() yields %>
-    <%= form.label_for("slug") %>
-    <%= form.text_field("slug", &Crails::Cms::Page::get_slug, {{"maxlength",std::to_string(Crails::Cms::Editable::slug_length)}}) %>
-  <% yields-end -%>
 
   <% if (has_partial(extra_partial)) do -%>
     <!-- extra partial <%= extra_partial %> -->
