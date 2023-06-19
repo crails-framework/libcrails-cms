@@ -1,4 +1,5 @@
 #include "style.hpp"
+#include "../lib/assets.hpp"
 #include <crails/icons.hpp>
 #include <crails/i18n.hpp>
 #include <crails/html_template.hpp>
@@ -6,6 +7,19 @@
 
 using namespace Crails;
 using namespace std;
+
+vector<string> Cms::Style::stylesheets() const
+{
+  return {CrailsCmsAssets::pure_css, CrailsCmsAssets::proudcms_css};
+}
+
+vector<string> Cms::Style::admin_stylesheets() const
+{
+  auto result = stylesheets();
+
+  result.push_back(CrailsCmsAssets::admin_css);
+  return result;
+}
 
 DataTree Cms::Style::as_data() const
 {

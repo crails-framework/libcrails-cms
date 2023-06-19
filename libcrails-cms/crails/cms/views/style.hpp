@@ -58,6 +58,8 @@ namespace Crails::Cms
 
     virtual std::string render_menu(const Menu&, Menu::Direction, const ClassList& classlist = {}, const std::string& header = "") const;
 
+    virtual std::vector<std::string> stylesheets() const;
+    virtual std::vector<std::string> admin_stylesheets() const;
     virtual std::string javascript_on_content_loaded() const { return std::string(); }
   };
 }
