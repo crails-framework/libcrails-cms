@@ -168,5 +168,4 @@ namespace Crails::Cms
   };
 }
 
-# undef libcrails_cms_admin_crud
 #endif
