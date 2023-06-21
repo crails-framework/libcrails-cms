@@ -4,6 +4,8 @@ export SASS=node_modules/.bin/sass
 export STYLE_ROOT=webpackage/stylesheets
 export OUTPUT=webpackage/build
 
+mkdir -p "$OUTPUT"
+
 npm install
 
 scripts/prepare-content-tools.sh
