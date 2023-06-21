@@ -9,6 +9,7 @@ import intf_libs += libcrails-semantics%lib{crails-semantics}
 import intf_libs += libcrails-i18n%lib{crails-i18n}
 import intf_libs += libcrails-logger%lib{crails-logger}
 import intf_libs += libcrails-odb%lib{crails-odb}
+import intf_libs += libcrails-image%lib{crails-image}
 import intf_libs += libdatatree%lib{datatree}
 import intf_libs += libbacktrace%lib{backtrace}
 
