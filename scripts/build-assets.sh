@@ -15,7 +15,9 @@ $SASS -s compressed $STYLE_ROOT/admin.scss > $OUTPUT/admin.css
 $SASS -s compressed $STYLE_ROOT/content_tools.scss > $OUTPUT/content_tools.css
 $SASS -s compressed $STYLE_ROOT/proudcms.scss > $OUTPUT/proudcms.css
 
-webpack --progress
+node_modules/.bin/webpack --progress
+
+mkdir -p "libcrails-cms/crails/cms/lib"
 
 crails-builtin-assets \
   --inputs      "$OUTPUT" \
