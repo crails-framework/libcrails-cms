@@ -21,7 +21,7 @@ hxx{version}: in{version} $src_root/manifest
 
 hxx{export}@./: cxx.importable = false
 
-cxx.poptions =+ "-I$out_root" "-I$src_root"
+cxx.poptions =+ "-I$out_root/libcrails-cms" "-I$src_root/libcrails-cms"
 
 {hbmia obja}{*}: cxx.poptions += -DLIBCRAILS_CMS_STATIC_BUILD
 {hbmis objs}{*}: cxx.poptions += -DLIBCRAILS_CMS_SHARED_BUILD
