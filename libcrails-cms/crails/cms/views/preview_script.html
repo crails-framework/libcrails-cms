@@ -1,11 +1,6 @@
-#include "../../../models/settings.hpp"
-
-const Crails::Cms::Settings& @settings;
-
-// END LINKING
 <script>
   (function(){
-    const prefix = "http://<%= settings.get_public_url() %>";
+    const prefix = window.location.origin;
     function traverseNode(node) {
       for (let child of node.children)
         traverseNode(child);
