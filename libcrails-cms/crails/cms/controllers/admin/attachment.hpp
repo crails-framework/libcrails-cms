@@ -125,7 +125,7 @@ namespace Crails::Cms
       if (model)
       {
         Super::database.destroy(*model);
-	Super::redirect_to(Super::get_url());
+        Super::redirect_to(Super::get_url());
       }
     }
 
