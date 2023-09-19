@@ -3,6 +3,8 @@
 #include <crails/datatree.hpp>
 #include <crails/attachment.hpp>
 #include <crails/image.hpp>
+#include <crails/audiofile.hpp>
+#include <crails/videofile.hpp>
 #include "taggable.hpp"
 
 namespace Crails::Cms
@@ -10,7 +12,9 @@ namespace Crails::Cms
   enum AttachmentType
   {
     UnknownAttachment = 0,
-    ImageAttachment
+    ImageAttachment,
+    AudioAttachment,
+    VideoAttachment
   };
 
   #pragma db object abstract
@@ -55,6 +59,8 @@ namespace Crails::Cms
     void set_type(AttachmentType value) { this->type = value; }
     const std::string& get_mimetype() const { return mimetype; }
     void set_mimetype(const std::string& value) { mimetype = value; }
+    bool get_processing() const { return processing; }
+    void set_processing(bool value) { processing = value; }
     AttachmentType get_type() const { return static_cast<AttachmentType>(type); }
 
     Crails::Attachment as_attachment() const { return Crails::Attachment(resource); }
@@ -70,5 +76,6 @@ namespace Crails::Cms
     std::string description;
     std::string mimetype;
     int type = UnknownAttachment;
+    bool processing = false;
   };
 }

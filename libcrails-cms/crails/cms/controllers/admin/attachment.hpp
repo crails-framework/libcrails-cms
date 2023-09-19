@@ -1,6 +1,8 @@
 #pragma once
 #include "resource.hpp"
 #include "../../models/attachment.hpp"
+#include <crails/logger.hpp>
+#include <thread>
 
 namespace Crails::Cms
 {
@@ -32,6 +34,7 @@ namespace Crails::Cms
     {
       DataTree output;
 
+      logger << Logger::Debug << "AdminAttachmentController: create has been called" << Logger::endl;
       Super::params.as_data().output();
       for (const auto& file : Super::params.get_files())
       {
@@ -96,7 +99,50 @@ namespace Crails::Cms
         model.set_type(Crails::Cms::ImageAttachment);
         model.set_miniature(miniature);
       }
+      else if (file.mimetype.find("audio/") == 0)
+        model.set_type(Crails::Cms::AudioAttachment);
+      else if (file.mimetype.find("video/") == 0)
+        model.set_type(Crails::Cms::VideoAttachment);
+      if (enforce_acceptable_format(model))
+        model.set_processing(true);
       Super::database.save(model);
+    }
+
+    virtual bool enforce_acceptable_format(Model& model)
+    {
+      if (model.get_mimetype().find("audio/") == 0 && model.get_mimetype() != "audio/mp3")
+        start_convert_task<Crails::AudioFile>(Crails::AudioFile::Mp3Format, model);
+      else if (model.get_mimetype().find("video/") == 0 && model.get_mimetype() != "video/mpeg" && model.get_mimetype() != "video/mp4")
+        start_convert_task<Crails::VideoFile>(Crails::VideoFile::Mp4Format, model);
+      else
+        return false;
+      return true;
+    }
+
+    template<typename MEDIA_TYPE>
+    void start_convert_task(typename MEDIA_TYPE::Format format, const Model& model)
+    {
+      Super::start_thread([model, format]()
+      {
+        logger << Logger::Info << "AdminAttachmentController: converting attachment "
+                               << model.get_id() << Logger::endl;
+        Model model2(model);
+        MEDIA_TYPE source(model.get_resource());
+        MEDIA_TYPE target = source.as_format(format);
+
+        model2.as_attachment().cleanup_files();
+        model2.set_resource(target);
+        model2.set_mimetype(target.get_mimetype());
+        model2.set_processing(false);
+        {
+          Odb::Connection database;
+          database.rollback_on_destruction = false;
+          database.save(model2);
+          database.commit();
+        }
+        logger << Logger::Info << "AdminAttachmentController: done converting media "
+                               << model.get_id() << " to " << target.get_mimetype() << Logger::endl;
+      });
     }
 
     void new_()

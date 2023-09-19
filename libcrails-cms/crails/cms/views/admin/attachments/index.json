@@ -24,6 +24,8 @@ json([&]()
     json("url", model->as_attachment().get_url());
     if (model->get_type() == Crails::Cms::ImageAttachment)
       json("miniature_url", model->get_miniature().get_url());
+    if (model->get_processing())
+      json("processing", true);
   });
   json_map("tag_options", tag_options);
 });

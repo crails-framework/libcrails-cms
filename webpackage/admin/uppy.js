@@ -74,7 +74,7 @@ export function configureUppy(uppy, callback) {
       inline: true,
       height: 470,
       metaFields: getMetaFields(),
-      note: 'Images and video only, 2–3 files, up to 1 MB',
+      note: i18n.t("uppy.note")
     })
     // All remote services like Instagram and Google Drive in one package
     .use(RemoteSources, {

@@ -34,6 +34,14 @@ location: https://github.com/crails-framework/libcrails-i18n.git#master
 
 :
 role: prerequisite
+location: https://github.com/crails-framework/libcrails-image.git#master
+
+:
+role: prerequisite
+location: https://github.com/crails-framework/libcrails-multimedia.git#master
+
+:
+role: prerequisite
 location: https://github.com/crails-framework/libcrails-logger.git#master
 
 :

@@ -23,6 +23,13 @@ using namespace Crails::Cms;
     <%= form.text_field("name", &Crails::Cms::Attachment::get_name, {{"autocomplete","off"}}) %>
   <% yields-end %>
 
+  <% if (model.get_processing()) do -%>
+    <%= style.form_group() yields %>
+      <%= form.label_for("processing") %>
+      <%= form.boolean_field("processing", &Crails::Cms::Attachment::get_processing) %>
+    <% yields-end %>
+  <% end -%>
+
   <%= style.form_group() yields %>
     <%= form.label_for("description") %>
     <%= form.text_field("description", &Crails::Cms::Attachment::get_description, {{"autocomplete","off"}}) %>

@@ -164,7 +164,10 @@ export default class extends ProudCmsDialog {
       video.appendChild(source);
       miniature.appendChild(video);
     }
-    item.addEventListener("click", this.onFilePicked.bind(this, file));
+    if (file.processing)
+      item.classList.add("file-processing");
+    else
+      item.addEventListener("click", this.onFilePicked.bind(this, file));
     return item;
   }
 
