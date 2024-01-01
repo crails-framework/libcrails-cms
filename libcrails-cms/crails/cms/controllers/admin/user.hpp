@@ -50,7 +50,8 @@ namespace Crails::Cms
     void render_editor(Model& model) override
     {
       require_groups();
-      Super::vars["page_title"] = model.get_email();
+      if (model.get_email().length())
+        Super::vars["page_title"] = model.get_email();
       Super::vars["group_options"] = &groups;
       Super::render_editor(model);
     }
