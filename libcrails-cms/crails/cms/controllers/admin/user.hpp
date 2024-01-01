@@ -18,6 +18,7 @@ namespace Crails::Cms
     {
       Super::vars["page_title"] = i18n::t("admin.menu.users");
       Super::vars["page_subtitle"] = i18n::t("admin.users-subtitle");
+      Super::vars["group_route"] = "/admin/user_groups"; // TODO this doesn't use local_route, and it should... but where and when is local_route ever set ?
     }
 
     void new_()
