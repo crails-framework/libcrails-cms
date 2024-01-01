@@ -70,11 +70,14 @@ namespace Crails::Cms
 
     std::map<std::string, std::string> plugin_options()
     {
-      const auto& plugins = Crails::Cms::Plugins::singleton::require();
+      const auto* plugins = Crails::Cms::Plugins::singleton::get();
       std::map<std::string, std::string> options;
 
-      for (const std::string& name : plugins.get_plugin_names())
-        options.emplace(name, name);
+      if (plugins)
+      {
+        for (const std::string& name : plugins->get_plugin_names())
+          options.emplace(name, name);
+      }
       return options;
     }
   };

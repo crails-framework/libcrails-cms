@@ -68,7 +68,10 @@ void Crails::Cms::Settings::set_plugins(const std::vector<std::string>& value)
 void Crails::Cms::Settings::update_plugins(const std::vector<std::string>& new_plugin_names)
 {
   auto current_plugin_names = get_plugins();
-  const auto& plugins = Crails::Cms::Plugins::singleton::require();
+  const auto* plugins = Crails::Cms::Plugins::singleton::get();
+
+  if (!plugins)
+    return ;
 
   // Clear removed plugins
   for (const auto& name : current_plugin_names)
@@ -76,7 +79,7 @@ void Crails::Cms::Settings::update_plugins(const std::vector<std::string>& new_p
     auto it = std::find(new_plugin_names.begin(), new_plugin_names.end(), name);
     if (it == new_plugin_names.end())
     {
-      Plugin* plugin = plugins.get_plugin(name);
+      Plugin* plugin = plugins->get_plugin(name);
 
       if (plugin)
       {
@@ -92,7 +95,7 @@ void Crails::Cms::Settings::update_plugins(const std::vector<std::string>& new_p
     auto it = std::find(current_plugin_names.begin(), current_plugin_names.end(), name);
     if (it == current_plugin_names.end())
     {
-      Plugin* plugin = plugins.get_plugin(name);
+      Plugin* plugin = plugins->get_plugin(name);
 
       if (plugin)
       {
