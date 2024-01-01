@@ -1,0 +1,32 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../models/user.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/layout.hpp"
+#include "../../../views/style.hpp"
+
+using namespace Crails;
+
+const Cms::Settings& @settings;
+const Cms::Style& style = settings.get_layout().get_style();
+const Cms::User& @model;
+
+FormBuilder<Cms::User>& @form;
+
+// END LINKING
+
+<%= style.form_group() yields %>
+  <%= form.label_for("firstname") %>
+  <%= form.text_field("firstname", &Cms::User::get_firstname) %>
+<% yields-end %>
+
+<%= style.form_group() yields %>
+  <%= form.label_for("lastname") %>
+  <%= form.text_field("lastname", &Cms::User::get_lastname) %>
+<% yields-end %>
+  
+<%= style.form_group(Cms::ClassList("avatar-input")) yields %>
+  <%= form.label_for("avatar") %>
+  <%= form.upload_field("avatar") %>
+  <%= tag("img", {{"src", model.get_avatar_url()}}) %>
+<% yields-end %>

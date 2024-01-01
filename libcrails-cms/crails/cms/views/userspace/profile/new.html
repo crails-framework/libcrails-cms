@@ -1,0 +1,41 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../models/user.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/layout.hpp"
+#include "../../../views/style.hpp"
+
+using namespace Crails;
+
+const Cms::Settings& @settings;
+const Cms::Style& style = settings.get_layout().get_style();
+const Cms::User& @model;
+
+FormBuilder<Cms::User> form = FormBuilder<Cms::User>(this, model);
+
+// END LINKING
+
+<%= form_for(model, "/userspace/profile", {{"enctype","multipart/form-data"}}) yields %>
+  <%= style.form_group() yields %>
+    <%= form.label_for("email") %>
+    <%= form.mail_field("email", &Cms::User::get_email) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("password") %>
+    <%= form.password_field("password", std::string()) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("confirm_password") %>
+    <%= form.password_field("confirm_password", std::string()) %>
+  <% yields-end %>
+
+  <%= partial("userspace/profile/_form", {
+    {"form", &form}
+  }) %>
+
+  <%= tag("button", {{"type","submit"},{"clsss",style.confirm_button_classes()}}) yields %>
+    <%= i18n::t("create") %>
+  <% yields-end %>
+<% yields-end %>

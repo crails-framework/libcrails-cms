@@ -1,0 +1,30 @@
+#include "../../../models/user.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/layout.hpp"
+#include "../../../views/style.hpp"
+
+using namespace Crails;
+
+const Cms::Settings& @settings;
+const Cms::Style& style = settings.get_layout().get_style();
+const Cms::User& @model;
+bool @is_current_user = false;
+bool @show_private_data = is_current_user;
+std::string @edit_path = "";
+
+// END LINKING
+
+<div class="user-profile">
+  <%= tag("img", {{"src", model.get_avatar_url()}}) %>
+  <div class="firstname"><%= model.get_firstname() %></div>
+  <div class="lastname"><%= model.get_lastname() %></div>
+  <% if (show_private_data) do -%>
+    <div class="email"><%= model.get_email() %></div>
+  <% end -%>
+</div>
+
+<% if (is_current_user) do -%>
+  <%= tag("a", {{"href",edit_path},{"class",style.button_classes()}}) yields %>
+    Edit
+  <% yields-end %>
+<% end -%>

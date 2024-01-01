@@ -1,0 +1,26 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include "../../../models/user.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/layout.hpp"
+#include "../../../views/style.hpp"
+
+using namespace Crails;
+
+const Cms::Settings& @settings;
+const Cms::Style& style = settings.get_layout().get_style();
+const Cms::User& @model;
+
+FormBuilder<Cms::User> form = FormBuilder<Cms::User>(this, model);
+
+// END LINKING
+
+<%= form_for(model, "/userspace/profile", {{"enctype","multipart/form-data"}}) yields %>
+  <%= partial("userspace/profile/_form", {
+    {"form", &form}
+  }) %>
+
+  <%= tag("button", {{"type","submit"},{"class",style.confirm_button_classes()}}) yields %>
+    <%= i18n::t("confirm") %>
+  <% yields-end %>
+<% yields-end %>
