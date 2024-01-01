@@ -1,6 +1,8 @@
 #pragma once
 #include "../admin.hpp"
 #include "../../models/settings.hpp"
+#include "../../plugins.hpp"
+#include <crails/server.hpp>
 #include <crails/i18n.hpp>
 
 namespace Crails::Cms
@@ -27,6 +29,7 @@ namespace Crails::Cms
     void render_editor(SETTINGS& model)
     {
       Super::vars["page_options"] = page_options();
+      Super::vars["plugin_options"] = plugin_options();
       Super::render("admin/settings", {
         {"model", reinterpret_cast<const Crails::Cms::Settings*>(&model)}
       });
@@ -38,9 +41,12 @@ namespace Crails::Cms
 
       model->edit(Super::params["setting"]);
       Super::database.save(*model);
-      Super::flash["info"] = "Settings updated";
+      Super::flash["info"] = i18n::t("admin.resource-updated");
       Super::redirect_to("/admin/settings");
+      if (model->should_reload_server())
+        Crails::Server::singleton::require().restart();
     }
+
   protected:
     std::shared_ptr<SETTINGS> require_settings()
     {
@@ -59,6 +65,16 @@ namespace Crails::Cms
       Super::database.find(pages, odb::query<PAGE>(true));
       for (const PAGE& page : pages)
         options.emplace(page.get_id(), page.get_title());
+      return options;
+    }
+
+    std::map<std::string, std::string> plugin_options()
+    {
+      const auto& plugins = Crails::Cms::Plugins::singleton::require();
+      std::map<std::string, std::string> options;
+
+      for (const std::string& name : plugins.get_plugin_names())
+        options.emplace(name, name);
       return options;
     }
   };

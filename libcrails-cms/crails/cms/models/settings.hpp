@@ -9,6 +9,7 @@ namespace Crails::Cms
   #pragma db object abstract
   class Settings : public Crails::Odb::Model
   {
+    friend class odb::access;
   public:
     static const std::string scope;
     static const std::string plural_scope;
@@ -41,6 +42,11 @@ namespace Crails::Cms
     const std::string& get_footer() const { return footer; }
     void set_footer(const std::string& value) { footer = value; }
 
+    std::vector<std::string> get_plugins() const;
+    void set_plugins(const std::vector<std::string>&);
+    void update_plugins(const std::vector<std::string>&);
+    bool should_reload_server() const;
+
   private:
     std::string title;
     std::string default_locale;
@@ -49,6 +55,9 @@ namespace Crails::Cms
     #pragma db value_type("VARCHAR(32)")
     std::string theme;
     std::string footer;
+    std::string plugins;
     Crails::Odb::id_type homepage_id;
+    #pragma db transient
+    bool plugins_updated = false;
   };
 }

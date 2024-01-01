@@ -1,12 +1,70 @@
 #include <crails/getenv.hpp>
+#include <crails/logger.hpp>
 #include "plugins.hpp"
+#include "plugin.hpp"
 #include "dylib.hpp"
+#include <iostream>
 
 using namespace Crails::Cms;
 using namespace std;
 
 namespace Crails::Cms
 {
+  Plugins::Plugins()
+  {
+    std::list<filesystem::path> roots = find_plugin_paths();
+    std::list<filesystem::path> libraries;
+
+    for (const filesystem::path& root : roots)
+      find_plugins_at(root, libraries);
+    for (const filesystem::path& library_path : libraries)
+    {
+      auto plugin = new Plugin(library_path);
+      list.push_back(move(plugin));
+    }
+  }
+
+  Plugins::~Plugins()
+  {
+    for (Plugin* plugin : list)
+      delete plugin;
+  }
+
+  Plugin* Plugins::get_plugin(const string& name) const
+  {
+    std::cout << "Plugins::get_plugin(" << name << ')' << std::endl;
+    for (Plugin* plugin : list)
+    {
+      std::cout << " -> matching with " << plugin << std::endl;
+      std::cout << " -> with name " << plugin->name() << std::endl;
+      if (plugin->name() == name)
+        return plugin;
+    }
+    return nullptr;
+  }
+
+  vector<string> Plugins::get_plugin_names() const
+  {
+    vector<string> names;
+
+    for (const Plugin* plugin : list)
+      names.push_back(plugin->name());
+    return names;
+  }
+
+  void Plugins::initialize(const std::vector<std::string>& names) const
+  {
+    for (const std::string& name : names)
+    {
+      Plugin* plugin = get_plugin(name);
+
+      if (plugin)
+        plugin->initialize();
+      else
+        Crails::logger << Crails::Logger::Error << "Crails::Cms::Plugins: missing plugin " << name << Crails::Logger::endl;
+    }
+  }
+
   void find_plugins_at(const filesystem::path& path, list<filesystem::path>& list)
   {
     string_view suffix(dylib::filename_components::suffix);
@@ -39,4 +97,5 @@ namespace Crails::Cms
 #endif
     return roots;
   }
+
 }
