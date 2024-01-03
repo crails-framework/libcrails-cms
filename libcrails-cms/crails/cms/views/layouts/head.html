@@ -1,0 +1,24 @@
+#include "../../../models/settings.hpp"
+#include "../../../opengraph.hpp"
+#include "../../../plugins.hpp"
+
+const Crails::Cms::Settings& @settings;
+const Crails::Cms::OpenGraph* @open_graph = nullptr;
+const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
+const std::string @rss = "";
+
+// END LINKING
+    
+<% if (open_graph) do -%>
+  <%= open_graph->render() %>
+<% end -%>
+<% if (settings.get_favicon().length()) do -%>
+  <%= tag("link", {{"rel","icon"},{"href",settings.get_favicon()}}) %>
+<% end -%>
+<% if (rss.length()) do -%>    
+  <%= tag("link", {{"rel","alternate"},{"href", rss},{"type","application/rss+xml"}}) %>
+<% end -%>
+<% if (plugins && plugins->has_plugins()) do -%>
+  <%= tag("link", {{"rel","stylesheet"},{"src",Crails::Cms::Plugins::application_css_uri}}) %>
+  <%= tag("script", {{"src",Crails::Cms::Plugins::application_js_uri}}) %>
+<% end -%>

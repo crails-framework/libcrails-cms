@@ -4,14 +4,16 @@
 #include "../../../plugins.hpp"
 #include <crails/icons.hpp>
 
-const Crails::Cms::Style* @style = Crails::Cms::Style::singleton::get();
 const Crails::Cms::Settings& @settings;
+const Crails::Cms::Style* @style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
 
 // END LINKING
 <script>
   function crailscms_on_content_loaded(document) {<%= style->javascript_on_content_loaded() %>}
   document.addEventListener("DOMContentLoaded", function() { crailscms_on_content_loaded(document); });
 </script>
+
 <% if (settings.get_favicon().length()) do -%>
   <%= tag("link", {{"rel", "icon"},{"href", settings.get_favicon()}}) %>
 <% end -%>
@@ -19,9 +21,12 @@ const Crails::Cms::Settings& @settings;
 <% for (const std::string& stylesheet : style->admin_stylesheets()) do -%>
   <%= tag("link", {{"rel", "stylesheet"},{"href", stylesheet}}) %>
 <% end -%>
+
 <%= Crails::fonticon_cdn_header() %>
 
 <%= tag("script", {{"src", CrailsCmsAssets::admin_js}}) %>
 
-<%= tag("link", {{"rel", "stylesheet"},{"src", Crails::Cms::Plugins::admin_css_uri}}) %>
-<%= tag("script", {{"src", Crails::Cms::Plugins::admin_js_uri}}) %>
+<% if (plugins && plugins->has_plugins()) do -%>
+  <%= tag("link", {{"rel", "stylesheet"},{"src", Crails::Cms::Plugins::admin_css_uri}}) %>
+  <%= tag("script", {{"src", Crails::Cms::Plugins::admin_js_uri}}) %>
+<% end -%>

@@ -75,6 +75,7 @@ namespace Crails::Cms
           stylesheet += plugin->stylesheet();
           admin_javascript += plugin->admin_javascript();
           admin_stylesheet += plugin->admin_stylesheet();
+          plugin_count++;
         }
         catch (const std::exception& err)
         {

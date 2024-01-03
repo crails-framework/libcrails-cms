@@ -20,6 +20,7 @@ namespace Crails::Cms
     std::string javascript, admin_javascript;
     std::string stylesheet, admin_stylesheet;
     BuiltinAssets assets;
+    int plugin_count = 0;
   public:
     static const char* application_js_uri;
     static const char* application_css_uri;
@@ -33,6 +34,7 @@ namespace Crails::Cms
     Plugin* get_plugin(const std::string&) const;
     std::vector<std::string> get_plugin_names() const;
     void initialize(const std::vector<std::string>&);
+    bool has_plugins() const { return plugin_count > 0; }
   };
 }
 
