@@ -59,7 +59,16 @@ namespace Crails::Cms
       Plugin* plugin = get_plugin(name);
 
       if (plugin)
-        plugin->initialize();
+      {
+        try
+        {
+          plugin->initialize();
+        }
+        catch (const std::exception& err)
+        {
+          Crails::logger << Crails::Logger::Error << "Crails::Cms::Plugins: failed to initialize plugin " << name << ": " << err.what() << Crails::Logger::endl;
+        }
+      }
       else
         Crails::logger << Crails::Logger::Error << "Crails::Cms::Plugins: missing plugin " << name << Crails::Logger::endl;
     }
