@@ -1,5 +1,6 @@
 #include "../../../models/settings.hpp"
 #include "../../../models/blog/post.hpp"
+#include "../../../local_route.hpp"
 
 const Crails::Cms::Settings& @settings;
 const std::vector<std::unique_ptr<Crails::Cms::BlogPost>>& @models;
