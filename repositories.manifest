@@ -26,6 +26,14 @@ location: https://github.com/crails-framework/libcrails-html-views.git#master
 
 :
 role: prerequisite
+location: https://github.com/crails-framework/libcrails-rss-views.git#master
+
+:
+role: prerequisite
+location: https://github.com/crails-framework/libcrails-json-views.git#master
+
+:
+role: prerequisite
 location: https://github.com/crails-framework/libcrails-fonticons.git#master
 
 :

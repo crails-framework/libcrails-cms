@@ -8,7 +8,10 @@ url: https://github.com/crails-framework/libcrails-cms.git
 email: michael@unetresgrossebite.com
 depends: * build2 >= 0.15.0
 depends: * bpkg >= 0.15.0
-depends: { libcrails libcrails-design-patterns libcrails-controllers libcrails-renderer libcrails-html-views libcrails-i18n libcrails-semantics libcrails-logger } ^2.0.0
+depends: { libcrails libcrails-design-patterns libcrails-controllers libcrails-renderer libcrails-i18n libcrails-semantics libcrails-logger } ^2.0.0
+depends: libcrails-html-views ^2.0.0
+depends: libcrails-rss-views ^2.0.0
+depends: libcrails-json-views ^2.0.0
 depends: libcrails-http-client ^2.0.0
 depends: libcrails-fonticons ^2.0.0
 depends: libcrails-odb ^2.0.0

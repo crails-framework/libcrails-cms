@@ -12,6 +12,15 @@ crails templates build \
   -v
 
 crails templates build \
+  -r rss \
+  -i views \
+  -t Crails::RssTemplate \
+  -z crails/rss_template.hpp \
+  -n CrailsCmsRssRenderer \
+  -p \.rss$ \
+  -v
+
+crails templates build \
   -r json \
   -i views \
   -t Crails::JsonTemplate \
