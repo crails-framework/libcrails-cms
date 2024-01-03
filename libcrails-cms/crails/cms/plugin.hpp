@@ -30,6 +30,11 @@ namespace Crails::Cms
     void uninstall();
     void initialize();
 
+    std::string javascript() const;
+    std::string stylesheet() const;
+    std::string admin_javascript() const;
+    std::string admin_stylesheet() const;
+
   private:
     void load();
     void unload();

@@ -1,6 +1,7 @@
 #include "../../../models/settings.hpp"
 #include "../../../lib/assets.hpp"
 #include "../../../views/style.hpp"
+#include "../../../plugins.hpp"
 #include <crails/icons.hpp>
 
 const Crails::Cms::Style* @style = Crails::Cms::Style::singleton::get();
@@ -21,3 +22,6 @@ const Crails::Cms::Settings& @settings;
 <%= Crails::fonticon_cdn_header() %>
 
 <%= tag("script", {{"src", CrailsCmsAssets::admin_js}}) %>
+
+<%= tag("link", {{"rel", "stylesheet"},{"src", Crails::Cms::Plugins::admin_css_uri}}) %>
+<%= tag("script", {{"src", Crails::Cms::Plugins::admin_js_uri}}) %>

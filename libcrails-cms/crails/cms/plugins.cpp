@@ -10,7 +10,12 @@ using namespace std;
 
 namespace Crails::Cms
 {
-  Plugins::Plugins()
+  const char* Plugins::application_js_uri  = "/cms/plugins/application.js";
+  const char* Plugins::application_css_uri = "/cms/plugins/application.css";
+  const char* Plugins::admin_js_uri        = "/cms/plugins/admin.js";
+  const char* Plugins::admin_css_uri       = "/cms/plugins/admin.css";
+
+  Plugins::Plugins() : assets("/cms/plugins/", "")
   {
     std::list<filesystem::path> roots = find_plugin_paths();
     std::list<filesystem::path> libraries;
@@ -52,8 +57,11 @@ namespace Crails::Cms
     return names;
   }
 
-  void Plugins::initialize(const std::vector<std::string>& names) const
+  void Plugins::initialize(const std::vector<std::string>& names)
   {
+    std::string javascript, admin_javascript;
+    std::string stylesheet, admin_stylesheet;
+
     for (const std::string& name : names)
     {
       Plugin* plugin = get_plugin(name);
@@ -63,6 +71,10 @@ namespace Crails::Cms
         try
         {
           plugin->initialize();
+          javascript += plugin->javascript();
+          stylesheet += plugin->stylesheet();
+          admin_javascript += plugin->admin_javascript();
+          admin_stylesheet += plugin->admin_stylesheet();
         }
         catch (const std::exception& err)
         {
@@ -72,6 +84,10 @@ namespace Crails::Cms
       else
         Crails::logger << Crails::Logger::Error << "Crails::Cms::Plugins: missing plugin " << name << Crails::Logger::endl;
     }
+    assets.add("application.js", javascript.c_str(), javascript.length());
+    assets.add("application.css", stylesheet.c_str(), javascript.length());
+    assets.add("admin.js", admin_javascript.c_str(), javascript.length());
+    assets.add("admin.css", admin_stylesheet.c_str(), javascript.length());
   }
 
   void find_plugins_at(const filesystem::path& path, list<filesystem::path>& list)
@@ -106,5 +122,4 @@ namespace Crails::Cms
 #endif
     return roots;
   }
-
 }
