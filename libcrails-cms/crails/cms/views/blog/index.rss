@@ -1,0 +1,36 @@
+#include "../../../models/settings.hpp"
+#include "../../../models/blog/post.hpp"
+
+const Crails::Cms::Settings& @settings;
+const std::vector<std::unique_ptr<Crails::Cms::BlogPost>>& @models;
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+
+// END LINKING
+<%= xml_header("UTF-8") %>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <%= title(settings.get_title()) %>
+    <%= link("http://" + settings.get_public_url() + route()) %>
+    <atom:link href="http://<%= settings.get_public_url() + route() %>" rel="self" type="application/rss+xml" />
+    <description>
+    </description>
+
+    <% if (models.size() > 0) do -%>
+      <%= last_build_date((*models.begin())->get_updated_at()) %>
+      <% for (const auto& model : models) do -%>
+        <item>
+          <%= guid(model->get_slug()) %>
+          <%= title(model->get_title()) %>
+          <%= publication_date(model->get_publication_at()) %>
+          <%= link("http://" + settings.get_public_url() + route.make(model->get_slug())) %>
+          <%= description() yields %>
+            <% if (model->get_thumbnail_url().length()) do -%>
+              <img src="http://<%= settings.get_public_url() + model->get_thumbnail_url() %>" />
+            <% end -%>
+            <p><%= model->get_description() %></p>
+          <% yields-end %>
+        </item>
+      <% end -%>
+    <% end -%>
+  </channel>
+</rss>
