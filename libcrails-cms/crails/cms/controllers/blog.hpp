@@ -17,6 +17,8 @@ namespace Crails::Cms
     {
       paginator.set_default_items_per_page(10);
     }
+ 
+    virtual std::string get_view_scope() const { return "blog"; }
 
     void index()
     {
@@ -34,9 +36,10 @@ namespace Crails::Cms
       Super::database.template find<IndexPost>(posts, query);
       for (const auto& post : posts)
         models.push_back(make_unique<Post>(post.to_post()));
-      Super::render("blog/index", {{
+      Super::render(get_view_scope() + "/index", {{
         {"posts", &models},
-        {"tag",   Super::params["tag"].template defaults_to<string>("")}
+        {"tag",   Super::params["tag"].template defaults_to<string>("")},
+        {"rss",   Super::params["uri"]}
       }});
     }
 
@@ -52,7 +55,9 @@ namespace Crails::Cms
       if (model)
       {
         Super::prepare_open_graph(*model);
-        Super::render("blog/show", {{"model", reinterpret_cast<Crails::Cms::BlogPost*>(model.get())}});
+        Super::render(get_view_scope() + "/show", {
+          {"model", reinterpret_cast<const Crails::Cms::BlogPost*>(model.get())}
+        });
       }
       else
         Super::respond_with(Crails::HttpStatus::not_found);
@@ -69,10 +74,10 @@ namespace Crails::Cms
     {
       Post model;
 
-      model.edit(Super::params[Crails::Cms::BlogPost::scope]);
+      model.edit(Super::params[Post::scope]);
       Super::prepare_open_graph(model);
       Super::vars["preview"] = true;
-      Super::render("blog/show", {
+      Super::render(get_view_scope() + "/show", {
         {"model", reinterpret_cast<Crails::Cms::BlogPost*>(&model)}
       });
     }

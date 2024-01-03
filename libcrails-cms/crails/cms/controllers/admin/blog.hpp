@@ -58,7 +58,7 @@ namespace Crails::Cms
 
     void update()
     {
-      std::shared_ptr<Post> model = require_post();
+      std::shared_ptr<Post> model = Super::require_resource();
 
       if (model)
       {
