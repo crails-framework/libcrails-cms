@@ -33,17 +33,6 @@ void Crails::Cms::Controller::initialize()
   vars["render_footer"] = true;
 }
 
-void Crails::Cms::Controller::prepare_open_graph()
-{
-  vars["open_graph"] = const_cast<const Crails::Cms::OpenGraph*>(&open_graph);
-  if (settings)
-  {
-    open_graph.site_name = settings->get_title();
-    open_graph.url = settings->get_public_url();
-    open_graph.locales.push_back(settings->get_default_locale());
-  }
-}
-
 static std::string find_scheme(const Crails::HttpRequest& request)
 {
   Crails::HttpRequest::const_iterator header;
@@ -58,6 +47,17 @@ static std::string find_scheme(const Crails::HttpRequest& request)
       return header->value() == "on" ? "https" : "http";
   }
   return "http";
+}
+
+void Crails::Cms::Controller::prepare_open_graph()
+{
+  vars["open_graph"] = const_cast<const Crails::Cms::OpenGraph*>(&open_graph);
+  if (settings)
+  {
+    open_graph.site_name = settings->get_title();
+    open_graph.url = settings->get_public_url();
+    open_graph.locales.push_back(settings->get_default_locale());
+  }
 }
 
 void Crails::Cms::Controller::prepare_open_graph(const Crails::Cms::Editable& editable)

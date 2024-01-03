@@ -11,6 +11,12 @@ static string type_to_string(OpenGraph::Type type)
   {
   case OpenGraph::ArticleType:
     return "article";
+  case OpenGraph::VideoMovieType:
+    return "video.movie";
+  case OpenGraph::VideoEpisodeType:
+    return "video.episode";
+  case OpenGraph::SongType:
+    return "music.song";
   default:
     break ;
   }

@@ -14,7 +14,8 @@ namespace Crails::Cms
       WebsiteType,
       ArticleType,
       VideoMovieType,
-      VideoEpisodeType
+      VideoEpisodeType,
+      SongType
     };
 
     Type        type = WebsiteType;

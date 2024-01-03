@@ -1,6 +1,7 @@
 #pragma once
 #include "../userspace.hpp"
 #include <crails/params.hpp>
+#include <crails/image.hpp>
 
 namespace Crails::Cms::Userspace
 {

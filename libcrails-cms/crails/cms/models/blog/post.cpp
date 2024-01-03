@@ -15,7 +15,6 @@ const std::string Crails::Cms::BlogPost::view = "blog/post/show";
 void Crails::Cms::BlogPost::edit(Data params)
 {
   Editable::edit(params);
-  params.output();
   if (params["tags"].exists())
     set_tags(params["tags"].to_vector<std::string>());
 }
