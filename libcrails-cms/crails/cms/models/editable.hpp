@@ -31,6 +31,7 @@ private:
     #pragma db value_type("VARCHAR(255)")
     std::string description;
     std::string thumbnail;
+    #pragma db transient
     bool preview = false;
   };
 }
