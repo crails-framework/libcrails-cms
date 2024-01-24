@@ -19,7 +19,7 @@ namespace Crails::Cms
     void index()
     {
       odb::result<IndexModel> models;
-      std::vector<std::shared_ptr<BASE_MODEL>> pages;
+      std::vector<std::shared_ptr<BASE_MODEL>> list;
       odb::query<Model> query(make_index_query());
 
       Super::paginator.decorate_view(Super::vars, [this, query]()
@@ -29,9 +29,9 @@ namespace Crails::Cms
       Super::paginator.decorate_query(query);
       Super::database.template find<IndexModel>(models, query);
       for (IndexModel& model : models)
-        pages.push_back(std::make_shared<Model>(model));
+        list.push_back(std::make_shared<Model>(model));
       Super::render("admin/" + get_view_scope() + "/index", {
-        {"models", &pages}
+        {"models", &list}
       });
     }
 
@@ -53,8 +53,9 @@ namespace Crails::Cms
     void create()
     {
       Model model;
+      Data attributes = Super::params[BASE_MODEL::scope];
 
-      if (edit_resource(model, Super::params[BASE_MODEL::scope]))
+      if (initialize_resource(model, attributes) && edit_resource(model, attributes))
       {
         Super::database.save(model);
         Super::flash["info"] = i18n::t("admin.flash.resource-created");
@@ -140,6 +141,11 @@ namespace Crails::Cms
       if (!model)
         Super::respond_with(Crails::HttpStatus::not_found);
       return model;
+    }
+
+    virtual bool initialize_resource(Model& model, Data data)
+    {
+      return true;
     }
 
     virtual bool edit_resource(Model& model, Data data)
