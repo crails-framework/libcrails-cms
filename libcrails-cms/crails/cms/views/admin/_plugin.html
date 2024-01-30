@@ -1,0 +1,30 @@
+#include "../../../plugins.hpp"
+#include "../../../models/settings.hpp"
+
+std::string @plugin_name;
+const Crails::Cms::Settings& @model;
+const Crails::Cms::Plugins& plugins = Crails::Cms::Plugins::singleton::require();
+const Crails::Cms::Plugin* plugin = plugins.get_plugin(plugin_name);
+
+// END LINKING
+<% if (plugin) do -%>
+  <%= boolean_field(plugin_name + "-input", model.has_plugin(plugin_name), {
+    {"style", "display:none"},
+    {"data-plugin", plugin_name}
+  }) %>
+  <div>
+    <div class="text-block">
+      <h4><%= plugin_name %></h4>
+
+      <div class="description">
+        <%= plugin->description() %>
+      </div>
+    </div>
+
+    <div class="image-block">
+      <%= tag("img", {{"src", plugin->base64_logo()}}) %>
+    </div>
+  </div>
+<% end else do -%>
+  <!-- plugin <%= plugin_name %> not found -->
+<% end -%>

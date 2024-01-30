@@ -6,6 +6,7 @@ import ProudCmsDialog from "./admin/dialog.js";
 import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
+import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
 window.createUppyUpdater = createUppyUpdater;

@@ -1,5 +1,6 @@
 #include <crails/getenv.hpp>
 #include <crails/logger.hpp>
+#include <crails/utils/split.hpp>
 #include "plugins.hpp"
 #include "plugin.hpp"
 #include "dylib.hpp"
@@ -14,8 +15,9 @@ namespace Crails::Cms
   const char* Plugins::application_css_uri = "/cms/plugins/application.css";
   const char* Plugins::admin_js_uri        = "/cms/plugins/admin.js";
   const char* Plugins::admin_css_uri       = "/cms/plugins/admin.css";
+  static const std::string_view assets_path = "/cms/plugins/";
 
-  Plugins::Plugins() : assets("/cms/plugins/", "")
+  Plugins::Plugins() : assets(assets_path, std::string_view())
   {
     std::list<filesystem::path> roots = find_plugin_paths();
     std::list<filesystem::path> libraries;
@@ -59,9 +61,6 @@ namespace Crails::Cms
 
   void Plugins::initialize(const std::vector<std::string>& names)
   {
-    std::string javascript, admin_javascript;
-    std::string stylesheet, admin_stylesheet;
-
     for (const std::string& name : names)
     {
       Plugin* plugin = get_plugin(name);
@@ -85,10 +84,11 @@ namespace Crails::Cms
       else
         Crails::logger << Crails::Logger::Error << "Crails::Cms::Plugins: missing plugin " << name << Crails::Logger::endl;
     }
+    std::cout << "/cms/plugins/admin.js: length=" << admin_javascript.length() << std::endl << std::string_view(admin_javascript.c_str(), admin_javascript.length()) << std::endl << std::endl;
     assets.add("application.js", javascript.c_str(), javascript.length());
     assets.add("application.css", stylesheet.c_str(), javascript.length());
-    assets.add("admin.js", admin_javascript.c_str(), javascript.length());
-    assets.add("admin.css", admin_stylesheet.c_str(), javascript.length());
+    assets.add("admin.js", admin_javascript.c_str(), admin_javascript.length());
+    assets.add("admin.css", admin_stylesheet.c_str(), admin_javascript.length());
   }
 
   void find_plugins_at(const filesystem::path& path, list<filesystem::path>& list)
@@ -112,10 +112,11 @@ namespace Crails::Cms
   list<filesystem::path> find_plugin_paths()
   {
     list<filesystem::path> roots;
-    string custom_path = Crails::getenv("CRAILS_CMS_PLUGIN_PATH");
+    string environment_path = Crails::getenv("CRAILS_CMS_PLUGIN_PATH");
+    list<string> custom_path_list = Crails::split(environment_path, ':');
 
     roots.push_back(".");
-    if (custom_path.length())
+    for (const string& custom_path : custom_path_list)
       roots.push_back(custom_path);
 #if !(defined(_WIN32) || defined(_WIN64))
     roots.push_back("/usr/lib/libcrails-cms");

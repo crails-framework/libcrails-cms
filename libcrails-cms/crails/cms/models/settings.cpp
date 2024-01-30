@@ -24,6 +24,8 @@ void Crails::Cms::Settings::edit(Data params)
     set_footer(params["footer"]);
   if (params["plugins"].exists())
     update_plugins(params["plugins"].to_vector<std::string>());
+  else if (params["with_plugins"].exists())
+    update_plugins({});
 }
 
 void Crails::Cms::Settings::merge_data(Data out) const
@@ -49,6 +51,11 @@ const Crails::Cms::Layout& Crails::Cms::Settings::get_layout() const
   return Crails::Cms::Layout::get(theme);
 }
 
+const Crails::Cms::Style& Crails::Cms::Settings::get_style() const
+{
+  return get_layout().get_style();
+}
+
 std::vector<std::string> Crails::Cms::Settings::get_plugins() const
 {
   return Crails::split<std::string, std::vector<std::string>>(plugins, ';');
@@ -63,6 +70,12 @@ void Crails::Cms::Settings::set_plugins(const std::vector<std::string>& value)
       plugins += ';';
     plugins += plugin;
   }
+}
+
+bool Crails::Cms::Settings::has_plugin(const std::string& plugin_name) const
+{
+  auto plugin_list = get_plugins();
+  return std::find(plugin_list.begin(), plugin_list.end(), plugin_name) != plugin_list.end();
 }
 
 void Crails::Cms::Settings::update_plugins(const std::vector<std::string>& new_plugin_names)

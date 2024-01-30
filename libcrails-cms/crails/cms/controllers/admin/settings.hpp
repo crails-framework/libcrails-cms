@@ -26,10 +26,24 @@ namespace Crails::Cms
         render_editor(*model);
     }
 
+    void show_plugins()
+    {
+      std::shared_ptr<SETTINGS> model = require_settings();
+
+      if (model)
+      {
+        Super::vars["page_title"] = i18n::t("admin.menu.plugins");
+        Super::vars["page_subtitle"] = i18n::t("admin.plugins-subtitle");
+        Super::vars["plugin_options"] = plugin_options();
+        Super::render("admin/plugins", {
+          {"model", reinterpret_cast<const Crails::Cms::Settings*>(model.get())}
+        });
+      }
+    }
+
     void render_editor(SETTINGS& model)
     {
       Super::vars["page_options"] = page_options();
-      Super::vars["plugin_options"] = plugin_options();
       Super::render("admin/settings", {
         {"model", reinterpret_cast<const Crails::Cms::Settings*>(&model)}
       });

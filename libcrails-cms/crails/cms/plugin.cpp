@@ -2,13 +2,14 @@
 #include "models/settings.hpp"
 #include "dylib.hpp"
 #include <crails/odb/connection.hpp>
-#include <string_view>
+#include <crails/read_file.hpp>
+#include <crails/utils/base64.hpp>
 
 using namespace Crails::Cms;
 using namespace std;
 
-typedef void        (PluginFunction)(void);
-typedef const char* (PluginAssetGetter)(void);
+typedef void             (PluginFunction)(void);
+typedef std::string_view (PluginAssetGetter)(void);
 
 static void run_plugin_function(const dylib* library, const char* function_name)
 {
@@ -21,7 +22,7 @@ static void run_plugin_function(const dylib* library, const char* function_name)
   }
 }
 
-static const char* get_plugin_asset(const dylib* library, const char* function_name)
+static std::string_view get_plugin_asset(const dylib* library, const char* function_name)
 {
   if (library && library->has_symbol(function_name))
   {
@@ -30,7 +31,7 @@ static const char* get_plugin_asset(const dylib* library, const char* function_n
     function = library->get_function<PluginAssetGetter>(function_name);
     return (*function)();
   }
-  return nullptr;
+  return std::string_view();
 }
 
 Plugin::Plugin(const filesystem::path& path) : filepath(path)
@@ -41,6 +42,27 @@ Plugin::~Plugin()
 {
   const std::lock_guard<std::mutex> lock(mutex_);
   unload();
+}
+
+string Plugin::description() const
+{
+  string filename = name() + ".description.json";
+  filesystem::path description_path = filepath.parent_path() / filename;
+  string result;
+
+  Crails::read_file(description_path, result);
+  return result;
+}
+
+string Plugin::base64_logo() const
+{
+  string filename = name() + ".description.png";
+  filesystem::path description_path = filepath.parent_path() / filename;
+  string result;
+
+  if (Crails::read_file(description_path, result))
+    return "data:image/png;base64," + Crails::base64_encode(result);
+  return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 }
 
 void Plugin::load()
@@ -84,22 +106,22 @@ void Plugin::uninstall()
   run_plugin_function(library, "uninstall");
 }
 
-std::string Plugin::javascript() const
+std::string_view Plugin::javascript() const
 {
   return get_plugin_asset(library, "plugin_javascript");
 }
 
-std::string Plugin::stylesheet() const
+std::string_view Plugin::stylesheet() const
 {
   return get_plugin_asset(library, "plugin_stylesheet");
 }
 
-std::string Plugin::admin_javascript() const
+std::string_view Plugin::admin_javascript() const
 {
   return get_plugin_asset(library, "plugin_admin_javascript");
 }
 
-std::string Plugin::admin_stylesheet() const
+std::string_view Plugin::admin_stylesheet() const
 {
   return get_plugin_asset(library, "plugin_admin_stylesheet");
 }

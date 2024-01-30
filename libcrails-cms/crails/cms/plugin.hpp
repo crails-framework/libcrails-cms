@@ -3,6 +3,7 @@
 
 # include <filesystem>
 # include <mutex>
+# include <string_view>
 # include <crails/utils/backtrace.hpp>
 
 class dylib;
@@ -26,14 +27,16 @@ namespace Crails::Cms
     ~Plugin();
 
     std::string name() const { return filepath.stem(); }
+    std::string description() const;
+    std::string base64_logo() const;
     void install();
     void uninstall();
     void initialize();
 
-    std::string javascript() const;
-    std::string stylesheet() const;
-    std::string admin_javascript() const;
-    std::string admin_stylesheet() const;
+    std::string_view javascript() const;
+    std::string_view stylesheet() const;
+    std::string_view admin_javascript() const;
+    std::string_view admin_stylesheet() const;
 
   private:
     void load();

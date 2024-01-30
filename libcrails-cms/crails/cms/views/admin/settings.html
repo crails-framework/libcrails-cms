@@ -1,16 +1,18 @@
 #include <crails/i18n.hpp>
 #include <crails/html_form_builder.hpp>
+#include <crails/icons.hpp>
 #include "../../../routes.hpp"
 #include "../../../models/settings.hpp"
 #include "../../../views/style.hpp"
 #include "../../../views/layout.hpp"
+#include "../../../plugins.hpp"
 
 const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
 const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
 const Crails::Cms::Settings& @model;
 Crails::FormBuilder<Crails::Cms::Settings> form = Crails::FormBuilder<Crails::Cms::Settings>(this, model);
 std::map<Crails::Odb::id_type, std::string> @page_options;
-std::map<std::string, std::string> @plugin_options;
 const Crails::Cms::Layout& proudcms_layout = model.get_layout();
 
 using namespace Crails::Cms;
@@ -42,6 +44,16 @@ using namespace Crails::Cms;
           &Crails::Cms::Settings::get_theme) %>
   <% yields-end -%>
 
+  <% if (plugins && plugins->has_available_plugins()) do -%>
+    <%= style.form_group() yields %>
+      <%= form.label_for("plugins") %>
+      <%= tag("a", {{"href", route.make("plugins")}, {"style", style.button_classes()}}) yields %>
+        <%= Crails::fonticon_tag(Crails::FontIcon::Plugin) %>
+        <%= i18n::t("admin.plugins-edit") %>
+      <% yields-end %>
+    <% yields-end -%>
+  <% end -%>
+
   <%= style.form_group() yields %>
     <%= form.label_for("homepage") %>
     <%= form.select_field("homepage", page_options, &Crails::Cms::Settings::get_homepage_id) %>
@@ -51,13 +63,6 @@ using namespace Crails::Cms;
     <%= form.label_for("public_url") %>
     <%= form.text_field("public_url", &Crails::Cms::Settings::get_public_url) %>
   <% yields-end %>
-
-  <% if (plugin_options.size() > 0) do -%>
-    <%= style.form_group() yields %>
-      <%= form.label_for("plugins") %>
-      <%= form.select_field<std::string>("plugins", plugin_options, model.get_plugins()) %>
-    <% yields-end %>
-  <% end -%>
 
   <% if (proudcms_layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
     <%= style.form_group() yields %>

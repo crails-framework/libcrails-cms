@@ -1,0 +1,27 @@
+#cms-plugins-view {
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 1em 0;
+  }
+
+  li {
+    > div {
+      position: relative;
+      padding: 0.5em 1em;
+      h4 {
+        padding: 0;
+        margin: 0;
+        text-transform: capitalize;
+      }
+    }
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    input[type="checkbox"]:checked ~ div {
+      background-color: lightgreen;
+    }
+  }
+}

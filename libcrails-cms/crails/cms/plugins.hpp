@@ -30,11 +30,12 @@ namespace Crails::Cms
     Plugins();
     virtual ~Plugins();
 
-    const BuiltinAssets get_assets() const { return assets; }
+    const BuiltinAssets& get_assets() const { return assets; }
     Plugin* get_plugin(const std::string&) const;
     std::vector<std::string> get_plugin_names() const;
     void initialize(const std::vector<std::string>&);
     bool has_plugins() const { return plugin_count > 0; }
+    bool has_available_plugins() const { return list.size() > 0; }
   };
 }
 

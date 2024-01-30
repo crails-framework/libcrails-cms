@@ -5,6 +5,7 @@
 namespace Crails::Cms
 {
   class Layout;
+  class Style;
 
   #pragma db object abstract
   class Settings : public Crails::Odb::Model
@@ -38,12 +39,14 @@ namespace Crails::Cms
     void set_theme(const std::string& value) { theme = value; }
 
     const Layout& get_layout() const;
+    const Style& get_style() const;
 
     const std::string& get_footer() const { return footer; }
     void set_footer(const std::string& value) { footer = value; }
 
     std::vector<std::string> get_plugins() const;
     void set_plugins(const std::vector<std::string>&);
+    bool has_plugin(const std::string&) const;
     void update_plugins(const std::vector<std::string>&);
     bool should_reload_server() const;
 
