@@ -2,6 +2,7 @@
 #include "../../../models/blog/post.hpp"
 #include "../../../local_route.hpp"
 #include "../../../views/layout.hpp"
+#include "../../../time.hpp"
 #include <crails/i18n.hpp>
 
 const Crails::Cms::Settings& @settings;
@@ -18,6 +19,9 @@ std::string theme_overload = settings.get_layout().get_name() + "/blog/index" + 
     <% for (const auto& model : models) do -%>
       <li>
         <h2><%= html_escape(model->get_title()) %></h2>
+        <div class="article-date">
+          <%= time_to_string(model->get_publication_at(), i18n::t("short-date-format")) %>
+        </div>
         <div class="article-description">
           <%= html_escape(model->get_description()) %>
         </div>
@@ -27,5 +31,8 @@ std::string theme_overload = settings.get_layout().get_name() + "/blog/index" + 
       </li>
     <% end -%>
   </ul>
-<% end -%>
 
+  <% if (!is_injected) do -%>
+    <%= partial("paginator") %>
+  <% end -%>
+<% end -%>
