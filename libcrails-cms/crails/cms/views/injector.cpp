@@ -41,9 +41,31 @@ static Crails::SharedVars import_injection_variables(string_view element, Crails
   return vars;
 }
 
+struct InjectionLock
+{
+  InjectionLock()
+  {
+    already_locked = injecting;
+    injecting = true;
+  }
+
+  ~InjectionLock()
+  {
+    if (!already_locked)
+      injecting = false;
+  }
+
+  static thread_local bool injecting;
+  bool already_locked = false;
+};
+
+thread_local bool InjectionLock::injecting = false;
+
 string Injector::inject(string content, Crails::SharedVars vars) const
 {
+  InjectionLock lock;
   int index;
+  unsigned short injection_count = 0;
 
   while ((index = content.find("<inject")) >= 0)
   {
@@ -53,11 +75,20 @@ string Injector::inject(string content, Crails::SharedVars vars) const
     string name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
     string injectable_content;
 
-    vars = import_injection_variables(element, vars);
-    injectable_content = generate_injection(name, vars);
-    cout << "generate injection " << name << ' ' << std::any_cast<std::string>(vars.at("id")) << endl;
+    if (!lock.already_locked)
+    {
+      vars = import_injection_variables(element, vars);
+      injectable_content = generate_injection(name, vars);
+    }
+    else
+    {
+      injectable_content = "<!-- nested injections are not allowed --!>";
+    }
     content = content.substr(0, index) + injectable_content + content.substr(end);
-    break ;
+    if (injection_count++ > 150)
+    {
+      throw boost_ext::runtime_error("max injection count reached");
+    }
   }
   return content;
 }
