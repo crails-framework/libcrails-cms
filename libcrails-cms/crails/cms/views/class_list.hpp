@@ -10,10 +10,11 @@ namespace Crails::Cms
   public:
     ClassList() {}
     ClassList(const ClassList& copy) : std::set<std::string>(copy) {}
-    ClassList(const std::string value) : std::set<std::string>{value} {}
+    ClassList(const std::string& value) : std::set<std::string>{value} {}
     ClassList(std::initializer_list<std::string> init) : std::set<std::string>(init) {}
 
     std::string to_string() const;
+    std::string css_selector() const;
 
     ClassList operator+(const char* str) const { return operator+(std::string(str)); }
     ClassList operator+(const std::string&) const;

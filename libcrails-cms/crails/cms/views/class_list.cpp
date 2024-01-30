@@ -15,6 +15,11 @@ string ClassList::to_string() const
   return Crails::join(begin(), end(), ' ');
 }
 
+string ClassList::css_selector() const
+{
+  return '.' + Crails::join(begin(), end(), '.');
+}
+
 ClassList ClassList::operator+(const string& classname) const
 {
   ClassList result(*this);
