@@ -26,12 +26,14 @@ namespace Crails::Cms
     {
       using namespace std;
       typedef vector<unique_ptr<Crails::Cms::BlogPost>> PostList;
+      DataTree params;
+      params.from_map(map<string,string>{
+        {"page", "1"},
+        {"count", Crails::defaults_to<string>(vars, "count", "3")}
+      });
       Crails::Odb::Connection database;
       const Crails::Renderer* renderer;
-      Crails::Paginator paginator(DataTree().from_map(map<string,string>{
-        {"page", "1"},
-        {"items_per_page", Crails::defaults_to<std::string>(vars, "count", "3")}
-      }));
+      Crails::Paginator paginator(params);
       odb::result<IndexPost> posts;
       PostList models;
       DataTree params;
@@ -46,6 +48,7 @@ namespace Crails::Cms
         view_vars.erase("layout");
         view_vars["is_injected"] = true;
         view_vars["local_route"] = "/blog";
+        paginator.decorate_query(query);
         database.find<IndexPost>(posts, query);
         for (const auto& post : posts)
           models.push_back(make_unique<Post>(post.to_post()));
