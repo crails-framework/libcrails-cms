@@ -2,6 +2,8 @@
 #include <crails/odb/controller.hpp>
 #include <crails/odb/to_vector.hpp>
 #include <crails/paginator.hpp>
+#include <crails/renderer.hpp>
+#include <crails/any_cast.hpp>
 #include "../models/blog/post.hpp"
 
 namespace Crails::Cms
@@ -10,7 +12,7 @@ namespace Crails::Cms
   class BlogController : public Crails::Odb::Controller<SUPER>
   {
     typedef Crails::Odb::Controller<SUPER> Super;
-    typedef typename TRAITS::PostModel Post;
+    typedef typename TRAITS::Model Post;
     typedef typename TRAITS::IndexModel IndexPost;
   public:
     BlogController(Crails::Context& context) : Super(context), paginator(Super::params)
@@ -19,6 +21,40 @@ namespace Crails::Cms
     }
  
     virtual std::string get_view_scope() const { return "blog"; }
+
+    static std::string injectable_index(const Crails::SharedVars& vars)
+    {
+      using namespace std;
+      typedef vector<unique_ptr<Crails::Cms::BlogPost>> PostList;
+      Crails::Odb::Connection database;
+      const Crails::Renderer* renderer;
+      Crails::Paginator paginator(DataTree().from_map(map<string,string>{
+        {"page", "1"},
+        {"items_per_page", Crails::defaults_to<std::string>(vars, "count", "3")}
+      }));
+      odb::result<IndexPost> posts;
+      PostList models;
+      DataTree params;
+      auto query = Post::template make_index_query<odb::query<Post>>(params.as_data());
+      renderer = Crails::Renderer::pick_renderer("blog/index", "text/html");
+
+      if (renderer)
+      {
+        Crails::RenderString output;
+        Crails::SharedVars view_vars(vars);
+
+        view_vars.erase("layout");
+        view_vars["is_injected"] = true;
+        view_vars["local_route"] = "/blog";
+        database.find<IndexPost>(posts, query);
+        for (const auto& post : posts)
+          models.push_back(make_unique<Post>(post.to_post()));
+        view_vars["models"] = const_cast<const PostList*>(&models);
+        renderer->render_template("blog/index", output, view_vars);
+        return string(output.value());
+      }
+      return string();
+    }
 
     void index()
     {
@@ -37,9 +73,9 @@ namespace Crails::Cms
       for (const auto& post : posts)
         models.push_back(make_unique<Post>(post.to_post()));
       Super::render(get_view_scope() + "/index", {{
-        {"posts", &models},
+        {"models", const_cast<const vector<unique_ptr<Crails::Cms::BlogPost>>*>(&models)},
         {"tag",   Super::params["tag"].template defaults_to<string>("")},
-        {"rss",   Super::params["uri"]}
+        {"rss",   Super::params["uri"].template as<string>()}
       }});
     }
 
@@ -78,7 +114,7 @@ namespace Crails::Cms
       Super::prepare_open_graph(model);
       Super::vars["preview"] = true;
       Super::render(get_view_scope() + "/show", {
-        {"model", reinterpret_cast<Crails::Cms::BlogPost*>(&model)}
+        {"model", reinterpret_cast<const Crails::Cms::BlogPost*>(&model)}
       });
     }
 

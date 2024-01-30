@@ -1,0 +1,31 @@
+#include "../../../models/settings.hpp"
+#include "../../../models/blog/post.hpp"
+#include "../../../local_route.hpp"
+#include "../../../views/layout.hpp"
+#include <crails/i18n.hpp>
+
+const Crails::Cms::Settings& @settings;
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+const std::vector<std::unique_ptr<Crails::Cms::BlogPost>>& @models;
+bool @is_injected = false;
+std::string theme_overload = settings.get_layout().get_name() + "/blog/index" + (is_injected ? "-injection" : "");
+
+// END LINKING
+<% if (has_partial(theme_overload)) do -%>
+  <%= partial(theme_overload) %>
+<% end else do -%>
+  <ul>
+    <% for (const auto& model : models) do -%>
+      <li>
+        <h2><%= html_escape(model->get_title()) %></h2>
+        <div class="article-description">
+          <%= html_escape(model->get_description()) %>
+        </div>
+        <a href="<%= route.make(model->get_slug()) %>">
+          <%= i18n::t("blog.read-more") %>
+        </a>
+      </li>
+    <% end -%>
+  </ul>
+<% end -%>
+

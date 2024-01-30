@@ -17,7 +17,7 @@ using namespace Crails::Cms;
 
 <div class="controls">
   <div class="<%= style->button_group_classes() %>">
-    <%= link(route.make("new"), i18n::t("admin.new-post"), {{"class", style->button_classes()}}) %>
+    <%= link(route.make("post", "new"), i18n::t("admin.new-post"), {{"class", style->button_classes()}}) %>
   </div>
 
   <div class="separator"></div>
@@ -41,7 +41,7 @@ using namespace Crails::Cms;
   <% for (const auto& model : models) do %>
     <tr>
       <td>
-        <%= link(route.make(model->get_id())) yields %>
+        <%= link(route.make("post", model->get_id())) yields %>
           <%= model->get_title() %>
         <% yields-end %>
       </td>
