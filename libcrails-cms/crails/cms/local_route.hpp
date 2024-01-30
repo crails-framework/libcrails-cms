@@ -24,7 +24,7 @@ namespace Crails::Cms
     template<typename ARG, typename... Args>
     std::string fragment(ARG arg, Args... args) const
     {
-      return make(arg) + '/' + make(args...);
+      return fragment(arg) + '/' + fragment(args...);
     }
   };
 
