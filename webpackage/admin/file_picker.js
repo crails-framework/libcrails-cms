@@ -43,6 +43,11 @@ export default class extends ProudCmsDialog {
     });
   }
 
+  set title(value) {
+    const element = this.popup.querySelector(".popup-title");
+    element.textContent = this.plugin.title = value;
+  }
+
   fetch(params = {}) {
     const headers = new Headers();
     const urlParams = makeUrlParams(this, params);

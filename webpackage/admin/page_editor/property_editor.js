@@ -15,7 +15,7 @@ function makeFilePickerInput(input) {
   button.textContent = i18n.t("admin.image-library");
   button.addEventListener("click", function(event) {
     event.preventDefault();
-    filePicker.plugin.title = i18n.t("admin.image-library");
+    filePicker.title = i18n.t("admin.image-library");
     filePicker.plugin.filePicked = function(file) {
       input.value = file.url;
     };
