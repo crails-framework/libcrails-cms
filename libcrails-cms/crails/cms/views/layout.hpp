@@ -31,7 +31,9 @@ namespace Crails::Cms
 
     virtual std::string get_layout_path() const
     {
-      return "layouts/themes/" + name;
+      if (type != DocumentLayoutType)
+        return "layouts/themes/" + name;
+      return std::string();
     }
 
     virtual void use_admin_style() const { throw std::runtime_error("no admin style for layout " + name); }
