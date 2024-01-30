@@ -22,6 +22,7 @@ import GridComponentEditor from "./admin/page_editor/grid_component_editor.js";
 import SliderComponentEditor from "./admin/page_editor/slider_component_editor.js";
 import BackgroundComponentEditor from "./admin/page_editor/background_component_editor.js";
 import ImageComponentEditor from "./admin/page_editor/image_component_editor.js";
+import InjectedComponentEditor from "./admin/page_editor/injected_component_editor.js";
 import SocialComponentEditor from "./admin/page_editor/social_footer_component_editor.js";
 import CreatePageEditor from "./admin/page_editor.js";
 import DefaultControlMenu from "./admin/page_editor/component_controls.js";
@@ -39,6 +40,7 @@ window.PageEditor = {
   "SliderComponentEditor": SliderComponentEditor,
   "BackgroundComponentEditor": BackgroundComponentEditor,
   "ImageComponentEditor": ImageComponentEditor,
+  "InjectedComponentEditor": InjectedComponentEditor,
   "SocialComponentEditor": SocialComponentEditor,
   "DefaultControlMenu": DefaultControlMenu
 };

@@ -1,4 +1,5 @@
 #include "../../../views/layout.hpp"
+#include "../../../views/injector.hpp"
 #include "../../../lib/assets.hpp"
 
 const Crails::Cms::Layout& @proudcms_layout;
@@ -7,6 +8,12 @@ std::string @field_name;
 std::string @mode = "default";
 
 // END LINKING
+
+<div data-role="injector-list">
+  <% for (const std::string_view name : Crails::Cms::Injector::available_injectors()) do -%>
+    <div data-name="<%= name %>" />
+  <% end -%>
+</div>
 
 <% if (proudcms_layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
   <%= tag("link", {{"rel","stylesheet"},{"type","text/css"},{"href",CrailsCmsAssets::content_tools_css}}) %>

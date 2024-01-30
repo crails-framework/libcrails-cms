@@ -2,6 +2,8 @@ import i18n from "../../i18n.js";
 import ComponentEditor from "./component_editor.js";
 import {MetaAction, Action} from "./controls.js";
 import DefaultControlMenu from "./component_controls.js";
+import {withInjections} from "./injected_component_editor.js";
+import InjectableComponentEditor from "./injected_component_editor.js";
 
 function animate(element, property, duration, transformCallback) {
   return new Promise(solve => {
@@ -64,6 +66,8 @@ export class ControlMenu extends DefaultControlMenu {
 export default class NestedComponentEditor extends ComponentEditor {
   constructor(parent, element, componentTypes) {
     super(parent, element);
+    if (withInjections() && !componentTypes.injectable)
+      componentTypes.injectable = InjectableComponentEditor;
     this.componentTypes = componentTypes || {};
     this.components = [];
     this.actions = new ControlMenu(this);
