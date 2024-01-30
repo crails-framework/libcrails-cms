@@ -4,7 +4,11 @@ function updateBackgroundTint(component) {
   const style = component.root.querySelector("style[data-type='background']");
 
   if (style) {
-    style.innerHTML = `[data-id="${component.id}"]:before { background-color: ${component.backgroundTint}; }`
+    if (component.backgroundTint) {
+      style.innerHTML = `[data-id="${component.id}"]:before { background-color: ${component.backgroundTint}; }`
+    } else {
+      style.innerHTML = "";
+    }
   } else {
     console.err("Did not find the background style element for", component.id);
   }
@@ -15,8 +19,8 @@ export default function (parentClass = ComponentEditor) {
     initializeProperties() {
       this.properties.background = { category: "background", type: "image", target: this.root, style: "backgroundImage" };
       this.properties.fixedBackground = { category: "background", type: "bool", target: this, attribute: "fixedBackground" };
-      this.properties.tint = { category: "background", type: "color", target: this, attribute: "backgroundTint" };
-      this.properties.textColor = { type: "color", target: this.root, style: "color" };
+      this.properties.tint = { category: "background", type: "color", target: this, attribute: "backgroundTint", optional: true };
+      this.properties.textColor = { type: "color", target: this.root, style: "color", optional: true };
       super.initializeProperties();
     }
 
