@@ -1,12 +1,16 @@
 import FilePicker from "./file_picker.js";
 
 function updatePreview(preview, input) {
-  preview.innerHTML = "";
-  console.log("updatePreview", preview, input, input.value);
-  if (input.value[0] == '/')
-    preview.src = window.location.origin + input.value;
-  else
-    preview.src = input.value;
+  try {
+    preview.innerHTML = "";
+    console.log("updatePreview", preview, input, input.value);
+    if (input.value[0] == '/')
+      preview.src = window.location.origin + input.value;
+    else
+      preview.src = input.value;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export default function(formGroup) {

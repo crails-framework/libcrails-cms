@@ -1,12 +1,14 @@
 import FilePicker from "./file_picker.js";
 
 function updatePreview(preview, input) {
-  window.poil = input;
-  console.log("updatePreview", preview, input, input.value);
-  if (input.value[0] == '/')
-    preview.src = window.location.origin + input.value;
-  else
-    preview.src = input.value;
+  try {
+    if (input.value[0] == '/')
+      preview.src = window.location.origin + input.value;
+    else
+      preview.src = input.value;
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export default function(formGroup, fileAttribute = "url") {
@@ -14,17 +16,21 @@ export default function(formGroup, fileAttribute = "url") {
   const libraryButton = formGroup.querySelector("button");
   const preview = formGroup.querySelector("img");
 
-  updatePreview(preview, input);
-  preview.style.visibility = "hidden";
-  preview.addEventListener("load", function() {
-    preview.style.visibility = "visible";
-  });
-  preview.addEventListener("error", function() {
+  if (preview) {
+    updatePreview(preview, input);
     preview.style.visibility = "hidden";
-  });
-  input.addEventListener("change", function() {
-     updatePreview(preview, input);
-  });
+    preview.addEventListener("load", function() {
+      preview.style.visibility = "visible";
+    });
+    preview.addEventListener("error", function() {
+      preview.style.visibility = "hidden";
+    });
+    input.addEventListener("change", function() {
+       updatePreview(preview, input);
+    });
+  } else {
+    console.warn("image picker field lacks the <img> attribute required to display a preview", formGroup);
+  }
   libraryButton.addEventListener("click", function(event) {
     event.preventDefault();
     new FilePicker({
