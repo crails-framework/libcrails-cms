@@ -26,6 +26,10 @@
 // END ckeditor
 
 form {
+  textarea {
+    width: 100%;
+  }
+
   .aligned-inputs {
     display: flex;
     > div:first-of-type {
@@ -69,6 +73,10 @@ form {
 
   > table {
     width: 100%;
+  }
+
+  .content {
+    padding: 0 !important;
   }
 }
 
