@@ -47,6 +47,8 @@ namespace Crails::Cms
     virtual ClassList collection_classes() const { return {}; }
     virtual ClassList collection_item_classes() const { return {}; }
     virtual ClassList paginator_classes() const { return button_group_classes() + "proudcms-paginator"; }
+    virtual ClassList card_classes() const { return {}; }
+    virtual ClassList frame_classes() const { return {}; }
 
     virtual std::string signin_button(const std::string& form_id = "") const;
     virtual std::string admin_remove_button(const HtmlTemplate&, const std::string& url, std::string label = "") const;
@@ -57,6 +59,15 @@ namespace Crails::Cms
     virtual std::string form_group(const ClassList& classes, std::function<std::string()> yield) const; 
 
     virtual std::string render_menu(const Menu&, Menu::Direction, const ClassList& classlist = {}, const std::string& header = "") const;
+    std::string section(std::function<std::string()> yield) const { return section(1, {}, yield); }
+    std::string section(const std::map<std::string,std::string>& attrs, std::function<std::string()> yield) const { return section(1, attrs, yield); }
+    virtual std::string section(int index, const std::map<std::string, std::string>&, std::function<std::string()> yield) const;
+    std::string card(std::function<std::string()> yield) const { return card({}, yield); }
+    virtual std::string card(const std::map<std::string,std::string>&, std::function<std::string()> yield) const;
+    std::string thumbnail(const std::string& src) const { return thumbnail({}, src); }
+    virtual std::string thumbnail(const ClassList& classes, const std::string& src) const;
+    std::string nav(std::function<std::string()> yield) const { return nav({}, yield); }
+    virtual std::string nav(const ClassList& classes, std::function<std::string()> yield) const;
 
     virtual std::vector<std::string> stylesheets() const;
     virtual std::vector<std::string> admin_stylesheets() const;

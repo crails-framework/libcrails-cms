@@ -27,6 +27,9 @@ DataTree Cms::Style::as_data() const
 
   tree["form"] = string(form_classes());
   tree["searchForm"] = string(search_form_classes());
+  tree["formGroup"] = string(form_group_classes());
+  tree["formInput"] = string(form_input_classes());
+  tree["buttonGroup"] = string(button_group_classes());
   tree["button"] = string(button_classes());
   tree["confirmButton"] = string(confirm_button_classes());
   tree["dangerButton"] = string(danger_button_classes());
@@ -131,3 +134,22 @@ string Cms::Style::admin_search_button() const
   }, yield);
 }
 
+string Cms::Style::section(int, const std::map<std::string, std::string>& attrs, std::function<std::string()> yield) const
+{
+  return HtmlTemplate::tag("section", attrs, yield);
+}
+
+string Cms::Style::card(const std::map<std::string,std::string>& attrs, std::function<std::string()> yield) const
+{
+  return HtmlTemplate::tag("div", attrs, yield);
+}
+
+string Cms::Style::thumbnail(const ClassList& classes, const std::string& src) const
+{
+  return HtmlTemplate::tag("img", {{"class",classes + "thumbnail"},{"src",src}});
+}
+
+string Cms::Style::nav(const ClassList& classes, function<string()> yield) const
+{
+  return HtmlTemplate::tag("nav", {{"class",classes}}, yield);
+}
