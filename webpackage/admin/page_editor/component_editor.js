@@ -5,12 +5,18 @@ function imageFromStyle(cssContent) {
   return cssContent.substr(4, cssContent.length - 5);
 }
 
+function rgbaValue(value) {
+  const base = value.toString(16);
+  return base.length == 1 ? '0' + base : base;
+}
+
 function rgb(r, g, b) {
-  return '#' + r.toString(16) + g.toString(16) + b.toString(16);
+  const v = rgbaValue;
+  return '#' + v(r) + v(g) + v(b);
 }
 
 function rgba(r, g, b, a) {
-  return rgb(r, g, b) + a.toString(16);
+  return rgb(r, g, b) + rgbaValue(a);
 }
 
 export default class {
