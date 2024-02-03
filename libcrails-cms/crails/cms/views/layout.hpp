@@ -2,6 +2,7 @@
 #include <crails/utils/singleton.hpp>
 #include <crails/request_handlers/builtin_assets.hpp>
 #include <map>
+#include "../models/layout.hpp"
 
 class dylib;
 namespace Crails { class Renderer; }
@@ -28,6 +29,7 @@ namespace Crails::Cms
     const std::vector<std::string> get_editor_stylesheets() const { return editor_stylesheets; }
     const std::vector<std::string> get_editor_javascripts() const { return editor_javascripts; }
     const std::string get_component_layout_name() const { return component_layout_name; }
+    const LayoutVariables& get_variables() const { return variables; }
 
     virtual std::string get_layout_path() const
     {
@@ -44,6 +46,7 @@ namespace Crails::Cms
   protected:
     std::string              name;
     LayoutType               type = DocumentLayoutType;
+    LayoutVariables          variables;
     std::string              component_layout_name;
     std::vector<std::string> stylesheets, editor_stylesheets;
     std::vector<std::string> javascripts, editor_javascripts;

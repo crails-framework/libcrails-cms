@@ -20,6 +20,8 @@ void Crails::Cms::Settings::edit(Data params)
     set_favicon(params["favicon"]);
   if (params["theme"].exists())
     set_theme(params["theme"]);
+  if (params["theme_settings"].exists())
+    set_theme_settings(params["theme_settings"]);
   if (params["footer"].exists())
     set_footer(params["footer"]);
   if (params["plugins"].exists())
@@ -54,6 +56,12 @@ const Crails::Cms::Layout& Crails::Cms::Settings::get_layout() const
 const Crails::Cms::Style& Crails::Cms::Settings::get_style() const
 {
   return get_layout().get_style();
+}
+
+void Crails::Cms::Settings::set_theme_settings(Data value)
+{
+  theme_settings.as_data().destroy();
+  theme_settings.as_data().merge(value);
 }
 
 std::vector<std::string> Crails::Cms::Settings::get_plugins() const

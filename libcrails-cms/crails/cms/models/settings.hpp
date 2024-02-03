@@ -37,6 +37,8 @@ namespace Crails::Cms
 
     const std::string& get_theme() const { return theme; }
     void set_theme(const std::string& value) { theme = value; }
+    const Data get_theme_settings() const { return theme_settings.as_data(); }
+    void set_theme_settings(Data);
 
     const Layout& get_layout() const;
     const Style& get_style() const;
@@ -57,6 +59,8 @@ namespace Crails::Cms
     std::string favicon;
     #pragma db value_type("VARCHAR(32)")
     std::string theme;
+    #pragma db type("TEXT")
+    DataTree theme_settings;
     std::string footer;
     std::string plugins;
     Crails::Odb::id_type homepage_id;

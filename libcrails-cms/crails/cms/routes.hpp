@@ -64,11 +64,14 @@ namespace Crails::Cms
     void register_settings_admin_routes(Crails::Router& router)
     {
       set_path_for<CONTROLLER>(router);
-      router.match_action("GET",  "/",    CONTROLLER, show);
-      router.match_action("PUT",  "/:id", CONTROLLER, update);
-      router.match_action("POST", "/",    CONTROLLER, update);
-      router.match_action("GET",  "/plugins", CONTROLLER, show_plugins);
-      router.match_action("POST", "/plugins", CONTROLLER, update);
+      router.match_action("GET",  "/",            CONTROLLER, show);
+      router.match_action("PUT",  "/:id",         CONTROLLER, update);
+      router.match_action("POST", "/",            CONTROLLER, update);
+      router.match_action("GET",  "/layout",      CONTROLLER, show_layout);
+      router.match_action("POST", "/layout",      CONTROLLER, update);
+      router.match_action("PUT",  "/layout/:id",  CONTROLLER, update);
+      router.match_action("GET",  "/plugins",     CONTROLLER, show_plugins);
+      router.match_action("POST", "/plugins",     CONTROLLER, update);
       router.match_action("PUT",  "/plugins/:id", CONTROLLER, update);
     }
 

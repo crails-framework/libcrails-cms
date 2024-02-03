@@ -1,10 +1,13 @@
 #include "../../../models/settings.hpp"
+#include "../../../views/layout.hpp"
 #include "../../../opengraph.hpp"
 #include "../../../plugins.hpp"
 
 const Crails::Cms::Settings& @settings;
 const Crails::Cms::OpenGraph* @open_graph = nullptr;
 const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
+const Crails::Cms::LayoutVariables& variables = settings.get_layout().get_variables();
+const Data values = settings.get_theme_settings();
 const std::string @rss = "";
 
 // END LINKING
@@ -21,4 +24,16 @@ const std::string @rss = "";
 <% if (plugins && plugins->has_plugins()) do -%>
   <%= tag("link", {{"rel","stylesheet"},{"src",Crails::Cms::Plugins::application_css_uri}}) %>
   <%= tag("script", {{"src",Crails::Cms::Plugins::application_js_uri}}) %>
+<% end -%>
+
+<% if (variables.size()) do -%>
+  <style id="layout-variables">
+    :root {
+    <% for (const auto& variable : variables) do -%>
+      <% if (variable.type == "color") do -%>
+        --<%= variable.name %>: <%= values[std::string(variable.name)].defaults_to<std::string>(std::string(variable.default_value)) %>;
+      <% end -%>
+    <% end -%>
+    }
+  </style>
 <% end -%>

@@ -1,0 +1,80 @@
+#include "../../../models/settings.hpp"
+#include "../../../views/layout.hpp"
+#include "../../../views/style.hpp"
+#include "../../../routes.hpp"
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include <crails/icons.hpp>
+
+const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+const Crails::Cms::Settings& @model;
+const Crails::Cms::Layout& layout = model.get_layout();
+const Crails::Cms::LayoutVariables variables = layout.get_variables();
+const Data values = model.get_theme_settings();
+Crails::FormBuilder<Crails::Cms::Settings> form = Crails::FormBuilder<Crails::Cms::Settings>(this, model);
+
+// END LINKING
+<%
+std::function<std::string(const Crails::Cms::LayoutVariable&)> field_relative_name = [](const Crails::Cms::LayoutVariable& variable) -> std::string
+{
+  return "[theme_settings][" + std::string(variable.name) + ']';
+};
+
+std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&](const Crails::Cms::LayoutVariable& variable) -> std::string
+{
+  return values[variable.name.data()]
+    .defaults_to<std::string>(std::string(variable.default_value));
+};
+%>
+
+<%= form_for(model, route(), {
+  {"id", "main-form"},
+  {"class", style.form_classes()}
+}) yields %>
+
+  <% for (const Crails::Cms::LayoutVariable& variable : variables) do -%>
+    <%= style.form_group() yields %>
+      <% std::string name = form.scoped_name(field_relative_name(variable)) %>
+      <% std::string value = field_value(variable) %>
+      <%= form.label_for(field_relative_name(variable), std::string(variable.name)) %>
+      <% if (variable.type != "select") do -%>
+        <input name="<%= name %>"
+               type="<%= variable.type %>"
+               value="<%= value %>"
+               />
+      <% end else do -%>
+        <select name="<%= name %>">
+          <% for (auto it = variable.options.begin() ; it != variable.options.end() ; ++it) do -%>
+            <option value="<%= it->second %>"
+              <% if (it->first == value) do %>selected<% end %>
+            >
+              <%= i18n::t(it->second) %>
+            </option>
+          <% end -%>
+        </select>
+      <% end -%>
+    <% yields-end -%>
+  <% end -%>
+
+  <% if (layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
+    <%= style.form_group() yields %>
+      <%= form.label_for("footer") %>
+      <%= form.text_area("footer", model.get_footer()) %>
+    <% yields-end %>
+  <% end -%>
+
+  <div class="proudcms-page-editor" style="position:relative" data-sticky-container></div>
+
+<% yields-end %>
+
+<div class="<%= style.button_group_classes() %>">
+  <%= style.admin_submit_button("main-form") %>
+</div>
+
+<%= partial("admin/page_editor", {
+  {"proudcms_layout", &layout},
+  {"form_id",         std::string("main-form")},
+  {"field_name",      form.scoped_name("footer")},
+  {"mode",            std::string("footer")}
+}) %>

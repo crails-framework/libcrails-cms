@@ -41,6 +41,19 @@ namespace Crails::Cms
       }
     }
 
+    void show_layout() {
+      std::shared_ptr<SETTINGS> model = require_settings();
+
+      if (model)
+      {
+        Super::vars["page_title"] = i18n::t("admin.menu.layout");
+        Super::vars["page_subtitle"] = i18n::t("admin.layout-subtitle");
+        Super::render("admin/theme_settings", {
+          {"model", reinterpret_cast<const Crails::Cms::Settings*>(model.get())}
+        });
+      }
+    }
+
     void render_editor(SETTINGS& model)
     {
       Super::vars["page_options"] = page_options();
