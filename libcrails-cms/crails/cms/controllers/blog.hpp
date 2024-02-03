@@ -5,6 +5,7 @@
 #include <crails/renderer.hpp>
 #include <crails/any_cast.hpp>
 #include "../models/blog/post.hpp"
+#include "../local_route.hpp"
 
 namespace Crails::Cms
 {
@@ -22,6 +23,12 @@ namespace Crails::Cms
  
     virtual std::string get_view_scope() const { return "blog"; }
 
+    void initialize()
+    {
+      Super::initialize();
+      Super::vars["rss"] = LocalRoute(Super::vars)();
+    }
+
     static std::string injectable_index(const Crails::SharedVars& vars)
     {
       using namespace std;
@@ -36,7 +43,6 @@ namespace Crails::Cms
       Crails::Paginator paginator(params);
       odb::result<IndexPost> posts;
       PostList models;
-      DataTree params;
       auto query = Post::template make_index_query<odb::query<Post>>(params.as_data());
       renderer = Crails::Renderer::pick_renderer("blog/index", "text/html");
 
@@ -85,7 +91,7 @@ namespace Crails::Cms
     void show()
     {
       using namespace std;
-      shared_ptr<Post> model;
+      shared_ptr<Post> model, previous_model, next_model;
 
       if (Super::params["slug"].exists())
         Super::database.find_one(model, odb::query<Post>::slug == Super::params["slug"].template as<string>());
@@ -93,6 +99,10 @@ namespace Crails::Cms
         Super::database.find_one(model, Super::params["id"].template as<Crails::Odb::id_type>());
       if (model)
       {
+        Super::database.find_one(previous_model, Post::template make_previous_query<odb::query<Post>>(*model));
+        Super::database.find_one(next_model, Post::template make_next_query<odb::query<Post>>(*model));
+        add_model_to_vars("previous_model", previous_model);
+        add_model_to_vars("next_model", next_model);
         Super::prepare_open_graph(*model);
         Super::render(get_view_scope() + "/show", {
           {"model", reinterpret_cast<const Crails::Cms::BlogPost*>(model.get())}
@@ -107,6 +117,11 @@ namespace Crails::Cms
       if (Super::get_action_name() == "preview")
         return false;
       return Super::must_protect_from_forgery();
+    }
+
+    void add_model_to_vars(const char* key, const std::shared_ptr<Post>& model)
+    {
+      Super::vars[key] = reinterpret_cast<const Crails::Cms::BlogPost*>(model.get());
     }
 
     void preview()

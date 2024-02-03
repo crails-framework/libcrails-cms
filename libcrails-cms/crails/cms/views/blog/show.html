@@ -1,8 +1,10 @@
 #include "../../../models/settings.hpp"
 #include "../../../models/blog/post.hpp"
 #include "../../../views/layout.hpp"
+#include "../../../views/style.hpp"
 
 const Crails::Cms::Settings& @settings;
+const Crails::Cms::Style& style = settings.get_style();
 const Crails::Cms::BlogPost& @model;
 std::string theme_overload = settings.get_layout().get_name() + "/blog/show";
 bool @preview = false;
@@ -11,13 +13,16 @@ bool @preview = false;
 <% if (has_partial(theme_overload)) do -%>
   <%= partial(theme_overload) %>
 <% end else do -%>
-  <article>
-    <h1><%= html_escape(model.get_title()) %></h1>
-    <img src="<%= model.get_thumbnail_url() %>" />
-    <div class="body">
-      <%= model.get_body() %>
-    </div>
-  </article>
+  <%= partial("blog/_show_nav") %>
+  <%= style.section() yields %>
+    <article>
+      <h1><%= html_escape(model.get_title()) %></h1>
+      <img src="<%= model.get_thumbnail_url() %>" />
+      <div class="body">
+        <%= model.get_body() %>
+      </div>
+    </article>
+  <% yields-end %>
 <% end -%>
 <% if (preview) do %>
   <%= partial("preview_script") %>

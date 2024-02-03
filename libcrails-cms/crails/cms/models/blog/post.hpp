@@ -36,6 +36,26 @@ namespace Crails::Cms
       return query;
     }
 
+    template<typename QUERY>
+    static QUERY make_next_query(const BlogPost& model)
+    {
+      QUERY query = QUERY::publication_at > model.get_publication_at();
+
+      return query
+             + "ORDER BY" + QUERY::publication_at + "ASC"
+             + "LIMIT 1";
+    }
+
+    template<typename QUERY>
+    static QUERY make_previous_query(const BlogPost& model)
+    {
+      QUERY query = QUERY::publication_at < model.get_publication_at();
+
+      return query
+             + "ORDER BY" + QUERY::publication_at + "DESC"
+             + "LIMIT 1";
+    }
+
     virtual void edit(Data) override;
     virtual void merge_data(Data) const override;
 

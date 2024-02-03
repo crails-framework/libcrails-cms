@@ -1,0 +1,30 @@
+#include "../../../models/settings.hpp"
+#include "../../../views/style.hpp"
+#include "../../../models/blog/post.hpp"
+#include "../../../local_route.hpp"
+
+const Crails::Cms::Settings& @settings;
+const Crails::Cms::Style& style = settings.get_style();
+const Crails::Cms::BlogPost* @previous_model;
+const Crails::Cms::BlogPost* @next_model;
+Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
+
+// END LINKING
+<%= style.nav({"blog-nav"}) yields %>
+  <ul>
+    <% if (previous_model) do -%>
+      <li data-role="previous">
+        <%= tag("a", {{"href", route.make(previous_model->get_slug())}}) yields %>
+          <%= previous_model->get_title() %>
+        <% yields-end %>
+      </li>
+    <% end %>
+    <% if (next_model) do -%>
+      <li data-role="next">
+        <%= tag("a", {{"href", route.make(next_model->get_slug())}}) yields %>
+          <%= next_model->get_title() %>
+        <% yields-end %>
+      </li>
+    <% end -%>
+  </ul>
+<% yields-end %>
