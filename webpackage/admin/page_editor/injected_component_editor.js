@@ -27,11 +27,11 @@ export default class InjectableComponentEditor extends GridComponentEditor(Compo
   }
 
   get injectableName() {
-    return this.injector.attributes.name ? this.injector.attributes.name.value : null;
+    return this.root.dataset.injectable;
   }
 
   set injectableName(value) {
-    console.log("Update injectable name", value);
+    this.root.dataset.injectable = value;
     this.injector.setAttribute("name", value);
     this.updatePlaceholder();
   }

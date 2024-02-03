@@ -75,7 +75,7 @@ function makeOptionalInput(inputGroup, input, value) {
   const update = function() { input.disabled = !checkbox.checked; };
 
   checkbox.type = "checkbox";
-  checkbox.checked = value && (typeof value !== "string" || value.length > 0);
+  checkbox.checked = value && (typeof value !== "string" || value.length > 0) && value !== "null";
   checkbox.addEventListener("change", update);
   inputGroup.insertBefore(checkbox, input);
   update();

@@ -122,6 +122,8 @@ export class ControlMenu {
   }
 
   onResized() {
-    this.title.style.display = this.root.offsetWidth >= (2 * this.buttonsWidth) ? "block" : "none";
+    const action = this.root.offsetWidth >= (2 * this.buttonsWidth) ? "remove" : "add";
+
+    this.title.classList[action]("hidden");
   }
 }

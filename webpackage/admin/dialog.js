@@ -19,7 +19,8 @@ export default class {
     });
     this.root.appendChild(this.popup);
     document.addEventListener("DOMContentLoaded", () => {
-      document.body.removeChild(this.root);
+      if (document.body.contains(this.root))
+        document.body.removeChild(this.root);
     });
   }
 

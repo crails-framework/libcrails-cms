@@ -14,7 +14,7 @@ export default class extends ContentTools.Tool {
   }
 
   isApplied(element, selection) {
-    if (element && element._domElement)
+    if (element && element._domElement && element._domElement.children[0])
       return element._domElement.children[0].tagName == "img";
     return false;
   }
