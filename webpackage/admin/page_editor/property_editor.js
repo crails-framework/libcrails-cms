@@ -28,9 +28,12 @@ function makeCheckboxInput(input, label) {
   const span = document.createElement("span");
 
   input.type = "checkbox";
-  span.textContent = label.textContent;
+  span.textContent = label ? label.textContent : " ";
   input.parentElement.insertBefore(span, input.nextSibling);
-  span.addEventListener("click", function() { input.checked = !input.checked; });
+  span.addEventListener("click", function() {
+    input.checked = !input.checked;
+    input.dispatchEvent(new Event("change"));
+  });
 }
 
 function makeSelectInput(inputGroup, input, property) {
@@ -71,13 +74,17 @@ function makeRangeInput(inputGroup, input, property) {
 }
 
 function makeOptionalInput(inputGroup, input, value) {
+  const wrapper = document.createElement("span");
   const checkbox = document.createElement("input");
   const update = function() { input.disabled = !checkbox.checked; };
 
-  checkbox.type = "checkbox";
+  inputGroup.classList.add("optional");
+  inputGroup.insertBefore(wrapper, input);
+  wrapper.classList.add("optional-checkbox");
+  wrapper.appendChild(checkbox);
+  makeCheckboxInput(checkbox);
   checkbox.checked = value && (typeof value !== "string" || value.length > 0) && value !== "null";
   checkbox.addEventListener("change", update);
-  inputGroup.insertBefore(checkbox, input);
   update();
 }
 
@@ -113,11 +120,13 @@ export default class extends ProudCmsDialog {
       Style.apply("formGroup", formGroup);
       formGroup.classList.add("property");
       formGroup.classList.add(`property-${property}`);
+      label.dataset.type = component.properties[property].type;
       label.textContent = i18n.tt(
         `admin.page-editor.properties.${component.component_type}.${property}`,
         `admin.page-editor.properties.${property}`
       );
       input.value = value;
+      inputGroup.classList.add("input-group");
       inputGroup.appendChild(input);
       switch (component.properties[property].type) {
       case "image":
