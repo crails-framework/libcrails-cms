@@ -42,7 +42,7 @@ using namespace Crails::Cms;
     <%= form.select_field("theme",
           Crails::Cms::Layouts::singleton::get()->get_theme_options(),
           &Crails::Cms::Settings::get_theme) %>
-    <%= tag("a", {{"href", route.make("layout")}, {"style", style.button_classes()}}) yields %>
+    <%= tag("a", {{"href", route.make("layout")}, {"class", style.button_classes()}}) yields %>
       <%= Crails::fonticon_tag(Crails::FontIcon::Settings) %>
       <%= i18n::t("admin.layout-edit") %>
     <% yields-end %>
@@ -51,7 +51,7 @@ using namespace Crails::Cms;
   <% if (plugins && plugins->has_available_plugins()) do -%>
     <%= style.form_group() yields %>
       <%= form.label_for("plugins") %>
-      <%= tag("a", {{"href", route.make("plugins")}, {"style", style.button_classes()}}) yields %>
+      <%= tag("a", {{"href", route.make("plugins")}, {"class", style.button_classes()}}) yields %>
         <%= Crails::fonticon_tag(Crails::FontIcon::Plugin) %>
         <%= i18n::t("admin.plugins-edit") %>
       <% yields-end %>
