@@ -13,14 +13,18 @@ using namespace Crails;
 //static const char* form_date_format = "%FT%H:%M";
 static const char* form_date_format = "%Y-%m-%dT%H:%M";
 
-string time_to_string(std::time_t value, const string& format) { return time_to_string(value, format.c_str()); }
+string time_to_string(std::time_t value, const string& format)
+{
+  return time_to_string(value, format.c_str());
+}
 
 string time_to_string(std::time_t value, const char* format)
 {
-  std::tm tmdata = *localtime(&value);
+  std::tm tmdata;
   stringstream stream;
 
-  stream << put_time(&tmdata, format);
+  localtime_r(&value, &tmdata);
+  stream << put_time(&tmdata, format ? format : "%d-%m-%y");
   return stream.str();
 }
 
