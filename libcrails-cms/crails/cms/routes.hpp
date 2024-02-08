@@ -2,6 +2,7 @@
 # define LIBCRAILS_CMS_ROUTER_HPP
 
 # include <crails/router.hpp>
+# include <crails/signin/session_controller.hpp>
 # include "local_route.hpp"
 
 # define libcrails_cms_admin_crud(path, controller) \
@@ -156,6 +157,17 @@ namespace Crails::Cms
       }
       router.match_action("GET", "/by-id/:id", CONTROLLER, show);
       router.match_action("GET", "/:slug",     CONTROLLER, show);
+    }
+
+    template<typename CONTROLLER>
+    void register_signin_controller(Crails::Router& router)
+    {
+      router.scope(CONTROLLER::signin_path, [&]()
+      {
+        set_path_for<CONTROLLER>(router);
+        router.signin_actions("/", CONTROLLER)
+              .match_action("GET", "/new", CONTROLLER, new_);
+      });
     }
 
     template<typename CONTROLLER>

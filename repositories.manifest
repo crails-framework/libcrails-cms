@@ -50,6 +50,10 @@ location: https://github.com/crails-framework/libcrails-multimedia.git#master
 
 :
 role: prerequisite
+location: https://github.com/crails-framework/libcrails-signin.git#master
+
+:
+role: prerequisite
 location: https://github.com/crails-framework/libcrails-logger.git#master
 
 :
