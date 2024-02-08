@@ -22,11 +22,17 @@ namespace Crails::Cms
       std::vector<std::shared_ptr<BASE_MODEL>> list;
       odb::query<Model> query(make_index_query());
 
-      Super::paginator.decorate_view(Super::vars, [this, query]()
+      Super::paginator.set_enabled(
+        Super::params["no_pagination"].template defaults_to<std::string>("0") != "1"
+      );
+      if (Super::paginator.is_enabled())
       {
-        return Super::database.template count<Model>(query);
-      });
-      Super::paginator.decorate_query(query);
+        Super::paginator.decorate_view(Super::vars, [this, query]()
+        {
+          return Super::database.template count<Model>(query);
+        });
+        Super::paginator.decorate_query(query);
+      }
       Super::database.template find<IndexModel>(models, query);
       for (IndexModel& model : models)
         list.push_back(std::make_shared<Model>(model));
