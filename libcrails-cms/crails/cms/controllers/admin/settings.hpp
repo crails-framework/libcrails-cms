@@ -71,10 +71,20 @@ namespace Crails::Cms
       Super::flash["info"] = i18n::t("admin.resource-updated");
       Super::redirect_to("/admin/settings");
       if (model->should_reload_server())
-        Crails::Server::singleton::require().restart();
+        trigger_server_restart();
     }
 
   protected:
+    void trigger_server_restart()
+    {
+      std::thread restarter([]()
+      {
+        sleep(1);
+        Crails::Server::singleton::require().restart();
+      });
+      restarter.detach();
+    }
+
     std::shared_ptr<SETTINGS> require_settings()
     {
       auto model = Super::find_settings();
