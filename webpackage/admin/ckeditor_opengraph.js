@@ -44,10 +44,12 @@ function generateDatasetFromModel(modelElement) {
 }
 
 export default class extends Plugin {
+  static toolName = "proudcmsOpenGraph";
+
   init() {
     this.defineSchema();
     this.defineConverters();
-    this.editor.ui.componentFactory.add("proudcmsOpenGraph", this.createButton.bind(this));
+    this.editor.ui.componentFactory.add(this.constructor.toolName, this.createButton.bind(this));
   }
 
   defineSchema() {

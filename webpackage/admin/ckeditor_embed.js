@@ -5,9 +5,11 @@ import proudcmsEmbedIcon from './icons/library.svg';
 import i18n from "../i18n.js";
 
 export default class extends Plugin {
+  static toolName = "proudcmsEmbed";
+
   init() {
     const editor = this.editor;
-    editor.ui.componentFactory.add("proudcmsEmbed", this.createButton.bind(this));
+    editor.ui.componentFactory.add(this.constructor.toolName, this.createButton.bind(this));
     i18n.ready.then(() => { this.title = i18n.t("admin.image-library"); });
     this.mimetype = "image/*";
   }
