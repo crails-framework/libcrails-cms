@@ -11,6 +11,9 @@
  .match_action("POST",   std::string(path), controller, create) \
  .match_action("PUT",    std::string(path) + "/:id", controller, update) \
  .match_action("DELETE", std::string(path) + "/:id", controller, destroy)
+# define libcrails_cms_admin_preview(controller) \
+  match_action("PUT",  "/preview", controller, preview) \
+ .match_action("POST", "/preview", controller, preview)
 # define ROUTES_METHOD(NAME, CONTROLLER) \
   std::string get_##NAME##_path() const { return NAME##_path; } \
   std::string get_##NAME##_path(const std::string& suffix) const { return NAME##_path + '/' + suffix; } \
@@ -115,8 +118,7 @@ namespace Crails::Cms
     void register_page_admin_routes(Crails::Router& router)
     {
       set_path_for<ADMIN_CONTROLLER>(router);
-      router.match_action("POST", "/preview", CONTROLLER, preview);
-      router.match_action("PUT",  "/preview", CONTROLLER, preview);
+      router.libcrails_cms_admin_preview(CONTROLLER);
       router.libcrails_cms_admin_crud("/", ADMIN_CONTROLLER);
     }
 
@@ -133,8 +135,7 @@ namespace Crails::Cms
     {
       set_path_for<ADMIN_CONTROLLER>(router);
       router.libcrails_cms_admin_crud("/post", ADMIN_CONTROLLER);
-      router.match_action("POST", "/preview", CONTROLLER, preview);
-      router.match_action("PUT",  "/preview", CONTROLLER, preview);
+      router.libcrails_cms_admin_preview(CONTROLLER);
       router.match_action("", "/", ADMIN_CONTROLLER, index);
     }
 
