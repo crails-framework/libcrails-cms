@@ -5,8 +5,8 @@
 
 const Crails::Cms::Settings& @settings;
 const Crails::Cms::Style& style = settings.get_style();
-const Crails::Cms::BlogPost* @previous_model;
-const Crails::Cms::BlogPost* @next_model;
+const Crails::Cms::BlogPost* @previous_model = nullptr;
+const Crails::Cms::BlogPost* @next_model = nullptr;
 Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
 
 // END LINKING
