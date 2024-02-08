@@ -1,8 +1,11 @@
 import {createUppy, createUppyUpdater} from "./admin/uppy.js";
 import {adminCKEditor} from "./admin/ckeditor.js";
+import {CKEditorExports} from "./admin/ckeditor_exports.js";
+import TomSelect from "tom-select/dist/js/tom-select.base.js";
 import previewPost from "./admin/preview.js";
 import pageEditor from "./admin/page_editor.js";
 import ProudCmsDialog from "./admin/dialog.js";
+import ProudCmsPicker from "./admin/file_picker.js";
 import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
@@ -11,8 +14,14 @@ import "./admin/plugin_index.js";
 window.createUppy = createUppy;
 window.createUppyUpdater = createUppyUpdater;
 window.proudcmsAdminCKEditor = adminCKEditor;
+window.CKEditorExports = CKEditorExports;
 window.previewPost = previewPost;
 window.createSelectField = createSelectField;
+
+import Style from "./style.js";
+window.Style = Style;
+import i18n from "./i18n.js";
+window.i18n = i18n;
 
 import LayoutEditor from "./admin/page_editor/layout_editor.js";
 import ComponentEditor from "./admin/page_editor/component_editor.js";
@@ -58,6 +67,25 @@ window.initializeContentTools = function() {
 };
 
 window.ProudCmsDialog = ProudCmsDialog;
+window.ProudCmsPicker = ProudCmsPicker;
+
+window.Cms = {
+  ContentTools: ContentTools,
+  CKEditor:     CKEditorExports,
+  Dialog:       ProudCmsDialog,
+  PickerDialog: ProudCmsPicker,
+  PageEditor:   PageEditor,
+  MenuEditor:   MenuEditor,
+  TomSelect:    TomSelect,
+  Style:        Style,
+  i18n:         i18n,
+  initializers: {
+    ContentTools: initializeContentTools,
+    CKEditor:     adminCKEditor,
+    Uppy:         createUppy,
+    UppyUpdater:  createUppyUpdater
+  }
+};
 
 function initialize(event) {
   // initialize thumbnail pickers
