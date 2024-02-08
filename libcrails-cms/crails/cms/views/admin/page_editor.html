@@ -1,8 +1,11 @@
+#include "../../../models/settings.hpp"
 #include "../../../views/layout.hpp"
 #include "../../../views/injector.hpp"
 #include "../../../lib/assets.hpp"
 
+const Crails::Cms::Settings& @settings;
 const Crails::Cms::Layout& @proudcms_layout;
+const Crails::Cms::LayoutVariables variables = proudcms_layout.get_variables();
 std::string @form_id;
 std::string @field_name;
 std::string @mode = "default";
@@ -11,13 +14,17 @@ std::string @mode = "default";
 
 <div data-role="injector-list">
   <% for (const std::string_view name : Crails::Cms::Injector::available_injectors()) do -%>
-    <div data-name="<%= name %>" />
+    <div data-name="<%= name %>"></div>
   <% end -%>
 </div>
 
 <% if (proudcms_layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
   <%= tag("link", {{"rel","stylesheet"},{"type","text/css"},{"href",CrailsCmsAssets::content_tools_css}}) %>
   <script>initializeContentTools()</script>
+<% end -%>
+
+<% if (variables.size()) do -%>
+  <%= render_css_variables(variables, settings.get_theme_settings()) %>
 <% end -%>
 
 <% for (const auto& stylesheet : proudcms_layout.get_editor_stylesheets()) do %>

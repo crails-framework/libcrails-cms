@@ -17,6 +17,8 @@ namespace Crails::Cms
 
   class Style;
 
+  std::string render_css_variables(const LayoutVariables&, Data theme_settings);
+
   class Layout
   {
   public:

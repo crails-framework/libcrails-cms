@@ -37,11 +37,16 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
     <%= style.form_group() yields %>
       <% std::string name = form.scoped_name(field_relative_name(variable)) %>
       <% std::string value = field_value(variable) %>
-      <%= form.label_for(field_relative_name(variable), std::string(variable.name)) %>
+      <label for="<%= form.scoped_name(field_relative_name(variable)) %>" data-type="<%= variable.type %>">
+        <%= variable.name %>
+      </label>
       <% if (variable.type != "select") do -%>
         <input name="<%= name %>"
                type="<%= variable.type %>"
                value="<%= value %>"
+        <% if (variable.type == "color") do -%>
+               class="<%= style.button_classes() %>"
+        <% end -%>
                />
       <% end else do -%>
         <select name="<%= name %>">
