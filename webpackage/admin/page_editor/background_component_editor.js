@@ -1,11 +1,11 @@
 import ComponentEditor from "./component_editor.js";
 
-function updateBackgroundTint(component) {
+function updateBackgroundTint(component, overlaySelector) {
   const style = component.root.querySelector("style[data-type='background']");
 
   if (style) {
     if (component.backgroundTint) {
-      style.innerHTML = `[data-id="${component.id}"]:before { background-color: ${component.backgroundTint}; }`
+      style.innerHTML = `[data-id="${component.id}"]${overlaySelector} { background-color: ${component.backgroundTint}; }`
     } else {
       style.innerHTML = "";
     }
@@ -30,7 +30,7 @@ export default function (parentClass = ComponentEditor) {
 
     set backgroundTint(value) {
       this.root.dataset.tint = value;
-      updateBackgroundTint(this);
+      updateBackgroundTint(this, this.overlaySelector || ":before");
     }
 
     get fixedBackground() {
@@ -41,7 +41,7 @@ export default function (parentClass = ComponentEditor) {
       if (value)
         this.root.style.backgroundAttachment = "fixed";
       else
-        delete this.root.style.backgroundAttachment;
+        this.root.style.backgroundAttachment = "";
     }
 
     create() {

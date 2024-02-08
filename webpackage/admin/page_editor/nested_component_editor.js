@@ -139,6 +139,7 @@ export default class NestedComponentEditor extends ComponentEditor {
   addComponent(type) {
     console.log("Adding component", type, "to", this);
     const component = new this.componentTypes[type](this);
+    component.root.$component = component;
     component.create();
     component.componentType = type;
     this.components.push(component);
