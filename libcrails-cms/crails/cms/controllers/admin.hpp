@@ -6,6 +6,8 @@
 
 namespace Crails::Cms
 {
+  std::string_view get_admin_template_path();
+
   template<typename USER, typename SUPER>
   class AdminController : public Crails::AuthController<USER, SUPER>
   {
@@ -19,6 +21,7 @@ namespace Crails::Cms
     void initialize()
     {
       Super::initialize();
+      Super::vars["layout"] = get_admin_template_path();
       if (Super::user_session.get_current_user() != nullptr)
       {
         auto role = Super::user_session.get_current_user()->get_role();

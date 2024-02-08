@@ -21,6 +21,11 @@ vector<string> Cms::Style::admin_stylesheets() const
   return result;
 }
 
+string_view Cms::Style::admin_layout() const
+{
+  return "layouts/admin";
+}
+
 DataTree Cms::Style::as_data() const
 {
   DataTree tree;
