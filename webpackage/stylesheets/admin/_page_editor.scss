@@ -1,43 +1,67 @@
-.proudcms-page-editor {
-  margin-bottom: 2em;
+nav.proudcms-sticky-controls {
+  z-index: 10;
 }
 
-.proudcms-page-editor-controls {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid black;
-  border-bottom: 1px dotted black;
-  background-color: white;
-  > .pure-menu-list {
-    border: 1px solid black;
-    border-bottom: 1px dotted black;
-    margin-bottom: -1px;
-    margin-top: -1px;
-    background: white;
-  }
-  .pure-menu-children {
-    box-shadow: #0000005f 0 0 5px;
-  }
-  &:hover {
-    overflow: initial;
-    z-index: 1000;
-  }
-}
-
-.proudcms-sticky-controls {
-  z-index: 100;
-}
-
-.page-property-editor {
-  h2 {
-    margin-top: 0;
+body:not(.custom-admin-style) {
+  .proudcms-page-editor {
+    margin-bottom: 2em;
   }
 
-  .property {
-    margin: 1em 0;
-    > div {
-      display: flex;
-      input { flex-grow: 1; }
+  nav.proudcms-page-editor-controls {
+    position: relative !important;
+    overflow: hidden;
+    height: auto !important;
+    border: 1px solid black !important;
+    border-bottom: 1px dotted black !important;
+    border-radius: 0 !important;
+    background-color: white !important;
+    line-height: 1em !important;
+    > .pure-menu-list {
+      border: 1px solid black;
+      border-bottom: 1px dotted black;
+      margin-bottom: -1px;
+      margin-top: -1px;
+      background: white;
+    }
+    .pure-menu-children {
+      box-shadow: #0000005f 0 0 5px;
+    }
+    a.pure-menu-link {
+      font-size: 1em !important;
+      line-height: 1em !important;
+      color: black;
+      i {
+        font-size: 1em !important;
+        line-height: 1em !important;
+        height: 1em !important;
+        color: black;
+      }
+      &:hover { color: black; i { color: black; } }
+    }
+    .hidden {
+      display: none;
+    }
+    &:hover {
+      overflow: initial;
+      z-index: 1000;
+    }
+  }
+
+  .proudcms-sticky-controls {
+    z-index: 100;
+  }
+
+  .page-property-editor {
+    h2 {
+      margin-top: 0;
+    }
+
+    .property {
+      margin: 1em 0;
+      > div {
+        display: flex;
+        input { flex-grow: 1; }
+      }
     }
   }
 }
