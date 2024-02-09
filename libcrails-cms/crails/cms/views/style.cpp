@@ -26,6 +26,11 @@ string_view Cms::Style::admin_layout() const
   return "layouts/admin";
 }
 
+string_view Cms::Style::wizard_layout() const
+{
+  return "layouts/wizard";
+}
+
 DataTree Cms::Style::as_data() const
 {
   DataTree tree;

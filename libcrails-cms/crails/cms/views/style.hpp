@@ -72,6 +72,7 @@ namespace Crails::Cms
     virtual std::vector<std::string> stylesheets() const;
     virtual std::vector<std::string> admin_stylesheets() const;
     virtual std::string_view admin_layout() const;
+    virtual std::string_view wizard_layout() const;
     virtual std::string javascript_on_content_loaded() const { return std::string(); }
   };
 }

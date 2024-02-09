@@ -1,8 +1,13 @@
 #pragma once
 #include <crails/odb/controller.hpp>
+#include <crails/i18n.hpp>
+#include "../../models/user.hpp"
+#include "../../models/settings.hpp"
 
 namespace Crails::Cms
 {
+  std::string_view get_wizard_template_path();
+
   template<typename TRAITS, typename SUPER>
   class AdminWizardController : public Crails::Odb::Controller<SUPER>
   {
@@ -12,7 +17,7 @@ namespace Crails::Cms
   public:
     AdminWizardController(Crails::Context& context) : Super(context)
     {
-      Super::vars["layout"] = std::string("layouts/wizard");
+      Super::vars["layout"] = get_wizard_template_path();
       Super::vars["page_title"] = i18n::t("admin.wizard.title");
       Super::vars["page_subtitle"] = i18n::t("admin.wizard.subtitle");
     }
