@@ -51,9 +51,12 @@ string Plugin::description() const
   string filename = name() + ".description.json";
   filesystem::path description_path = filepath.parent_path() / filename;
   DataTree data;
+  string locale_name = i18n::locale_name();
 
-  data.from_json_file((description_path() / filename).string());
-  return data[i18n::locale_name()].defaults_to<string>("");
+  data.from_json_file(description_path.string());
+  if (locale_name.length())
+    return data[locale_name].defaults_to<string>("");
+  return string();
 }
 
 string Plugin::base64_logo() const
