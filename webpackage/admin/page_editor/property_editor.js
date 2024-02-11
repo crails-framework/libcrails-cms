@@ -162,9 +162,9 @@ export default class extends ProudCmsDialog {
       this.inputs[property] = input;
     }
     confirmButton.addEventListener("click", this.accepted.bind(this));
+    this.open();
     if (typeof crailscms_on_content_loaded == "function")
       crailscms_on_content_loaded(this.popup);
-    this.open();
   }
 
   accepted() {
