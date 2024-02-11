@@ -4,6 +4,8 @@
 #include <crails/odb/connection.hpp>
 #include <crails/read_file.hpp>
 #include <crails/utils/base64.hpp>
+#include <crails/i18n.hpp>
+#include <crails/datatree.hpp>
 
 using namespace Crails::Cms;
 using namespace std;
@@ -48,10 +50,10 @@ string Plugin::description() const
 {
   string filename = name() + ".description.json";
   filesystem::path description_path = filepath.parent_path() / filename;
-  string result;
+  DataTree data;
 
-  Crails::read_file(description_path, result);
-  return result;
+  data.from_json_file((description_path() / filename).string());
+  return data[i18n::locale_name()].defaults_to<string>("");
 }
 
 string Plugin::base64_logo() const
