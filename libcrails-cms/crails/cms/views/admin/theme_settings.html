@@ -40,15 +40,11 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
       <label for="<%= form.scoped_name(field_relative_name(variable)) %>" data-type="<%= variable.type %>">
         <%= variable.name %>
       </label>
-      <% if (variable.type != "select") do -%>
-        <input name="<%= name %>"
-               type="<%= variable.type %>"
-               value="<%= value %>"
-        <% if (variable.type == "color") do -%>
-               class="<%= style.button_classes() %>"
-        <% end -%>
-               />
-      <% end else do -%>
+      <% if (variable.type == "html") do -%>
+        <textarea name="<%= name %>">
+          <%= html_escape(value) %>
+        </textarea>
+      <% end else if (variable.type == "select") do -%>
         <select name="<%= name %>">
           <% for (auto it = variable.options.begin() ; it != variable.options.end() ; ++it) do -%>
             <option value="<%= it->second %>"
@@ -58,6 +54,14 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
             </option>
           <% end -%>
         </select>
+      <% end else do -%>
+        <input name="<%= name %>"
+               type="<%= variable.type %>"
+               value="<%= value %>"
+        <% if (variable.type == "color") do -%>
+               class="<%= style.button_classes() %>"
+        <% end -%>
+               />
       <% end -%>
     <% yields-end -%>
   <% end -%>
