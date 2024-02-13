@@ -35,7 +35,7 @@ time_t string_to_time(const std::string& value, const char* format)
   std::istringstream stream(value.c_str());
   std::tm tm{0};
 
-  stream >> std::get_time(&tm, form_date_format);
+  stream >> std::get_time(&tm, format);
   if (stream.fail())
   {
     logger << Logger::Debug << "Failed to parse date `" << value << "` using format `" << format << '`' << Logger::endl;
