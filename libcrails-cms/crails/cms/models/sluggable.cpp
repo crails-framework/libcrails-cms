@@ -8,7 +8,11 @@ using namespace Crails::Cms;
 
 string Sluggable::slug_from_title(const string& title) const
 {
-  return Url::encode(dasherize(title));
+  return Url::encode(
+    dasherize(
+      replace_accent_characters(title)
+    )
+  );
 }
 
 void Sluggable::edit(Data params)
