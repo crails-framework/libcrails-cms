@@ -41,9 +41,7 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
         <%= variable.name %>
       </label>
       <% if (variable.type == "html") do -%>
-        <textarea name="<%= name %>">
-          <%= html_escape(value) %>
-        </textarea>
+        <textarea name="<%= name %>"><%= html_escape(value) %></textarea>
       <% end else if (variable.type == "select") do -%>
         <select name="<%= name %>">
           <% for (auto it = variable.options.begin() ; it != variable.options.end() ; ++it) do -%>
