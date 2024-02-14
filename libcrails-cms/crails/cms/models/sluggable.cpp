@@ -1,5 +1,5 @@
 #include "sluggable.hpp"
-#include <crails/utils/semantics.hpp>
+#include <crails/utils/string.hpp>
 #include <crails/url.hpp>
 
 using namespace std;
@@ -10,7 +10,7 @@ string Sluggable::slug_from_title(const string& title) const
 {
   return Url::encode(
     dasherize(
-      replace_accent_characters(title)
+      replace_accented_characters(title)
     )
   );
 }
