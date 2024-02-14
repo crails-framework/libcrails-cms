@@ -9,28 +9,26 @@ using namespace Crails::Cms;
 
 // END LINKING
 
-<%= style.section() yields %>
-  <%= form({
-    {"action", "/session"},
-    {"method", "post"},
-    {"class", style.form_classes()}
-  }) yields %>
-    <%= tag("input", {
-      {"type", "hidden"},
-      {"name", "redirect_to"},
-      {"value", params["uri"].as<std::string>()}
-    }) %>
+<%= form({
+  {"action", "/session"},
+  {"method", "post"},
+  {"class", style.form_classes()}
+}) yields %>
+  <%= tag("input", {
+    {"type", "hidden"},
+    {"name", "redirect_to"},
+    {"value", params["uri"].as<std::string>()}
+  }) %>
 
-    <%= style.form_group() yields %>
-      <label for="email"><%= i18n::t("session.login") %></label>
-      <%= text_field("email", std::string()) %>
-    <% yields-end %>
-
-    <%= style.form_group() yields %>
-      <label for="password"><%= i18n::t("session.password") %></label>
-      <%= password_field("password", std::string()) %>
-    <% yields-end %>
-    
-    <%= style.signin_button() %>
+  <%= style.form_group() yields %>
+    <label for="email"><%= i18n::t("session.login") %></label>
+    <%= text_field("email", std::string()) %>
   <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <label for="password"><%= i18n::t("session.password") %></label>
+    <%= password_field("password", std::string()) %>
+  <% yields-end %>
+  
+  <%= style.signin_button() %>
 <% yields-end %>

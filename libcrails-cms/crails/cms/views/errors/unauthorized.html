@@ -1,5 +1,12 @@
 #include <crails/i18n.hpp>
-// END LINKING
-<h2><%= i18n::t("errors.unauthorized") %></h2>
+#include "../../../views/style.hpp"
 
-<%= partial("session/form") %>
+const Crails::Cms::Style& @style = Crails::Cms::Style::singleton::get();
+
+// END LINKING
+
+<%= style.section() yields %>
+  <h2><%= i18n::t("errors.unauthorized") %></h2>
+
+  <%= partial("session/form") %>
+<% yields-end %>
