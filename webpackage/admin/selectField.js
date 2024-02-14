@@ -4,10 +4,11 @@ import i18n from "../i18n.js";
 
 TomSelect.define("remove_button", TomSelect_remove_button);
 
-window.myTomSelect = TomSelect;
-
 export default function create(selector = "#tagPicker") {
   return i18n.ready.then(function() {
+    if (!document.querySelector(selector)) {
+      return null;
+    }
     return new TomSelect(selector, {
       createOnBlur: true,
       create: true,

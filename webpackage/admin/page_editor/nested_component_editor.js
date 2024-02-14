@@ -214,7 +214,7 @@ export default class NestedComponentEditor extends ComponentEditor {
   moveDown(component) {
     if (this.lastComponentElement == component.root) return ;
     const otherElement = component.root.nextElementSibling;
-    if (otherElement.$component.isFooter) return ;
+    if (!otherElement || otherElement.$component.isFooter) return ;
     return this.swapElement(component.root, otherElement).then(() => {
       this.container.insertBefore(component.root, otherElement.nextElementSibling);
       this.componentsChanged();
