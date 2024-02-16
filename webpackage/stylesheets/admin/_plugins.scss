@@ -8,7 +8,9 @@
   li {
     > div {
       position: relative;
+      display: flex;
       padding: 0.5em 1em;
+      .text-block { flex-grow: 1; }
       h4 {
         padding: 0;
         margin: 0;
