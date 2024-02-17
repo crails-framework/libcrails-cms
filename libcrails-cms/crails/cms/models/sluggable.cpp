@@ -10,7 +10,7 @@ string Sluggable::slug_from_title(const string& title) const
 {
   return Url::encode(
     dasherize(
-      replace_accented_characters(title)
+      title
     )
   );
 }
