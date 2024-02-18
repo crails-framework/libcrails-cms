@@ -69,7 +69,7 @@ namespace Crails::Cms
     const Layout* find(const std::string& name) const;
     const Layout& require(const std::string& name) const;
     const std::vector<const Layout*>& get_layouts() const { return layouts; }
-    std::map<std::string, std::string> get_layout_options() const;
+    std::map<std::string, std::string> get_layout_options(const std::string& theme) const;
     std::map<std::string, std::string> get_theme_options() const;
 
   protected:

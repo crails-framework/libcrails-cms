@@ -92,12 +92,15 @@ const Layout& Layouts::require(const string& name) const
   return *layout;
 }
 
-map<string,string> Layouts::get_layout_options() const
+map<string,string> Layouts::get_layout_options(const string& theme) const
 {
   map<string,string> result;
 
   for (const auto* layout : layouts)
-    result.emplace(layout->get_name(), layout->get_name());
+  {
+    if (layout->get_type() == DocumentLayoutType || layout->get_name() == theme)
+      result.emplace(layout->get_name(), layout->get_name());
+  }
   return result;
 }
 
