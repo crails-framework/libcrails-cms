@@ -1,14 +1,16 @@
 #include <crails/html_form_builder.hpp>
 #include <crails/i18n.hpp>
 #include "../../../routes.hpp"
+#include "../../../models/settings.hpp"
 #include "../../../models/page.hpp"
 #include "../../../views/style.hpp"
 #include "../../../views/layout.hpp"
 
+const Crails::Cms::Settings& @settings;
 const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
 const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
 const Crails::Cms::Page& @model;
-const Crails::Cms::Layout& proudcms_layout = model.get_layout();
+const Crails::Cms::Layout& proudcms_layout = model.get_layout(settings.get_theme());
 Crails::FormBuilder<Crails::Cms::Page> form = Crails::FormBuilder<Crails::Cms::Page>(this, model);
 const std::string url = route.make(model.get_id());
 std::string @extra_partial = "admin/pages/_form_extra";
@@ -26,7 +28,7 @@ using namespace Crails::Cms;
     <%= style.form_group() yields %>
       <%= form.label_for("layout") %>
       <%= form.select_field("layout",
-            Crails::Cms::Layouts::singleton::get()->get_layout_options(),
+            Crails::Cms::Layouts::singleton::get()->get_layout_options(settings.get_theme()),
             &Crails::Cms::Page::get_layout_name) %>
     <% yields-end -%>
 

@@ -43,7 +43,7 @@ namespace Crails::Cms
     virtual void use_admin_style() const { throw std::runtime_error("no admin style for layout " + name); }
     virtual const Style& get_style() const { throw std::runtime_error("no style defined for layout " + name); }
 
-    static const Layout& get(const std::string& name);
+    static const Layout& get(const std::string& theme, const std::string& name);
 
   protected:
     std::string              name;
@@ -57,6 +57,7 @@ namespace Crails::Cms
   class Layouts
   {
     SINGLETON(Layouts)
+    typedef std::vector<const Layout*> LayoutList;
   protected:
     Layouts();
     ~Layouts();
@@ -66,14 +67,15 @@ namespace Crails::Cms
     void use_admin_style(const std::string& name) const;
 
     virtual const Layout& default_layout() const;
-    const Layout* find(const std::string& name) const;
-    const Layout& require(const std::string& name) const;
-    const std::vector<const Layout*>& get_layouts() const { return layouts; }
-    std::map<std::string, std::string> get_layout_options() const;
+    const Layout& default_layout_for_theme(const std::string& theme) const;
+    const Layout* find(const std::string& theme, const std::string& name) const;
+    const Layout& require(const std::string& theme, const std::string& name) const;
+    const std::vector<const Layout*>& get_layouts(const std::string&) const;
+    std::map<std::string, std::string> get_layout_options(const std::string&) const;
     std::map<std::string, std::string> get_theme_options() const;
 
   protected:
-    std::vector<const Layout*> layouts;
+    std::map<std::string, LayoutList> layouts;
     std::list<const dylib*> plugins;
   };
 }

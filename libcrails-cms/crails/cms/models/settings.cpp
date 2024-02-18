@@ -50,7 +50,8 @@ std::string Crails::Cms::Settings::to_json() const
 
 const Crails::Cms::Layout& Crails::Cms::Settings::get_layout() const
 {
-  return Crails::Cms::Layout::get(theme);
+  return Crails::Cms::Layouts::singleton::require()
+    .default_layout_for_theme(theme);
 }
 
 const Crails::Cms::Style& Crails::Cms::Settings::get_style() const

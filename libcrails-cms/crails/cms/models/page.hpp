@@ -23,7 +23,7 @@ namespace Crails::Cms
     const std::string& get_layout_name() const;
 
     void set_layout(const Layout&);
-    const Layout& get_layout() const;
+    const Layout& get_layout(const std::string& theme) const;
 
     bool get_has_footer() const { return has_footer; }
     void set_has_footer(bool value) { has_footer = value; }

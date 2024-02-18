@@ -30,12 +30,12 @@ void Crails::Cms::Page::set_layout(const Crails::Cms::Layout& layout)
 
 const std::string& Crails::Cms::Page::get_layout_name() const
 {
-  if (layout_name.length() == 0)
-    return get_layout().get_name();
+  //if (layout_name.length() == 0)
+  //  return get_layout().get_name();
   return layout_name;
 }
 
-const Crails::Cms::Layout& Crails::Cms::Page::get_layout() const
+const Crails::Cms::Layout& Crails::Cms::Page::get_layout(const std::string& theme) const
 {
-  return Crails::Cms::Layout::get(layout_name);
+  return Crails::Cms::Layout::get(theme, layout_name);
 }
