@@ -35,7 +35,7 @@ void Attachment::merge_data(Data out) const
   out["url"] = this->as_attachment().get_url();
   if (type == ImageAttachment)
     out["miniature_url"] = this->get_miniature().get_url();
-  out["tags"].from_vector(tags);
+  out["tags"].from_vector(get_tags());
 }
 
 std::string Attachment::to_json() const
