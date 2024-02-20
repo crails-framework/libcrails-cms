@@ -36,6 +36,7 @@ namespace Crails::Cms
     }
 
   protected:
-    std::string tag_list;
+    std::vector<std::string> tags;
+    std::string              tag_list;
   };
 }

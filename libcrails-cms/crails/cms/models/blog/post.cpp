@@ -25,7 +25,7 @@ void Crails::Cms::BlogPost::merge_data(Data out) const
   out["published"] = published;
   out["publication_at"] = publication_at;
   out["author_id"] = author_id;
-  out["tags"].from_vector(get_tags());
+  out["tags"].from_vector(tags);
 }
 
 string Crails::Cms::BlogPost::slug_from_title(const std::string& title) const
