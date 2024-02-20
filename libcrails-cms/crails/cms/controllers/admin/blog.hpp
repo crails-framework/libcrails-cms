@@ -1,6 +1,7 @@
 #pragma once
 #include "resource.hpp"
 #include "../../models/blog/post.hpp"
+#include "../../local_route.hpp"
 #include <chrono>
 
 namespace Crails::Cms
@@ -41,6 +42,7 @@ namespace Crails::Cms
 
     void create()
     {
+      LocalRoute route(Super::vars);
       Post model;
       bool published = should_publish();
       auto author = Super::user_session.const_get_current_user();
@@ -53,11 +55,12 @@ namespace Crails::Cms
       if (published)
         on_post_published(model);
       Super::flash["info"] = "Post created";
-      Super::redirect_to("/admin/blog/post/" + std::to_string(model.get_id()));
+      Super::redirect_to(route.make("post", model.get_id()));
     }
 
     void update()
     {
+      LocalRoute route(Super::vars);
       std::shared_ptr<Post> model = Super::require_resource();
 
       if (model)
@@ -74,7 +77,7 @@ namespace Crails::Cms
         if (published_action)
           on_post_published(*model);
         Super::flash["info"] = "Post updated";
-        Super::redirect_to("/admin/blog/post/" + std::to_string(model->get_id()));
+        Super::redirect_to(route.make("post", model->get_id()));
       }
     }
 

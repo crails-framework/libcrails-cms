@@ -52,7 +52,7 @@ using namespace Crails::Cms;
   <%= style.admin_submit_button("main-form") %>
   <%= style.admin_preview_button(route.make("preview")) %>
   <% if (model.is_persistent()) do %>
-    <%= style.admin_remove_button(*this, route.make(model.get_id())) %>
+    <%= style.admin_remove_button(*this, route.make("post", model.get_id())) %>
   <% end %>
 </div>
 
