@@ -103,6 +103,7 @@ namespace Crails::Cms
         model.set_type(Crails::Cms::AudioAttachment);
       else if (file.mimetype.find("video/") == 0)
         model.set_type(Crails::Cms::VideoAttachment);
+      Super::database.save(model);
       if (enforce_acceptable_format(model))
         model.set_processing(true);
       Super::database.save(model);
@@ -134,6 +135,7 @@ namespace Crails::Cms
         model2.set_resource(target);
         model2.set_mimetype(target.get_mimetype());
         model2.set_processing(false);
+        source.link_to(target.get_filepath());
         {
           Odb::Connection database;
           database.rollback_on_destruction = false;
