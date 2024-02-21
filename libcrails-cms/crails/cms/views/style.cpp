@@ -151,7 +151,13 @@ string Cms::Style::section(int, const std::map<std::string, std::string>& attrs,
 
 string Cms::Style::card(const std::map<std::string,std::string>& attrs, std::function<std::string()> yield) const
 {
-  return HtmlTemplate::tag("div", attrs, yield);
+  std::map<std::string,std::string> final_attrs(attrs);
+
+  if (attrs.find("class") != attrs.end())
+    attrs["class"] = card_classes() + attrs["class"];
+  else
+    attrs["class"] = card_classes();
+  return HtmlTemplate::tag("div", final_attrs, yield);
 }
 
 string Cms::Style::thumbnail(const ClassList& classes, const std::string& src) const
