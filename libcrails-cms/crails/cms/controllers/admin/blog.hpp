@@ -47,7 +47,7 @@ namespace Crails::Cms
       bool published = should_publish();
       auto author = Super::user_session.const_get_current_user();
 
-      model.edit(Super::params[Crails::Cms::BlogPost::scope]);
+      model.edit(Super::params[Post::scope]);
       model.set_author_id(author->get_id());
       if (published)
         before_publishing_post(model);
@@ -69,7 +69,7 @@ namespace Crails::Cms
         bool published = should_publish();
         bool published_action = published && !already_published;
 
-        model->edit(Super::params[Crails::Cms::BlogPost::scope]);
+        model->edit(Super::params[Post::scope]);
         model->set_published(published);
         if (published_action)
           before_publishing_post(*model);
@@ -105,7 +105,7 @@ namespace Crails::Cms
     bool should_publish() const
     {
       return can_publish()
-          && Super::params[Crails::Cms::BlogPost::scope]["published"].template defaults_to<std::string>("") == "on";
+          && Super::params[Post::scope]["published"].template defaults_to<std::string>("") == "on";
     }
 
     virtual void before_publishing_post(Post& post)
