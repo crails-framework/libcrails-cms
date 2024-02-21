@@ -154,9 +154,9 @@ string Cms::Style::card(const std::map<std::string,std::string>& attrs, std::fun
   std::map<std::string,std::string> final_attrs(attrs);
 
   if (attrs.find("class") != attrs.end())
-    attrs["class"] = card_classes() + attrs["class"];
+    final_attrs["class"] = card_classes() + attrs.at("class");
   else
-    attrs["class"] = card_classes();
+    final_attrs["class"] = card_classes();
   return HtmlTemplate::tag("div", final_attrs, yield);
 }
 

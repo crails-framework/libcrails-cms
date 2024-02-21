@@ -27,7 +27,7 @@ int index = 1;
       <div class="article-description">
         <%= html_escape(model->get_description()) %>
       </div>
-      <a href="<%= route.make(model->get_slug()) %>">
+      <a href="<%= route.make(model->get_slug()) %>" data-id="<%= model->get_id() %>">
         <%= i18n::t("blog.read-more") %>
       </a>
     <% yields-end %>
