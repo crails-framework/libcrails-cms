@@ -46,6 +46,9 @@ namespace Crails::Cms
     const std::string& get_footer() const { return footer; }
     void set_footer(const std::string& value) { footer = value; }
 
+    bool get_enable_user_subscribe() const { return enable_user_subscribe; }
+    void set_enable_user_subscribe(bool value) { enable_user_subscribe = value; }
+
     std::vector<std::string> get_plugins() const;
     void set_plugins(const std::vector<std::string>&);
     bool has_plugin(const std::string&) const;
@@ -64,6 +67,7 @@ namespace Crails::Cms
     std::string footer;
     std::string plugins;
     Crails::Odb::id_type homepage_id;
+    bool enable_user_subscribe = false;
     #pragma db transient
     bool plugins_updated = false;
   };

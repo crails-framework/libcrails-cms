@@ -24,6 +24,8 @@ void Crails::Cms::Settings::edit(Data params)
     set_theme_settings(params["theme_settings"]);
   if (params["footer"].exists())
     set_footer(params["footer"]);
+  if (params["enable_user_subscribe"].exists())
+    set_enable_user_subscribe(params["enable_user_subscribe"].as<bool>());
   if (params["plugins"].exists())
     update_plugins(params["plugins"].to_vector<std::string>());
   else if (params["with_plugins"].exists())

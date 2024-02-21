@@ -67,6 +67,11 @@ using namespace Crails::Cms;
     <%= form.label_for("public_url") %>
     <%= form.text_field("public_url", &Crails::Cms::Settings::get_public_url) %>
   <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("enable_user_subscribe") %>
+    <%= form.boolean_field("enable_user_subscribe", &Crails::Cms::Settings::get_enable_user_subscribe) %>
+  <% yields-end %>
 <% yields-end %>
 
 <div class="<%= style.button_group_classes() %>">
