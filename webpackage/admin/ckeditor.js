@@ -23,8 +23,9 @@ import ImageResizeHandles from '@ckeditor/ckeditor5-image/src/imageresize/imager
 import imageLeftIcon from './icons/image-align-left.svg';
 import imageRightIcon from './icons/image-align-right.svg';
 
-import ProudCmsEmbed from "./ckeditor_embed.js";
-import ProudCmsOpenGraph from "./ckeditor_opengraph.js";
+import CmsImageEmbed from "./ckeditor_embed.js";
+import CmsAudioEmbed from "./ckeditor_audio.js";
+import CmsOpenGraph from "./ckeditor_opengraph.js";
 
 function makeCKEditorPluginList(customPlugins) {
   const plugins = [
@@ -33,7 +34,7 @@ function makeCKEditorPluginList(customPlugins) {
     Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, LinkImage,
     ImageResizeEditing, ImageResizeHandles,
     Table, TableToolbar, TableProperties, TableCellProperties, TableColumnResize, TableCaption, TableSelection, TableClipboard, TableUtils,
-    ProudCmsEmbed, ProudCmsOpenGraph
+    CmsImageEmbed, CmsAudioEmbed, CmsOpenGraph
   ];
 
   if (window.customCKEditorPlugins) {
@@ -53,10 +54,9 @@ function makeCKEditorToolbar(customPlugins) {
     return window.customCKEditorToolBar();
   else {
     const toolbar = [
-      'heading', 'bold', 'italic', 'link', 'alignment', 'blockQuote', 'mediaEmbed',
-      ProudCmsEmbed.toolName,
-      'insertTable',
-      ProudCmsOpenGraph.toolName
+      'heading', 'bold', 'italic', 'alignment', 'blockQuote', 'insertTable', '|',
+      'link',  'mediaEmbed', CmsImageEmbed.toolName, CmsAudioEmbed.toolName,
+      CmsOpenGraph.toolName
     ];
 
     if (window.customCKEditorPlugins) {
@@ -68,7 +68,10 @@ function makeCKEditorToolbar(customPlugins) {
       if (toolbar.indexOf(plugin.toolName) < 0)
         toolbar.push(plugin.toolName);
     });
-    return toolbar;
+    return {
+      items: toolbar,
+      shouldNotGroupWhenFull: true
+    };
   }
 }
 
