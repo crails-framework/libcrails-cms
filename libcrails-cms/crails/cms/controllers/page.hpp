@@ -1,5 +1,6 @@
 #pragma once
 #include "resource.hpp"
+#include "injectable.hpp"
 #include "../models/page.hpp"
 #include "../views/layout.hpp"
 #include <boost/lexical_cast.hpp>
@@ -14,6 +15,59 @@ namespace Crails::Cms
   {
     typedef Crails::Cms::ResourceController<TRAITS, SUPER> Super;
   public:
+    class InjectablePage : public Crails::Cms::Injectable
+    {
+      typedef std::shared_ptr<typename Super::Model> ModelPtr;
+      ModelPtr model;
+    public:
+      InjectablePage(const Crails::SharedVars& vars, Crails::RenderTarget& sink)
+        : Injectable(vars, sink)
+      {}
+
+      InjectablePage(ModelPtr model, const Crails::SharedVars& vars, Crails::RenderTarget& sink)
+        : Injectable(vars, sink), model(model)
+      {}
+
+      Crails::Odb::id_type page_id() const
+      {
+        return boost::lexical_cast<Crails::Odb::id_type>(
+          Crails::any_cast(vars.at("id"))
+        );
+      }
+
+      bool require_model()
+      {
+        if (!model)
+          database.find_one(model, page_id());
+        return model != nullptr;
+      }
+
+      void run() override
+      {
+        if (require_model())
+        {
+          const Layout& layout = model->get_layout();
+          std::string layout_path = layout.get_layout_path();
+          std::string page_view = "pages/show";
+
+          if (layout.get_type() == DocumentLayoutType)
+            page_view = "pages/document";
+          if (injecting)
+            vars["render_footer"] = false;
+          else
+          {
+            vars["layout"] = layout_path;
+            vars["render_footer"] = !model->get_has_footer();
+          }
+          render(page_view, {
+            {"page", reinterpret_cast<const Crails::Cms::Page*>(model.get())}
+          });
+        }
+        else
+          render_text("<!-- Page not found --!>");
+      }
+    };
+
     PageController(Crails::Context& context) : Super(context)
     {
     }
@@ -27,55 +81,17 @@ namespace Crails::Cms
     {
       if (model.can_read(Super::get_current_user()))
       {
-        const Layout& layout = model.get_layout();
-        std::string layout_path = layout.get_layout_path();
-        std::string page_view = "pages/show";
+        InjectablePage injectable(
+          std::make_shared<typename Super::Model>(model),
+          Super::vars,
+          Super::response
+        );
 
-        if (!layout_path.length())
-          layout_path = Super::find_settings()->get_layout().get_layout_path();
-        if (layout.get_type() == DocumentLayoutType)
-          page_view = "pages/document";
         Super::prepare_open_graph(model);
-        Super::vars["layout"] = layout_path;
-        Super::vars["render_footer"] = !model.get_has_footer();
-        Super::render(page_view, {
-          {"page", reinterpret_cast<const Crails::Cms::Page*>(&model)}
-        });
+        injectable.run();
       }
       else
         Super::respond_with(Crails::HttpStatus::forbidden);
-    }
-
-    static std::string injectable_page(const Crails::SharedVars& vars)
-    {
-      using namespace std;
-      Crails::Odb::Connection database;
-      shared_ptr<typename Super::Model> model;
-      const Crails::Renderer* renderer;
-      Crails::Odb::id_type page_id = boost::lexical_cast<Crails::Odb::id_type>(
-        Crails::any_cast(vars.at("id"))
-      );
-
-      database.find_one(model, odb::query<typename Super::Model>::id == page_id);
-      if (model)
-      {
-        Crails::RenderString output;
-        Crails::SharedVars view_vars(vars);
-        const Layout& layout = model->get_layout();
-        std::string page_view = "pages/show";
-
-        if (layout.get_type() == DocumentLayoutType)
-          page_view = "pages/document";
-        view_vars.erase("layout");
-        view_vars["render_footer"] = false;
-        view_vars["page"] = reinterpret_cast<const Crails::Cms::Page*>(model.get());
-        renderer = Crails::Renderer::pick_renderer(page_view, "text/html");
-        renderer->render_template(page_view, output, view_vars);
-        return string("<!-- Injected page " + model->get_slug() + " --!>")
-          + string(output.value());
-      }
-      return string("<!-- Page not found --!>");
-      
     }
   };
 }

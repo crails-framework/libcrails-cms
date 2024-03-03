@@ -4,6 +4,8 @@
 #include <crails/paginator.hpp>
 #include <crails/renderer.hpp>
 #include <crails/any_cast.hpp>
+#include <crails/shared_vars.hpp>
+#include "injectable.hpp"
 #include "../models/blog/post.hpp"
 #include "../local_route.hpp"
 
@@ -29,63 +31,52 @@ namespace Crails::Cms
       Super::vars["rss"] = LocalRoute(Super::vars)();
     }
 
-    static std::string injectable_index(const Crails::SharedVars& vars)
+    class InjectableIndex : public Crails::Cms::Injectable
     {
-      using namespace std;
-      typedef vector<unique_ptr<Crails::Cms::BlogPost>> PostList;
-      DataTree params;
-      params.from_map(map<string,string>{
-        {"page", "1"},
-        {"count", Crails::defaults_to<string>(vars, "count", "3")}
-      });
-      Crails::Odb::Connection database;
-      const Crails::Renderer* renderer;
-      Crails::Paginator paginator(params);
-      odb::result<IndexPost> posts;
-      PostList models;
-      auto query = Post::template make_index_query<odb::query<Post>>(params.as_data());
-      renderer = Crails::Renderer::pick_renderer("blog/index", "text/html");
-
-      if (renderer)
+      typedef std::vector<std::unique_ptr<Crails::Cms::BlogPost>> PostList;
+    public:
+      InjectableIndex(const Crails::SharedVars& a, Crails::RenderTarget& b) : Crails::Cms::Injectable(a, b)
       {
-        Crails::RenderString output;
-        Crails::SharedVars view_vars(vars);
+      }
 
-        view_vars.erase("layout");
-        view_vars["is_injected"] = true;
-        view_vars["local_route"] = "/blog";
+      virtual void run() override
+      {
+        using namespace std;
+        DataTree params;
+
+        params.from_map(map<string,string>{
+          {"page", "1"},
+          {"count", Crails::defaults_to<string>(vars, "count", "3")}
+        });
+        run(params);
+      }
+
+      virtual void run(Data params)
+      {
+        using namespace std;
+        Crails::SharedVars view_vars;
+        Crails::Paginator paginator(params);
+        odb::result<IndexPost> posts;
+        PostList models;
+        auto query = Post::template make_index_query<odb::query<Post>>(params);
+
+        view_vars["is_injected"] = injecting;
+        if (injecting)
+          view_vars["local_route"] = "/blog";
         paginator.decorate_query(query);
         database.find<IndexPost>(posts, query);
         for (const auto& post : posts)
           models.push_back(make_unique<Post>(post.to_post()));
         view_vars["models"] = const_cast<const PostList*>(&models);
-        renderer->render_template("blog/index", output, view_vars);
-        return string(output.value());
+        render("blog/index", view_vars);
       }
-      return string();
-    }
+    };
 
     void index()
     {
-      using namespace std;
-      odb::result<IndexPost> posts;
-      vector<unique_ptr<Crails::Cms::BlogPost>> models;
-      auto query = Post::template make_index_query<odb::query<Post>>(Super::params.as_data());
-      paginator.decorate_view(Super::vars, [this]()
-      {
-        return Super::database.template count<Post>(
-          Post::template make_index_query<odb::query<Post>>(Super::params.as_data())
-        );
-      });
-      paginator.decorate_query(query);
-      Super::database.template find<IndexPost>(posts, query);
-      for (const auto& post : posts)
-        models.push_back(make_unique<Post>(post.to_post()));
-      Super::render(get_view_scope() + "/index", {{
-        {"models", const_cast<const vector<unique_ptr<Crails::Cms::BlogPost>>*>(&models)},
-        {"tag",   Super::params["tag"].template defaults_to<string>("")},
-        {"rss",   Super::params["uri"].template as<string>()}
-      }});
+      InjectableIndex injectable(Super::vars, Super::response);
+
+      injectable.run(Super::params.as_data());
     }
 
     void show()

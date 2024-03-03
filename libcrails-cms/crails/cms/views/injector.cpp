@@ -15,7 +15,7 @@ static string extract_attribute(const string_view content)
   return result;
 }
 
-static int find_injection_end(const string& content)
+static int find_injection_end(const string_view content)
 {
   int index = content.find("</inject>");
   return index < 0 ? content.find("/>") + 3 : index + 9; 
@@ -61,58 +61,73 @@ struct InjectionLock
 
 thread_local bool InjectionLock::injecting = false;
 
-string Injector::inject(string content, Crails::SharedVars vars) const
+string Injector::inject(const string_view content, Crails::SharedVars vars) const
 {
   InjectionLock lock;
-  int index;
+  int index = 0;
+  int last_index = 0;
   unsigned short injection_count = 0;
+  ostringstream output;
+  Crails::RenderStream render_target(output);
 
-  while ((index = content.find("<inject")) >= 0)
+  vars.erase("layout");
+  while ((index = content.find("<inject", index)) >= 0)
   {
-    int    end = find_injection_end(content);
-    string element = content.substr(index, end - index);
-    int    name_attribute_index = element.find("name=\"") + index + 6;
-    string name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
-    string injectable_content;
+    unique_ptr<Injectable> injectable;
+    int         end = find_injection_end(content);
+    string_view element = content.substr(index, end - index);
+    int         name_attribute_index = element.find("name=\"") + index + 6;
+    string      name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
 
-    if (!lock.already_locked)
+    vars = import_injection_variables(element, vars);
+    injectable = generate_injectable(name, vars, render_target);
+    output << content.substr(0, index);
+    if (!injectable)
     {
-      vars = import_injection_variables(element, vars);
-      injectable_content = generate_injection(name, vars);
+      output << "<!-- injectable " << name << " not found !-->";
+    }
+    else if (!lock.already_locked)
+    {
+      injectable->run();
     }
     else
     {
-      injectable_content = "<!-- nested injections are not allowed --!>";
+      output << "<!-- nested injections are not allowed --!>";
     }
-    content = content.substr(0, index) + injectable_content + content.substr(end);
+    index = last_index = end - 1;
     if (injection_count++ > 150)
     {
       throw boost_ext::runtime_error("max injection count reached");
     }
   }
-  return content;
+  output << content.substr(last_index);
+  return output.str();
 }
 
-string Injector::generate_injection(const string_view name, const Crails::SharedVars& vars) const
+unique_ptr<Injectable> Injector::generate_injectable(const std::string_view name, const Crails::SharedVars& vars, Crails::RenderTarget& sink) const
 {
-  for (const auto& injectable : injectables)
+  auto it = find(injectables.begin(), injectables.end(), name);
+
+  if (it != injectables.end())
   {
-    if (injectable.matches(name))
-      return injectable.run(vars);
+    auto ptr = it->create(vars, sink);
+
+    ptr->injecting = true;
+    return move(ptr);
   }
-  return "<!-- injector " + string(name) + " not found !-->";
+  return nullptr;
 }
 
-string Injector::run(string content, const Crails::SharedVars& vars)
+string Injector::run(const string_view content, const Crails::SharedVars& vars)
 {
   const Injector* injector = Injector::singleton::get();
 
   if (injector)
     return injector->inject(content, vars);
-  return content;
+  return string(content);
 }
 
-void Injector::register_injectable(Injectable injectable)
+void Injector::register_injectable(InjectableTraits injectable)
 {
   Injector* injector = Injector::singleton::get();
 
@@ -120,23 +135,21 @@ void Injector::register_injectable(Injectable injectable)
     injector->add_injectable(injectable);
 }
 
-void Injector::add_injectable(Injectable injectable)
+void Injector::add_injectable(InjectableTraits injectable)
 {
   injectables.push_back(injectable);
 }
 
 vector<string_view> Injector::available_injectors()
 {
-  vector<Injectable>::const_iterator it;
+  vector<InjectableTraits>::const_iterator it;
   vector<string_view> result;
   const Injector* injector = Injector::singleton::get();
 
   if (injector)
   {
     for (it = injector->injectables.begin() ; it != injector->injectables.end() ; ++it)
-    {
-      result.push_back(it->get_name());
-    }
+      result.push_back(it->name);
   }
   return result;
 }
@@ -155,6 +168,6 @@ vector<string_view> Injector::params_for(const string_view name) const
   auto it = find(injectables.begin(), injectables.end(), name);
 
   if (it != injectables.end())
-    return it->get_param_names();
+    return it->param_names;
   return {};
 }
