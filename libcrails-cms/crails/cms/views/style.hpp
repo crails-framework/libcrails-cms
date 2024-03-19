@@ -35,8 +35,8 @@ namespace Crails::Cms
     virtual ClassList form_input_classes() const { return {}; }
     virtual ClassList button_classes() const { return {"pure-button"}; }
     virtual ClassList active_button_classes() const { return button_classes() + "pure-button-active"; }
-    virtual ClassList confirm_button_classes() const { return {"pure-button", "pure-button-primary"}; }
-    virtual ClassList danger_button_classes() const { return {"pure-button", "pure-button-danger"}; }
+    virtual ClassList confirm_button_classes() const { return button_classes() + "pure-button-primary"; }
+    virtual ClassList danger_button_classes() const { return button_classes() + "pure-button-danger"; }
     virtual ClassList button_group_classes() const { return {"pure-button-group"}; }
     virtual ClassList small_button_classes() const { return {"pure-sm-button"}; }
     virtual ClassList table_classes() const { return {"pure-table", "pure-table-horizontal", "pure-table-striped"}; }

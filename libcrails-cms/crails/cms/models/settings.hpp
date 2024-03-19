@@ -49,6 +49,9 @@ namespace Crails::Cms
     bool get_enable_user_subscribe() const { return enable_user_subscribe; }
     void set_enable_user_subscribe(bool value) { enable_user_subscribe = value; }
 
+    const std::string& get_matomo_url() const { return matomo_url; }
+    void set_matomo_url(const std::string& value) { matomo_url = value; }
+
     std::vector<std::string> get_plugins() const;
     void set_plugins(const std::vector<std::string>&);
     bool has_plugin(const std::string&) const;
@@ -62,6 +65,8 @@ namespace Crails::Cms
     std::string favicon;
     #pragma db value_type("VARCHAR(32)")
     std::string theme;
+    #pragma db value_type("VARCHAR(64)")
+    std::string matomo_url;
     #pragma db type("TEXT")
     DataTree theme_settings;
     std::string footer;

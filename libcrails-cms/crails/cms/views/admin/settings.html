@@ -69,6 +69,11 @@ using namespace Crails::Cms;
   <% yields-end %>
 
   <%= style.form_group() yields %>
+    <%= form.label_for("matomo_url") %>
+    <%= form.text_field("matomo_url", &Crails::Cms::Settings::get_matomo_url) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
     <%= form.label_for("enable_user_subscribe") %>
     <%= form.boolean_field("enable_user_subscribe", &Crails::Cms::Settings::get_enable_user_subscribe) %>
   <% yields-end %>

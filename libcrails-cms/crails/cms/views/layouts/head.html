@@ -7,7 +7,6 @@ const Crails::Cms::Settings& @settings;
 const Crails::Cms::OpenGraph* @open_graph = nullptr;
 const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
 const Crails::Cms::LayoutVariables& variables = settings.get_layout().get_variables();
-const Data values = settings.get_theme_settings();
 const std::string @rss = "";
 
 // END LINKING
@@ -28,4 +27,22 @@ const std::string @rss = "";
 
 <% if (variables.size()) do -%>
   <%= render_css_variables(variables, settings.get_theme_settings()) %>
+<% end -%>
+
+<% if (settings.get_matomo_url().length()) do -%>
+  <!-- Matomo -->
+  <script>
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+      var u="//<%= settings.get_matomo_url() %>/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
 <% end -%>
