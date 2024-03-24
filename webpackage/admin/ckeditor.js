@@ -11,6 +11,7 @@ import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed';
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import {Table, TableToolbar, TableProperties, TableCellProperties, TableColumnResize, TableCaption, TableSelection, TableClipboard, TableUtils} from '@ckeditor/ckeditor5-table';
+import {HtmlEmbed} from '@ckeditor/ckeditor5-html-embed';
 
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
@@ -34,6 +35,7 @@ function makeCKEditorPluginList(customPlugins) {
     Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, LinkImage,
     ImageResizeEditing, ImageResizeHandles,
     Table, TableToolbar, TableProperties, TableCellProperties, TableColumnResize, TableCaption, TableSelection, TableClipboard, TableUtils,
+    HtmlEmbed,
     CmsImageEmbed, CmsAudioEmbed, CmsOpenGraph
   ];
 
@@ -56,7 +58,7 @@ function makeCKEditorToolbar(customPlugins) {
     const toolbar = [
       'heading', 'bold', 'italic', 'alignment', 'blockQuote', 'insertTable', '|',
       'link',  'mediaEmbed', CmsImageEmbed.toolName, CmsAudioEmbed.toolName,
-      CmsOpenGraph.toolName
+      CmsOpenGraph.toolName, '|', 'htmlEmbed'
     ];
 
     if (window.customCKEditorPlugins) {

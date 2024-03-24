@@ -15,6 +15,7 @@
     "@ckeditor/ckeditor5-paragraph": "^35.3.2",
     "@ckeditor/ckeditor5-table": "^35.3.2",
     "@ckeditor/ckeditor5-theme-lark": "^35.3.2",
+    "@ckeditor/ckeditor5-html-embed": "^35.3.2",
     "ContentTools": "^1.6.16",
     "css-loader": "^5.2.7",
     "javascript-menu-editor": "github:Plaristote/javascript-menu-editor",
