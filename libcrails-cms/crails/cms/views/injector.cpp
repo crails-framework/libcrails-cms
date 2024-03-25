@@ -74,14 +74,14 @@ string Injector::inject(const string_view content, Crails::SharedVars vars) cons
   while ((index = content.find("<inject", index)) >= 0)
   {
     unique_ptr<Injectable> injectable;
-    int         end = find_injection_end(content);
+    int         end = last_index + find_injection_end(content.substr(last_index));
     string_view element = content.substr(index, end - index);
     int         name_attribute_index = element.find("name=\"") + index + 6;
     string      name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
 
     vars = import_injection_variables(element, vars);
     injectable = generate_injectable(name, vars, render_target);
-    output << content.substr(0, index);
+    output << content.substr(last_index, index - last_index);
     if (!injectable)
     {
       output << "<!-- injectable " << name << " not found !-->";
@@ -94,7 +94,7 @@ string Injector::inject(const string_view content, Crails::SharedVars vars) cons
     {
       output << "<!-- nested injections are not allowed --!>";
     }
-    index = last_index = end - 1;
+    index = last_index = end;
     if (injection_count++ > 150)
     {
       throw boost_ext::runtime_error("max injection count reached");
