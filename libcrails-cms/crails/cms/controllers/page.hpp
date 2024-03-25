@@ -44,6 +44,7 @@ namespace Crails::Cms
 
       void run() override
       {
+        using namespace Crails;
         if (require_model())
         {
           const Layout& layout = model->get_layout();
@@ -56,7 +57,8 @@ namespace Crails::Cms
             vars["render_footer"] = false;
           else
           {
-            vars["layout"] = layout_path;
+            if (layout_path.length())
+              vars["layout"] = layout_path;
             vars["render_footer"] = !model->get_has_footer();
           }
           render(page_view, {

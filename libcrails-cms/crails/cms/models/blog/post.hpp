@@ -16,7 +16,7 @@ namespace Crails::Cms
     static const std::string view;
 
     template<typename QUERY>
-    static QUERY default_order_by(QUERY query) { return query + "ORDER BY" + QUERY::publication_at; }
+    static QUERY default_order_by(QUERY query) { return query + "ORDER BY" + QUERY::publication_at + "DESC"; }
 
     template<typename QUERY>
     static QUERY make_index_query(Data params)

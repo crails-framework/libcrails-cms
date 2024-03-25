@@ -82,7 +82,7 @@ namespace Crails::Cms
     }
 
   protected:
-    odb::query<Post> make_index_query() const override
+    virtual odb::query<Post> make_index_query() const override
     {
       return Post::template make_index_query<odb::query<Post>>(Super::params.as_data());
     }

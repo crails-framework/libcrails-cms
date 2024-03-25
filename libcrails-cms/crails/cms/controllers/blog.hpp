@@ -53,17 +53,24 @@ namespace Crails::Cms
 
       virtual void run(Data params)
       {
+        Crails::Paginator paginator(params);
+
+        run_with_paginator(params, paginator);
+      }
+
+      virtual void run_with_paginator(Data params, Crails::Paginator& paginator)
+      {
         using namespace std;
         Crails::SharedVars view_vars;
-        Crails::Paginator paginator(params);
         odb::result<IndexPost> posts;
         PostList models;
-        auto query = Post::template make_index_query<odb::query<Post>>(params);
+        odb::query<Post> query = Post::template make_index_query<odb::query<Post>>(params);
 
         view_vars["is_injected"] = injecting;
         if (injecting)
           view_vars["local_route"] = "/blog";
-        paginator.decorate_query(query);
+        paginator.decorate_view(view_vars, [&]() { return database.count<Post>(query); });
+        paginator.decorate_query<Post>(query);
         database.find<IndexPost>(posts, query);
         for (const auto& post : posts)
           models.push_back(make_unique<Post>(post.to_post()));
@@ -76,7 +83,7 @@ namespace Crails::Cms
     {
       InjectableIndex injectable(Super::vars, Super::response);
 
-      injectable.run(Super::params.as_data());
+      injectable.run_with_paginator(Super::params.as_data(), paginator);
     }
 
     void show()
