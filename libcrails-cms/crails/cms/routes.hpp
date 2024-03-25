@@ -90,6 +90,7 @@ namespace Crails::Cms
       router.match_action("PUT",    "/:id",          CONTROLLER, update);
       router.match_action("DELETE", "/:id",          CONTROLLER, destroy);
       router.match_action("GET",    "/:id/reupload", CONTROLLER, show_reupload);
+      router.match_action("POST",   "/:id/reupload", CONTROLLER, reupload);
       router.match_action("",       "/reupload",     CONTROLLER, reupload);
       router.match_action("",       "/upload",       CONTROLLER, create);
     }
