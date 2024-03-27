@@ -33,6 +33,8 @@ namespace Crails::Cms
         });
         Super::paginator.decorate_query(query);
       }
+      else
+        query = Model::default_order_by(query);
       Super::database.template find<IndexModel>(models, query);
       for (IndexModel& model : models)
         list.push_back(std::make_shared<Model>(model));
