@@ -20,6 +20,7 @@ int index = 1;
 <% end else if (!is_injected) do -%>
   <% for (const auto& model : models) do -%>
     <%= style.section(index++, {}) yields %>
+      <%= style.thumbnail(model->get_thumbnail_url()) %>
       <h2><%= html_escape(model->get_title()) %></h2>
       <div class="article-date">
         <%= time_to_string(model->get_publication_at(), i18n::t("short-date-format")) %>
@@ -36,6 +37,7 @@ int index = 1;
 <% end else if (is_injected) do -%>
   <% for (const auto& model : models) do -%>
     <%= style.card() yields %>
+      <%= style.thumbnail(model->get_thumbnail_url()) %>
       <h2><%= html_escape(model->get_title()) %></h2>
       <div class="article-date">
         <%= time_to_string(model->get_publication_at(), i18n::t("short-date-format")) %>
