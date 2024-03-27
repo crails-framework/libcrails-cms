@@ -9,6 +9,7 @@ import ProudCmsPicker from "./admin/file_picker.js";
 import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
+import DirtyForm from "dirty-form";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -77,6 +78,7 @@ window.Cms = {
   PageEditor:   PageEditor,
   MenuEditor:   MenuEditor,
   TomSelect:    TomSelect,
+  DirtyForm:    DirtyForm,
   Style:        Style,
   i18n:         i18n,
   initializers: {

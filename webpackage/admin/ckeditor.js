@@ -3,6 +3,7 @@ import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading';
 import Link from '@ckeditor/ckeditor5-link/src/link';
 import AutoLink from '@ckeditor/ckeditor5-link/src/autolink';
@@ -30,7 +31,7 @@ import CmsOpenGraph from "./ckeditor_opengraph.js";
 
 function makeCKEditorPluginList(customPlugins) {
   const plugins = [
-    Essentials, Paragraph, Bold, Italic, Heading, 
+    Essentials, Paragraph, Bold, Italic, Underline, Heading,
     Link, AutoLink, Alignment, MediaEmbed, BlockQuote,
     Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, LinkImage,
     ImageResizeEditing, ImageResizeHandles,
@@ -56,7 +57,7 @@ function makeCKEditorToolbar(customPlugins) {
     return window.customCKEditorToolBar();
   else {
     const toolbar = [
-      'heading', 'bold', 'italic', 'alignment', 'blockQuote', 'insertTable', '|',
+      'heading', 'bold', 'italic', 'underline', 'alignment', 'blockQuote', 'insertTable', '|',
       'link',  'mediaEmbed', CmsImageEmbed.toolName, CmsAudioEmbed.toolName,
       CmsOpenGraph.toolName, '|', 'htmlEmbed'
     ];
