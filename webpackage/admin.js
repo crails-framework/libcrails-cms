@@ -9,7 +9,7 @@ import ProudCmsPicker from "./admin/file_picker.js";
 import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
-import DirtyForm from "dirty-form";
+import DirtyForm from "./admin/dirty_form.js";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -90,6 +90,9 @@ window.Cms = {
 };
 
 function initialize(event) {
+  const mainForm = document.getElementById("main-form");
+
+  window.mainFormWatcher = new DirtyForm(mainForm);
   // initialize thumbnail pickers
   for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
     imagePickerField(formGroup, "miniature_url");
