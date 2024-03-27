@@ -162,6 +162,8 @@ string Cms::Style::card(const std::map<std::string,std::string>& attrs, std::fun
 
 string Cms::Style::thumbnail(const ClassList& classes, const std::string& src) const
 {
+  if (!src.length())
+    return string();
   return HtmlTemplate::tag("img", {{"class",classes + "thumbnail"},{"src",src}});
 }
 
