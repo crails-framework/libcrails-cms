@@ -44,7 +44,7 @@ using namespace Crails;
     <%= hidden_field(form.scoped_name("with_plugins"), "yes") %>
 
     <%= style.form_group() yields %>
-      <%= form.label_for("plugins") %>
+      <%= form.label_for("plugins", i18n::t("form.label.plugins")) %>
       <%= form.select_field<std::string>("plugins", plugin_options, model.get_plugins()) %>
     <% yields-end %>
 

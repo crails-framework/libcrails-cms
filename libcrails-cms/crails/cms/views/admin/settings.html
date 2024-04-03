@@ -24,12 +24,12 @@ using namespace Crails::Cms;
   {"class", style.form_classes()}
 }) yields %>
   <%= style.form_group() yields %>
-    <%= form.label_for("title") %>
+    <%= form.label_for("title", i18n::t("form.label.title")) %>
     <%= form.text_field("title", &Crails::Cms::Settings::get_title) %>
   <% yields-end %>
 
   <%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
-    <%= form.label_for("favicon") %>
+    <%= form.label_for("favicon", i18n::t("form.label.favicon")) %>
     <%= form.text_field("favicon", &Crails::Cms::Settings::get_favicon) %>
     <%= tag("button", {{"class", style.button_classes()}}) yields %>
       <%= i18n::t("admin.image-library") %>
@@ -38,7 +38,7 @@ using namespace Crails::Cms;
   <% yields-end %>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("theme") %>
+    <%= form.label_for("theme", i18n::t("form.label.theme")) %>
     <%= form.select_field("theme",
           Crails::Cms::Layouts::singleton::get()->get_theme_options(),
           &Crails::Cms::Settings::get_theme) %>
@@ -50,7 +50,7 @@ using namespace Crails::Cms;
 
   <% if (plugins && plugins->has_available_plugins()) do -%>
     <%= style.form_group() yields %>
-      <%= form.label_for("plugins") %>
+      <%= form.label_for("plugins", i18n::t("form.label.plugins")) %>
       <%= tag("a", {{"href", route.make("plugins")}, {"class", style.button_classes()}}) yields %>
         <%= Crails::fonticon_tag(Crails::FontIcon::Plugin) %>
         <%= i18n::t("admin.plugins-edit") %>
@@ -59,22 +59,22 @@ using namespace Crails::Cms;
   <% end -%>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("homepage") %>
+    <%= form.label_for("homepage", i18n::t("form.label.homepage")) %>
     <%= form.select_field("homepage", page_options, &Crails::Cms::Settings::get_homepage_id) %>
   <% yields-end %>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("public_url") %>
+    <%= form.label_for("public_url", i18n::t("form.label.public_url")) %>
     <%= form.text_field("public_url", &Crails::Cms::Settings::get_public_url) %>
   <% yields-end %>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("matomo_url") %>
+    <%= form.label_for("matomo_url", i18n::t("form.label.matomo_url")) %>
     <%= form.text_field("matomo_url", &Crails::Cms::Settings::get_matomo_url) %>
   <% yields-end %>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("enable_user_subscribe") %>
+    <%= form.label_for("enable_user_subscribe", i18n::t("form.label.enable_user_subscribe")) %>
     <%= form.boolean_field("enable_user_subscribe", &Crails::Cms::Settings::get_enable_user_subscribe) %>
   <% yields-end %>
 <% yields-end %>

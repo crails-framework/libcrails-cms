@@ -8,8 +8,10 @@ std::map<std::string, std::string> @tag_options;
 
 // END LINKING
 
-<label for="tags">Tags</label>
+<label for="tags"><%= i18n::t("form.label.tags") %></label>
 <%= select_field("tags", tag_options, std::vector<std::string>(), {{"id","fileTagPicker"}}) %>
+
+<br/>
 
 <%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"}}) yields %>
   <div id="upload-block">

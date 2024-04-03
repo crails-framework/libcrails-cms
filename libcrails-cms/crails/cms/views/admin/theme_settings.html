@@ -66,7 +66,7 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
 
   <% if (layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
     <%= style.form_group() yields %>
-      <%= form.label_for("footer") %>
+      <%= form.label_for("footer", i18n::t("form.label.footer")) %>
       <%= form.text_area("footer", model.get_footer()) %>
     <% yields-end %>
   <% end -%>

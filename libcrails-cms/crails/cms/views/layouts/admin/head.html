@@ -3,10 +3,13 @@
 #include "../../../views/style.hpp"
 #include "../../../plugins.hpp"
 #include <crails/icons.hpp>
+#include <crails/i18n.hpp>
 
 const Crails::Cms::Settings& @settings;
 const Crails::Cms::Style* @style = Crails::Cms::Style::singleton::get();
 const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
+
+const std::string_view ckeditor_version = "35.4.0";
 
 // END LINKING
 <script>
@@ -30,3 +33,5 @@ const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
   <%= tag("link", {{"rel", "stylesheet"},{"src", Crails::Cms::Plugins::admin_css_uri}}) %>
   <%= tag("script", {{"src", Crails::Cms::Plugins::admin_js_uri}}) %>
 <% end -%>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/<%= ckeditor_version %>/classic/translations/<%= i18n::locale_name() %>.js"></script>

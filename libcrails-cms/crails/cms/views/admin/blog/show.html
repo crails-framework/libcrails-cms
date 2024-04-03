@@ -19,15 +19,15 @@ using namespace Crails::Cms;
 
 <%= form_for(model, route.make("post"), {{"class",style.form_classes() + "blog-post-form"},{"id","main-form"}}) yields %>
   <%= style.form_group() yields %>
-    <%= form.label_for("title") %>
+    <%= form.label_for("title", i18n::t("form.label.title")) %>
     <%= form.text_field("title", &Crails::Cms::BlogPost::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
   <% yields-end %>
   <%= style.form_group() yields %>
-    <%= form.label_for("description") %>
+    <%= form.label_for("description", i18n::t("form.label.description")) %>
     <%= form.text_area("description", &Crails::Cms::BlogPost::get_description, {{"maxlength",std::to_string(Crails::Cms::Editable::description_length)}}) %>
   <% yields-end %>
   <%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
-    <%= form.label_for("thumbnail") %>
+    <%= form.label_for("thumbnail", i18n::t("form.label.thumbnail")) %>
     <%= form.text_field("thumbnail", &Crails::Cms::BlogPost::get_thumbnail_url) %>
     <%= tag("button", {{"class",style.button_classes()}}) yields %>
       <%= i18n::t("admin.image-library") %>
@@ -36,12 +36,12 @@ using namespace Crails::Cms;
   <% yields-end %>
   <% if (can_publish) do -%>
     <%= style.form_group() yields %>
-      <%= form.label_for("published") %>
+      <%= form.label_for("published", i18n::t("form.label.published")) %>
       <%= form.boolean_field("published", &Crails::Cms::BlogPost::get_published) %>
     <% yields-end %>
   <% end -%>
   <%= style.form_group() yields %>
-    <%= form.label_for("tags") %>
+    <%= form.label_for("tags", i18n::t("form.label.tags")) %>
     <%= form.select_field("tags", tag_options, &Crails::Cms::BlogPost::get_tags, {{"id","tagPicker"}}) %>
   <% yields-end %>
 

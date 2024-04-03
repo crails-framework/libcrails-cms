@@ -21,19 +21,19 @@ using namespace Crails::Cms;
 <%= form_for(model, route(), {{"class", style.form_classes()},{"id","main-form"}}) yields %>
   <div class="aligned-inputs">
     <div class="<%= style.form_group_classes() %>">
-      <%= form.label_for("title") %>
+      <%= form.label_for("title", i18n::t("form.label.title")) %>
       <%= form.text_field("title", &Crails::Cms::Page::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
     </div>
 
     <%= style.form_group() yields %>
-      <%= form.label_for("layout") %>
+      <%= form.label_for("layout", i18n::t("form.label.layout")) %>
       <%= form.select_field("layout",
             Crails::Cms::Layouts::singleton::get()->get_layout_options(settings.get_theme()),
             &Crails::Cms::Page::get_layout_name) %>
     <% yields-end -%>
 
     <%= style.form_group() yields %>
-      <%= form.label_for("slug") %>
+      <%= form.label_for("slug", i18n::t("form.label.slug")) %>
       <%= form.text_field("slug", &Crails::Cms::Page::get_slug, {{"maxlength",std::to_string(Crails::Cms::Editable::slug_length)}}) %>
     <% yields-end -%>
   </div>

@@ -24,17 +24,17 @@ using namespace Crails::Cms;
     <h3><%= i18n::t("admin.wizard.user") %></h3>
 
     <%= style->form_group() yields %>
-      <%= user_form.label_for("email") %>
+      <%= user_form.label_for("email", i18n::t("form.label.email")) %>
       <%= user_form.text_field("email", &Crails::Cms::User::get_email) %>
     <% yields-end %>
 
     <%= style->form_group() yields %>
-      <%= user_form.label_for("password") %>
+      <%= user_form.label_for("password", i18n::t("form.label.password")) %>
       <%= user_form.password_field("password", std::string()) %>
     <% yields-end %>
 
     <%= style->form_group() yields %>
-      <%= user_form.label_for("password-confirm") %>
+      <%= user_form.label_for("password-confirm", i18n::t("form.label.password-confirm")) %>
       <%= user_form.password_field("password-confirm", std::string()) %>
     <% yields-end %>
   </div>
@@ -43,19 +43,19 @@ using namespace Crails::Cms;
     <h3><%= i18n::t("admin.menu.settings") %></h3>
 
     <%= style->form_group() yields %>
-      <%= settings_form.label_for("title") %>
+      <%= settings_form.label_for("title", i18n::t("form.label.title")) %>
       <%= settings_form.text_field("title", &Crails::Cms::Settings::get_title) %>
     <% yields-end %>
 
     <%= style->form_group() yields %>
-      <%= settings_form.label_for("theme") %>
+      <%= settings_form.label_for("theme", i18n::t("form.label.theme")) %>
       <%= settings_form.select_field("theme",
             Crails::Cms::Layouts::singleton::get()->get_theme_options(),
             &Crails::Cms::Settings::get_theme) %>
     <% yields-end -%>
     
     <%= style->form_group() yields %>
-      <%= settings_form.label_for("public_url") %>
+      <%= settings_form.label_for("public_url", i18n::t("form.label.public_url")) %>
       <%= settings_form.text_field("public_url", &Crails::Cms::Settings::get_public_url, {{"id","public-url-input"}}) %>
     <% yields-end %>
 

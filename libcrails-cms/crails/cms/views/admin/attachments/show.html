@@ -19,7 +19,7 @@ using namespace Crails::Cms;
   <div class="pure-u-1-1 pure-u-sm-1-2 pure-u-md-1-3">
 <%= form_for(model, route(), {{"class",style.form_classes()},{"style","margin-right:1em"}}) yields %>
   <%= style.form_group() yields %>
-    <%= form.label_for("name") %>
+    <%= form.label_for("name", i18n::t("form.label.name")) %>
     <%= form.text_field("name", &Crails::Cms::Attachment::get_name, {{"autocomplete","off"}}) %>
   <% yields-end %>
 
@@ -31,12 +31,12 @@ using namespace Crails::Cms;
   <% end -%>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("description") %>
+    <%= form.label_for("description", i18n::t("form.label.description")) %>
     <%= form.text_field("description", &Crails::Cms::Attachment::get_description, {{"autocomplete","off"}}) %>
   <% yields-end %>
 
   <%= style.form_group() yields %>
-    <%= form.label_for("tags") %>
+    <%= form.label_for("tags", i18n::t("form.label.tags")) %>
     <%= form.select_field("tags", tag_options, &Crails::Cms::Attachment::get_tags, {{"id","tagPicker"}}) %>
   <% yields-end %>
 

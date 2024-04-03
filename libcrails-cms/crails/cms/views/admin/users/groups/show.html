@@ -15,7 +15,7 @@ using namespace Crails::Cms;
 
 <%= form_for(model, route(), {{"class", style.form_classes()}}) yields %>
   <%= style.form_group() yields %>
-    <%= form.label_for("name") %>
+    <%= form.label_for("name", i18n::t("form.label.name")) %>
     <%= form.text_field("name", &Crails::Cms::UserGroup::get_name) %>
   <% yields-end %>
 

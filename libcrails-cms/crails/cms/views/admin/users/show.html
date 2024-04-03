@@ -22,27 +22,27 @@ using namespace Crails::Cms;
 
 <%= form_for(model, route(), {{"class", style->form_classes()}}) yields %>
   <%= style->form_group() yields %>
-    <%= form.label_for("email") %>
+    <%= form.label_for("email", i18n::t("form.label.email")) %>
     <%= form.text_field("email", &Crails::Cms::User::get_email) %>
   <% yields-end %>
 
   <%= style->form_group() yields %>
-    <%= form.label_for("password") %>
+    <%= form.label_for("password", i18n::t("form.label.password")) %>
     <%= form.password_field("password", std::string()) %>
   <% yields-end %>
 
   <%= style->form_group() yields %>
-    <%= form.label_for("password-confirm") %>
+    <%= form.label_for("password-confirm", i18n::t("form.label.password-confirm")) %>
     <%= form.password_field("password-confirm", std::string()) %>
   <% yields-end %>
 
   <%= style->form_group() yields %>
-    <%= form.label_for("role") %>
+    <%= form.label_for("role", i18n::t("form.label.role")) %>
     <%= form.select_field("role", role_options, &Crails::Cms::User::get_role) %>
   <% yields-end %>
 
   <%= style->form_group() yields %>
-    <%= form.label_for("groups") %>
+    <%= form.label_for("groups", i18n::t("form.label.groups")) %>
     <%= form.select_field("groups", group_options, &Crails::Cms::User::get_group_ids, {{"id","userGroupPicker"}}) %>
   <% yields-end %>
 
