@@ -88,7 +88,7 @@ namespace Crails::Cms
     assets.add("application.js", javascript.c_str(), javascript.length());
     assets.add("application.css", stylesheet.c_str(), javascript.length());
     assets.add("admin.js", admin_javascript.c_str(), admin_javascript.length());
-    assets.add("admin.css", admin_stylesheet.c_str(), admin_javascript.length());
+    assets.add("admin.css", admin_stylesheet.c_str(), admin_stylesheet.length());
   }
 
   void find_plugins_at(const filesystem::path& path, list<filesystem::path>& list)
