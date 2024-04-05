@@ -40,6 +40,7 @@ namespace Crails::Cms
     virtual ClassList button_group_classes() const { return {"pure-button-group"}; }
     virtual ClassList small_button_classes() const { return {"pure-sm-button"}; }
     virtual ClassList table_classes() const { return {"pure-table", "pure-table-horizontal", "pure-table-striped"}; }
+    virtual ClassList sortable_table_classes() const { return table_classes() + "sortable-relationship"; }
     virtual ClassList modal_classes() const { return {}; }
     virtual ClassList modal_content_classes() const { return {}; }
     virtual ClassList modal_controls_classes() const { return {}; }

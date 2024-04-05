@@ -1,0 +1,17 @@
+.sortable-table {
+  position: relative;
+
+  .sortable-table__drag {
+    position: absolute;
+    z-index: 10;
+    cursor: grabbing;
+    opacity: 1;
+  }
+
+  tbody tr {
+    cursor: grabbing;
+    td {
+      user-select: none;
+    }
+  }
+}

@@ -10,6 +10,7 @@ import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
 import DirtyForm from "./admin/dirty_form.js";
+import SortableRelationshipTable from "./admin/sortable_relationship.js";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -104,6 +105,7 @@ function initialize(event) {
   // initialize tomSelect
   createSelectField("#tagPicker");
   createSelectField("#userGroupPicker");
+  SortableRelationshipTable.loadFromElements("table.sortable-relationship");
 }
 
 document.addEventListener("DOMContentLoaded", initialize);
