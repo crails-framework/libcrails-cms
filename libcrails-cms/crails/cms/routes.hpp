@@ -96,6 +96,14 @@ namespace Crails::Cms
     }
 
     template<typename CONTROLLER>
+    void register_attachments_routes(Crails::Router& router)
+    {
+      set_path_for<CONTROLLER>(router);
+      router.match_action("GET", "/:id/thumbnail", CONTROLLER, thumbnail);
+      router.match_action("GET", "/:id", CONTROLLER, show);
+    }
+
+    template<typename CONTROLLER>
     void register_menus_admin_routes(Crails::Router& router)
     {
       set_path_for<CONTROLLER>(router);
