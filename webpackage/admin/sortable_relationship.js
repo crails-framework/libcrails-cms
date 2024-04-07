@@ -1,6 +1,11 @@
 import SortableTable from "./sortable_table.js";
 
 export default class SortableRelationship extends SortableTable {
+  constructor(table) {
+    super(table);
+    this.dragHandleClass = 'drag-handle';
+  }
+
   onSwappedRows(row1, row2) {
     const payload = {
       "row-id": row1.dataset.id,
