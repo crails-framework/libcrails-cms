@@ -7,6 +7,7 @@ vector<shared_ptr<Crails::Cms::Attachment>>& @models;
 map<string,string> @tag_options;
 unsigned long @items_count;
 Data& @session;
+string @attachment_path = "/attachments/by-id";
 
 // END LINKING
 
@@ -18,12 +19,17 @@ json([&]()
   json("count", items_count);
   json_array<List, List::value_type>("files", models, [&](shared_ptr<Crails::Cms::Attachment> model)
   {
+    string url = attachment_path + '/' + to_string(model->get_id());
+
     json("name", model->get_name());
     json("description", model->get_description());
     json("mimetype", model->get_mimetype());
-    json("url", model->as_attachment().get_url());
+    json("url", url);
     if (model->get_type() == Crails::Cms::ImageAttachment)
+    {
       json("miniature_url", model->get_miniature().get_url());
+      json("miniature_url_alt", url + "/thumbnail");
+    }
     if (model->get_processing())
       json("processing", true);
   });
