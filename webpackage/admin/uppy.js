@@ -13,6 +13,9 @@ import DropTarget from '@uppy/drop-target';
 import Compressor from '@uppy/compressor';
 import {updateCsrfTokenFromResponse} from "./csrf_token.js";
 
+import French from '@uppy/locales/lib/fr_FR';
+import Spanish from '@uppy/locales/lib/es_ES';
+
 function getMetaFields() {
   return [
     {
@@ -112,9 +115,18 @@ export function attachmentsPath() {
   return meta ? meta.content : "/admin/attachments";
 }
 
+function getUppyLocale() {
+  switch (document.querySelector("html").lang) {
+  case 'fr': return French;
+  case 'es': return Spanish;
+  }
+  return undefined;
+}
+
 export function createUppyUpdater(uploadId) {
   const uppy = window.uppy = new Uppy({
     logger: debugLogger,
+    locale: getUppyLocale(),
     restrictions: {
       maxNumberOfFiles: 1
     }
@@ -124,7 +136,7 @@ export function createUppyUpdater(uploadId) {
 }
 
 export function createUppy() {
-  const uppy = window.uppy = new Uppy({ logger: debugLogger })
+  const uppy = window.uppy = new Uppy({ logger: debugLogger, locale: getUppyLocale() })
 
   uppy.cms_endpoint = `${attachmentsPath()}/upload`;
   return configureUppy(uppy, result => {

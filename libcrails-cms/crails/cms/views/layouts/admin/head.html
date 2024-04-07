@@ -17,6 +17,8 @@ const std::string_view ckeditor_version = "35.4.0";
   document.addEventListener("DOMContentLoaded", function() { crailscms_on_content_loaded(document); });
 </script>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/<%= ckeditor_version %>/classic/translations/<%= i18n::locale_name() %>.js"></script>
+
 <% if (settings.get_favicon().length()) do -%>
   <%= tag("link", {{"rel", "icon"},{"href", settings.get_favicon()}}) %>
 <% end -%>
@@ -33,5 +35,3 @@ const std::string_view ckeditor_version = "35.4.0";
   <%= tag("link", {{"rel", "stylesheet"},{"src", Crails::Cms::Plugins::admin_css_uri}}) %>
   <%= tag("script", {{"src", Crails::Cms::Plugins::admin_js_uri}}) %>
 <% end -%>
-
-<script src="https://cdn.ckeditor.com/ckeditor5/<%= ckeditor_version %>/classic/translations/<%= i18n::locale_name() %>.js"></script>

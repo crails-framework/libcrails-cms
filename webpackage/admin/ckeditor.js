@@ -82,6 +82,7 @@ export function adminCKEditor(name, options = {}) {
   const element = document.querySelector("textarea[name='" + name + "']");
   const editor = ClassicEditor
     .create(element, {
+      language: document.querySelector("html").lang,
       plugins: makeCKEditorPluginList(options.plugins || []),
       toolbar: options.toolbar ? options.toolbar : makeCKEditorToolbar(options.plugins || []),
       heading: {
