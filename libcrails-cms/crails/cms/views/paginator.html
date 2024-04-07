@@ -17,24 +17,26 @@ string        additional_params;
 
 // END LINKING
 
-<% if (params["search"].exists()) do -%>
-  <% additional_params = "&search=" + Url::encode(params["search"].as<string>()) %>
-<% end -%>
-
-<% if (params["tag"].exists()) do -%>
-  <% additional_params += "&tag=" + Url::encode(params["tag"].as<string>()) %>
-<% end -%>
-
-<%= tag("div", {{"class", style.paginator_classes()},{"role","group"}}) yields %>
-  <% for (unsigned int i = 1 ; i <= page_count ; ++i) do -%>
-    <% if (i == page) do -%>
-      <button class="<%= style.active_button_classes() %>"><%= i %></button>
-      <% end else if (
-        i == 1 || i == page_count ||
-        abs(static_cast<long>(i) - static_cast<long>(page)) < page_range
-      ) do -%>
-      <% string url = "?page=" + to_string(i) + additional_params %>
-      <%= link(url, to_string(i), {{"class",style.button_classes()}}) %>
-    <% end -%>
+<% if (page_count > 1) do -%>
+  <% if (params["search"].exists()) do -%>
+    <% additional_params = "&search=" + Url::encode(params["search"].as<string>()) %>
   <% end -%>
-<% yields-end %>
+
+  <% if (params["tag"].exists()) do -%>
+    <% additional_params += "&tag=" + Url::encode(params["tag"].as<string>()) %>
+  <% end -%>
+
+  <%= tag("div", {{"class", style.paginator_classes()},{"role","group"}}) yields %>
+    <% for (unsigned int i = 1 ; i <= page_count ; ++i) do -%>
+      <% if (i == page) do -%>
+        <button class="<%= style.active_button_classes() %>"><%= i %></button>
+        <% end else if (
+          i == 1 || i == page_count ||
+          abs(static_cast<long>(i) - static_cast<long>(page)) < page_range
+        ) do -%>
+        <% string url = "?page=" + to_string(i) + additional_params %>
+        <%= link(url, to_string(i), {{"class",style.button_classes()}}) %>
+      <% end -%>
+    <% end -%>
+  <% yields-end %>
+<% end -%>
