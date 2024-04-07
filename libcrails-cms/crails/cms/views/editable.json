@@ -1,0 +1,11 @@
+#include "../../../models/editable.hpp"
+
+const Crails::Cms::Editable& @model;
+
+// END LINKING
+
+json("title",         model.get_title());
+json("slug",          model.get_slug());
+json("body",          model.get_body());
+json("description",   model.get_description());
+json("thumbnail_url", model.get_thumbnail_url());
