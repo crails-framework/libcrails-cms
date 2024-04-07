@@ -1,5 +1,6 @@
 #include <crails/i18n.hpp>
 #include <crails/html_form_builder.hpp>
+#include <crails/icons.hpp>
 #include "../../../routes.hpp"
 #include "../../../models/blog/post.hpp"
 #include "../../../views/style.hpp"
@@ -30,6 +31,7 @@ using namespace Crails::Cms;
     <%= form.label_for("thumbnail", i18n::t("form.label.thumbnail")) %>
     <%= form.text_field("thumbnail", &Crails::Cms::BlogPost::get_thumbnail_url) %>
     <%= tag("button", {{"class",style.button_classes()}}) yields %>
+      <%= Crails::fonticon_tag(Crails::FontIcon::FilePicture) %>
       <%= i18n::t("admin.image-library") %>
     <% yields-end %>
     <img />

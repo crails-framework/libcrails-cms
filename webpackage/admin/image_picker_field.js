@@ -18,12 +18,12 @@ export default function(formGroup, fileAttribute = "url") {
 
   if (preview) {
     updatePreview(preview, input);
-    preview.style.visibility = "hidden";
+    preview.style.display = "none";
     preview.addEventListener("load", function() {
-      preview.style.visibility = "visible";
+      preview.style.display = "block";
     });
     preview.addEventListener("error", function() {
-      preview.style.visibility = "hidden";
+      preview.style.display = "none";
     });
     input.addEventListener("change", function() {
        updatePreview(preview, input);
