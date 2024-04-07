@@ -93,7 +93,9 @@ window.Cms = {
 function initialize(event) {
   const mainForm = document.getElementById("main-form");
 
-  window.mainFormWatcher = new DirtyForm(mainForm);
+  if (mainForm) {
+    window.mainFormWatcher = new DirtyForm(mainForm);
+  }
   // initialize thumbnail pickers
   for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
     imagePickerField(formGroup, "miniature_url");
