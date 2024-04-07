@@ -47,7 +47,7 @@ namespace Crails::Cms
     virtual ClassList badge_classes() const { return {}; }
     virtual ClassList collection_classes() const { return {}; }
     virtual ClassList collection_item_classes() const { return {}; }
-    virtual ClassList paginator_classes() const { return button_group_classes() + "proudcms-paginator"; }
+    virtual ClassList paginator_classes() const { return button_group_classes() + "cms-paginator"; }
     virtual ClassList card_classes() const { return {}; }
     virtual ClassList frame_classes() const { return {}; }
 
