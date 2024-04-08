@@ -13,6 +13,7 @@ import MediaEmbed from '@ckeditor/ckeditor5-media-embed/src/mediaembed';
 import Image from '@ckeditor/ckeditor5-image/src/image';
 import {Table, TableToolbar, TableProperties, TableCellProperties, TableColumnResize, TableCaption, TableSelection, TableClipboard, TableUtils} from '@ckeditor/ckeditor5-table';
 import {HtmlEmbed} from '@ckeditor/ckeditor5-html-embed';
+import {CKEditorTranslationsPlugin} from '@ckeditor/ckeditor5-dev-translations';
 
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
@@ -29,9 +30,17 @@ import CmsImageEmbed from "./ckeditor_embed.js";
 import CmsAudioEmbed from "./ckeditor_audio.js";
 import CmsOpenGraph from "./ckeditor_opengraph.js";
 
+function makeCKEditorTranslationPlugin() {
+  return new CKEditorTranslationPlugin({
+    language: 'fr',
+    additionalLanguages: ['en', 'es']
+  });
+}
+
 function makeCKEditorPluginList(customPlugins) {
   const plugins = [
-    Essentials, Paragraph, Bold, Italic, Underline, Heading,
+    Essentials, makeCKEditorTranslationPlugin(),
+    Paragraph, Bold, Italic, Underline, Heading,
     Link, AutoLink, Alignment, MediaEmbed, BlockQuote,
     Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, LinkImage,
     ImageResizeEditing, ImageResizeHandles,
