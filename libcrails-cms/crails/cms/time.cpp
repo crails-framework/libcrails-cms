@@ -2,7 +2,9 @@
 #include <iomanip>
 #include <ctime>
 #include <sstream>
+#include <locale>
 #include <crails/logger.hpp>
+#include <crails/i18n.hpp>
 
 using namespace std;
 using namespace Crails;
@@ -20,10 +22,23 @@ string time_to_string(std::time_t value, const string& format)
 
 string time_to_string(std::time_t value, const char* format)
 {
+  static const char* locale_key = "i18n-locale-name";
   std::tm tmdata;
   stringstream stream;
+  std::string locale_name = i18n::t(locale_key);
 
   localtime_r(&value, &tmdata);
+  if (locale_name != locale_key)
+  {
+    try
+    {
+      stream.imbue(std::locale(locale_name));
+    }
+    catch (const std::exception& err)
+    {
+      logger << Logger::Error << "Crails::Cms::time_to_string: failed to produce a localized date string using locale '" << locale_name << "', exception thrown: " << err.what() << Logger::endl;
+    }
+  }
   stream << put_time(&tmdata, format ? format : "%d-%m-%y");
   return stream.str();
 }
