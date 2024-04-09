@@ -1,5 +1,5 @@
 #ifndef  LIBCRAILS_CMS_ROUTES_HPP
-# define LIBCRAILS_CMS_ROUTER_HPP
+# define LIBCRAILS_CMS_ROUTES_HPP
 
 # include <crails/router.hpp>
 # include <crails/signin/session_controller.hpp>
