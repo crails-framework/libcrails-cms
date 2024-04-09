@@ -48,6 +48,12 @@ namespace Crails::Cms
     }
 
     template<typename CONTROLLER>
+    static LocalRoute get_local_route_for()
+    {
+      return LocalRoute(singleton::require().get_path_for<CONTROLLER>());
+    }
+
+    template<typename CONTROLLER>
     std::string get_path_for(const std::string& suffix) const
     {
       return get_path_for<CONTROLLER>() + suffix;
