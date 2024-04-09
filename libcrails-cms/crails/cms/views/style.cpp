@@ -171,3 +171,26 @@ string Cms::Style::nav(const ClassList& classes, function<string()> yield) const
 {
   return HtmlTemplate::tag("nav", {{"class",classes}}, yield);
 }
+
+string Cms::Style::breadcrumbs(const BreadcrumbsList& crumbs) const
+{
+  return HtmlTemplate::tag("nav", {{"class", menu_wrapper_classes(Cms::Menu::Horizontal)}}, [&]()
+  {
+    return HtmlTemplate::tag("ul", {{"class", menu_classes()}}, [&]()
+    {
+      string html;
+
+      for (const pair<string,string>& crumb : crumbs)
+      {
+        html += HtmlTemplate::tag("li", {{"class", menu_item_classes()}}, [&]()
+        {
+          return HtmlTemplate::tag("a", {{"class", menu_link_classes()}, {"href", crumb.first}}, [&crumb]()
+          {
+            return crumb.second;
+          });
+        });
+      }
+      return html;
+    });
+  });
+}

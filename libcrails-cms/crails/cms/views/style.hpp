@@ -9,6 +9,8 @@ namespace Crails { class HtmlTemplate; }
 
 namespace Crails::Cms
 {
+  typedef std::vector<std::pair<std::string,std::string>> BreadcrumbsList;
+
   class Style
   {
     SINGLETON(Style)
@@ -69,6 +71,7 @@ namespace Crails::Cms
     virtual std::string thumbnail(const ClassList& classes, const std::string& src) const;
     std::string nav(std::function<std::string()> yield) const { return nav({}, yield); }
     virtual std::string nav(const ClassList& classes, std::function<std::string()> yield) const;
+    virtual std::string breadcrumbs(const BreadcrumbsList& crumbs) const;
 
     virtual std::vector<std::string> stylesheets() const;
     virtual std::vector<std::string> admin_stylesheets() const;
