@@ -78,8 +78,10 @@ function makeCKEditorToolbar(customPlugins) {
   }
 }
 
-export function adminCKEditor(name, options = {}) {
-  const element = document.querySelector("textarea[name='" + name + "']");
+export function adminCKEditor(elementOrName, options = {}) {
+  const element = typeof elementOrName == "string"
+    ? document.querySelector(`textarea[name='${elementOrName}']`)
+    : elementOrName;
   const editor = ClassicEditor
     .create(element, {
       language: document.querySelector("html").lang,
