@@ -52,6 +52,7 @@ namespace Crails::Cms
     virtual ClassList paginator_classes() const { return button_group_classes() + "cms-paginator"; }
     virtual ClassList card_classes() const { return {}; }
     virtual ClassList frame_classes() const { return {}; }
+    virtual ClassList document_wrapper_classes() const { return {"document"}; }
 
     virtual std::string signin_button(const std::string& form_id = "") const;
     virtual std::string admin_remove_button(const HtmlTemplate&, const std::string& url, std::string label = "") const;

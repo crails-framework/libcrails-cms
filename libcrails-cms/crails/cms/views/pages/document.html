@@ -1,11 +1,15 @@
 #include "../../../models/page.hpp"
+#include "../../../models/settings.hpp"
+#include "../../../views/style.hpp"
 
 const Crails::Cms::Page& @page;
+const Crails::Cms::Settings& @settings;
+const Crails::Cms::Style& style = settings.get_style();
 bool @preview = false;
 
 // END LINKING
 
-<div class="document">
+<div class="<%= style.document_wrapper_classes() %>">
   <%= page.get_body() %>
 </div>
 
