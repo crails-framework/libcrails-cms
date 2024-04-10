@@ -13,9 +13,13 @@ class Style {
     return this.classes[name].split(' ');
   }
 
-  apply(name, target) {
+  apply(name, ...targets) {
     this.classesFor(name).forEach(function(className) {
-      if (className) target.classList.add(className);
+      if (className) {
+        targets.forEach(function(target) {
+          target.classList.add(className);
+        });
+      }
     });
   }
 }

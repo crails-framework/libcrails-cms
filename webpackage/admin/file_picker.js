@@ -1,7 +1,7 @@
 import Uppy, { debugLogger } from '@uppy/core';
 import {configureUppy, attachmentsPath} from "./uppy.js";
 import {updateCsrfTokenFromResponse} from "./csrf_token.js";
-import ProudCmsDialog from "./dialog.js";
+import CmsDialog from "./dialog.js";
 import i18n from "../i18n.js";
 import Style from "../style.js";
 import iconHtml from "./icons.js";
@@ -30,7 +30,7 @@ function makeUrlParams(self, params) {
   return params;
 }
 
-export default class extends ProudCmsDialog {
+export default class extends CmsDialog {
   constructor(plugin) {
     super();
     window.picker = this;

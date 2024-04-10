@@ -1,5 +1,6 @@
 import {createUppy, createUppyUpdater} from "./admin/uppy.js";
 import {adminCKEditor} from "./admin/ckeditor.js";
+import {adminCKEditorButton} from "./admin/ckeditor_dialog.js";
 import {CKEditorExports} from "./admin/ckeditor_exports.js";
 import TomSelect from "tom-select/dist/js/tom-select.base.js";
 import previewPost from "./admin/preview.js";
@@ -83,10 +84,11 @@ window.Cms = {
   Style:        Style,
   i18n:         i18n,
   initializers: {
-    ContentTools: initializeContentTools,
-    CKEditor:     adminCKEditor,
-    Uppy:         createUppy,
-    UppyUpdater:  createUppyUpdater
+    ContentTools:   initializeContentTools,
+    CKEditor:       adminCKEditor,
+    CKEditorButton: adminCKEditorButton,
+    Uppy:           createUppy,
+    UppyUpdater:    createUppyUpdater
   }
 };
 

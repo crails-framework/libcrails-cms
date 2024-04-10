@@ -82,7 +82,7 @@ export function adminCKEditor(elementOrName, options = {}) {
   const element = typeof elementOrName == "string"
     ? document.querySelector(`textarea[name='${elementOrName}']`)
     : elementOrName;
-  const editor = ClassicEditor
+  return ClassicEditor
     .create(element, {
       language: document.querySelector("html").lang,
       plugins: makeCKEditorPluginList(options.plugins || []),
@@ -130,6 +130,7 @@ export function adminCKEditor(elementOrName, options = {}) {
       if (window.ckeditors === undefined)
         window.ckeditors = [];
       window.ckeditors.push(editor);
+      return editor;
     })
     .catch(error => {
       console.error( error.stack );
