@@ -1,11 +1,11 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import ProudCmsPicker from "./file_picker.js";
-import proudcmsEmbedIcon from './icons/library.svg';
+import CmsPicker from "./file_picker.js";
+import toolbarIcon from './icons/picture.svg';
 import i18n from "../i18n.js";
 
 export default class extends Plugin {
-  static toolName = "proudcmsEmbed";
+  static toolName = "cmsPictureEmbed";
 
   init() {
     const editor = this.editor;
@@ -16,7 +16,9 @@ export default class extends Plugin {
 
   createButton() {
     const button = new ButtonView();
-    button.set({label: "Embed from library", icon: proudcmsEmbedIcon });
+    i18n.ready.then(function() {
+      button.set({label: i18n.t("admin.image-library"), icon: toolbarIcon });
+    });
     button.on("execute", this.buttonClicked.bind(this));
     return button;
   }
@@ -24,7 +26,7 @@ export default class extends Plugin {
   buttonClicked() {
     const editor = this.editor;
     editor.model.change(writer => {
-      new ProudCmsPicker(this).open();
+      new CmsPicker(this).open();
     });
   }
 

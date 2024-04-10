@@ -28,6 +28,13 @@ import imageRightIcon from './icons/image-align-right.svg';
 import CmsImageEmbed from "./ckeditor_embed.js";
 import CmsAudioEmbed from "./ckeditor_audio.js";
 import CmsOpenGraph from "./ckeditor_opengraph.js";
+import CmsEmbedIcon from "./icons/library.svg";
+
+const cmsEmbedToolbarGroup = {
+  label: "Inclure...",
+  icon: CmsEmbedIcon,
+  items: [CmsImageEmbed.toolName, CmsAudioEmbed.toolName]
+};
 
 function makeCKEditorPluginList(customPlugins) {
   const plugins = [
@@ -52,25 +59,46 @@ function makeCKEditorPluginList(customPlugins) {
   return plugins;
 }
 
+function appendCustomPluginsToToolbar(customPlugins, toolbar) {
+  if (window.customCKEditorPlugins) {
+    window.customCKEditorPlugins.forEach(plugin => {
+      toolbar.push(plugin.toolName);
+    });
+  }
+  customPlugins.forEach(plugin => {
+    if (toolbar.indexOf(plugin.toolName) < 0)
+      toolbar.push(plugin.toolName);
+  });
+}
+
+function makeCKEditorCompactToolbar(customPlugins) {
+  const toolbar = [
+    'heading',
+    'bold', 'italic', 'underline',
+    '|', 'alignment', 'insertTable',
+    '|', 'link'
+  ];
+
+  appendCustomPluginsToToolbar(customPlugins, toolbar);
+  return {
+    items: toolbar,
+    shouldNotGroupWhenFull: true
+  };
+}
+
 function makeCKEditorToolbar(customPlugins) {
   if (window.customCKEditorToolBar)
     return window.customCKEditorToolBar();
   else {
     const toolbar = [
-      'heading', 'bold', 'italic', 'underline', 'alignment', 'blockQuote', 'insertTable', '|',
-      'link',  'mediaEmbed', CmsImageEmbed.toolName, CmsAudioEmbed.toolName,
+      'heading',
+      'bold', 'italic', 'underline',
+      '|', 'alignment', 'blockQuote', 'insertTable',
+      '|', 'link',  'mediaEmbed', cmsEmbedToolbarGroup,
       CmsOpenGraph.toolName, '|', 'htmlEmbed'
     ];
 
-    if (window.customCKEditorPlugins) {
-      window.customCKEditorPlugins.forEach(plugin => {
-        toolbar.push(plugin.toolName);
-      });
-    }
-    customPlugins.forEach(plugin => {
-      if (toolbar.indexOf(plugin.toolName) < 0)
-        toolbar.push(plugin.toolName);
-    });
+    appendCustomPluginsToToolbar(customPlugins, toolbar);
     return {
       items: toolbar,
       shouldNotGroupWhenFull: true
@@ -78,15 +106,28 @@ function makeCKEditorToolbar(customPlugins) {
   }
 }
 
+function makeCustomToolbar(toolbar, customPlugins) {
+  switch (toolbar) {
+  case 'compact': return makeCKEditorCompactToolbar(customPlugins);
+  case 'default': return makeCKEditorToolbar(customPlugins);
+  }
+  return toolbar;
+}
+
 export function adminCKEditor(elementOrName, options = {}) {
   const element = typeof elementOrName == "string"
     ? document.querySelector(`textarea[name='${elementOrName}']`)
     : elementOrName;
+  const plugins = options.plugins || [];
+  const toolbar = options.toolbar
+    ? makeCustomToolbar(options.toolbar, plugins)
+    : makeCKEditorToolbar(plugins);
+
   return ClassicEditor
     .create(element, {
       language: document.querySelector("html").lang,
-      plugins: makeCKEditorPluginList(options.plugins || []),
-      toolbar: options.toolbar ? options.toolbar : makeCKEditorToolbar(options.plugins || []),
+      plugins: makeCKEditorPluginList(plugins),
+      toolbar: toolbar,
       heading: {
         options: [
           { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },

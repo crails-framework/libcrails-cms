@@ -1,7 +1,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import CmsFilePicker from "./file_picker.js";
-import proudcmsEmbedIcon from './icons/library.svg';
+import toolbarIcon from './icons/audio.svg';
 import i18n from "../i18n.js";
 
 function collectAttributesFromElement(viewElement) {
@@ -11,14 +11,12 @@ function collectAttributesFromElement(viewElement) {
 }
 
 export default class extends Plugin {
-  static toolName = "crailscmsAudioEmbed";
+  static toolName = "cmsAudioEmbed";
 
   init() {
     const editor = this.editor;
-    i18n.ready.then(() => {
-      editor.ui.componentFactory.add(this.constructor.toolName, this.createButton.bind(this));
-      this.title = i18n.t("admin.audio-library");
-    });
+    editor.ui.componentFactory.add(this.constructor.toolName, this.createButton.bind(this));
+    i18n.ready.then(() => { this.title = i18n.t("admin.audio-library"); });
     this.mimetype = "audio/*";
     this.defineSchema();
     this.defineConverters();
@@ -26,7 +24,9 @@ export default class extends Plugin {
 
   createButton() {
     const button = new ButtonView();
-    button.set({label: i18n.t("admin.audio-library"), icon: proudcmsEmbedIcon });
+    i18n.ready.then(function() {
+      button.set({label: i18n.t("admin.audio-library"), icon: toolbarIcon });
+    });
     button.on("execute", this.buttonClicked.bind(this));
     return button;
   }

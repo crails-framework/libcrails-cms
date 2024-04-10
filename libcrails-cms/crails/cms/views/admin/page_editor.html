@@ -39,7 +39,7 @@ std::string @mode = "default";
 <% switch (proudcms_layout.get_type()) do -%>
 <% case Crails::Cms::DocumentLayoutType: -%>
 
-  proudcmsAdminCKEditor("<%= field_name %>");
+  Cms.initializers.CKEditor("<%= field_name %>");
 
 <% break -%>
 <% case Crails::Cms::ComponentLayoutType: -%>

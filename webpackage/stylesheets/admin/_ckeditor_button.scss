@@ -1,0 +1,46 @@
+@keyframes ckeditor-button-preview-animation {
+  0% { top: 0%; }
+  50% { top: -100%; }
+  100% { top: 0%; }
+}
+
+.cms-ckeditor-button {
+  position: relative;
+  cursor: pointer;
+  width: 200px;
+  height: 3em;
+  overflow: hidden;
+  border: 1px solid black;
+
+  .hint {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    color: black;
+    font-size: 0.8em;
+    border: 1px solid black;
+    overflow: hidden;
+    max-height: 1.5em;
+    opacity: 0.6;
+  }
+  
+  .preview {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    transform-origin: 0 0;
+    transform: scale(0.5);
+  }
+  
+  &:hover {
+    .hint {
+      display: none;
+    }
+    .preview {
+      animation: ckeditor-button-preview-animation 3s ease-in-out infinite;
+    }
+  }
+}
