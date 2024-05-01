@@ -73,7 +73,7 @@ export function configureUppy(uppy, callback) {
     uppy
     // The main UI that shows files, progress and holds all plugins
     .use(Dashboard, {
-      target: '#upload-block',
+      target: (uppy.cms_domTarget || '#upload-block'),
       inline: true,
       height: 470,
       metaFields: getMetaFields(),
@@ -89,7 +89,7 @@ export function configureUppy(uppy, callback) {
     .use(Webcam, { target: Dashboard })
     .use(Audio, { target: Dashboard, showRecordingLength: true })
     .use(ScreenCapture, { target: Dashboard })
-    .use(Form, { target: '#upload-form' })
+    .use(Form, { target: (uppy.cms_formTarget || '#upload-form') })
     .use(ImageEditor, { target: Dashboard })
     // Allow dropping files on any element or the whole document
     .use(DropTarget, { target: document.body })
@@ -115,7 +115,7 @@ export function attachmentsPath() {
   return meta ? meta.content : "/admin/attachments";
 }
 
-function getUppyLocale() {
+export function getUppyLocale() {
   switch (document.querySelector("html").lang) {
   case 'fr': return French;
   case 'es': return Spanish;

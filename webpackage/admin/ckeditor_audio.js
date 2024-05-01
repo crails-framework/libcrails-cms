@@ -24,6 +24,7 @@ export default class extends Plugin {
 
   createButton() {
     const button = new ButtonView();
+    button.set({ label: "Audio", icon: toolbarIcon });
     i18n.ready.then(function() {
       button.set({label: i18n.t("admin.audio-library"), icon: toolbarIcon });
     });

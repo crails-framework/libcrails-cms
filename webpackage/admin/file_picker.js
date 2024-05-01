@@ -1,5 +1,5 @@
 import Uppy, { debugLogger } from '@uppy/core';
-import {configureUppy, attachmentsPath} from "./uppy.js";
+import {configureUppy, getUppyLocale, attachmentsPath} from "./uppy.js";
 import {updateCsrfTokenFromResponse} from "./csrf_token.js";
 import CmsDialog from "./dialog.js";
 import i18n from "../i18n.js";
@@ -222,16 +222,22 @@ export default class extends CmsDialog {
   renderUploader() {
     const uppy = window.uppy = new Uppy({
       logger: debugLogger,
+      locale: getUppyLocale(),
       restrictions: {
         maxNumberOfFiles: 1
       }
     });
     const uploadZone = document.createElement("div");
+    const uploadForm = document.createElement("form");
 
     uploadZone.id = "upload-block";
+    uploadForm.id = "upload-form";
+    uploadForm.appendChild(uploadZone);
     this.popup.innerHTML = "";
-    this.popup.appendChild(uploadZone);
+    this.popup.appendChild(uploadForm);
     uppy.cms_endpoint = `${attachmentsPath()}/upload`
+    uppy.cms_domTarget = uploadZone;
+    uppy.cms_formTarget = uploadForm;
     configureUppy(uppy, this.onFileUploaded.bind(this));
   }
 

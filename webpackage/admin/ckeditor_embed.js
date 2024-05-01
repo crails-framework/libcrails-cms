@@ -16,6 +16,7 @@ export default class extends Plugin {
 
   createButton() {
     const button = new ButtonView();
+    button.set({ label: "Image", icon: toolbarIcon });
     i18n.ready.then(function() {
       button.set({label: i18n.t("admin.image-library"), icon: toolbarIcon });
     });
