@@ -243,7 +243,7 @@ export default class extends CmsDialog {
 
   onFileUploaded(uppyResult) {
     if (uppyResult.successful.length > 0) {
-      const files = uppyResult.successful[0].response.body.files;
+      const files = uppyResult.successful[0].files;
       for (let id in files) {
         this.onFilePicked(files[id]);
         break ;

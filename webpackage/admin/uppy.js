@@ -16,6 +16,16 @@ import {updateCsrfTokenFromResponse} from "./csrf_token.js";
 import French from '@uppy/locales/lib/fr_FR';
 import Spanish from '@uppy/locales/lib/es_ES';
 
+const queryQueue = {
+  successful: [],
+  failures: []
+};
+
+function resetQueryQueue() {
+  queryQueue.successful = [];
+  queryQueue.failures = [];
+}
+
 function getMetaFields() {
   return [
     {
@@ -31,11 +41,30 @@ function getMetaFields() {
   ];
 }
 
+function getResponseData(responseText, response) {
+  let parsedResponse = {};
+  try {
+    parsedResponse = JSON.parse(responseText);
+
+    console.log("COUCOU UPPY getResponseData", data);
+    window.uppyResponse = parsedResponse;
+    updateCsrfTokenFromResponse(parsedResponse);
+    queryQueue.successful.push(parsedResponse);
+  } catch {
+    // ignore
+    queryQueue.failure.push(response);
+  }
+  return data;
+}
+
 function updateEndpoint(uppy) {
   const token = document.querySelector("[name='csrf-token']").value;
   const plugin = uppy.getPlugin("XHRUpload");
   const path = `${uppy.cms_endpoint}?csrf-token=${encodeURIComponent(token)}`;
-  const options = { endpoint: `${window.location.origin}${path}` };
+  const options = {
+    endpoint: `${window.location.origin}${path}`,
+    getResponseData: getResponseData
+  };
 
   if (!plugin)
     uppy.use(XHRUpload, options);
@@ -97,12 +126,15 @@ export function configureUppy(uppy, callback) {
     .use(Compressor);
     updateEndpoint(uppy);
 
-    uppy.on("complete", result => {
-      result.successful.forEach(file => {
-        updateCsrfTokenFromResponse(file.response.body);
-      });
+    uppy.on("complete", (result) => {
+      window.uppyDebugResponse = result;
       updateEndpoint(uppy);
-      callback(result);
+      try {
+        callback(queryQueue);
+      } catch (err) {
+        console.error("uppy complete callback crashed", err);
+      }
+      resetQueryQueue();
     });
 
     return uppy;
@@ -141,7 +173,7 @@ export function createUppy() {
   uppy.cms_endpoint = `${attachmentsPath()}/upload`;
   return configureUppy(uppy, result => {
     result.successful.forEach(file => {
-      receivedUploadResponse(file.response.body);
+      receivedUploadResponse(file);
     });
 
     console.log('failed files:', result.failed)
