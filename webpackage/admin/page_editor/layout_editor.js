@@ -6,6 +6,12 @@ import Sticky from "sticky-js";
 
 const sticky_controls_class = "proudcms-sticky-controls";
 
+function onRootComponentMutation() {
+  if (window.mainFormWatcher) {
+    window.mainFormWatcher.isDirty = true;
+  }
+}
+
 class LayoutMenu extends ControlMenu {
   constructor(componentEditor) {
     super(componentEditor);
@@ -32,6 +38,7 @@ export default class extends NestedComponentEditor {
   constructor(element, componentTypes) {
     super(null, element, componentTypes);
     this.actions = new LayoutMenu(this);
+    this.mutationObserver = new MutationObserver(onRootComponentMutation);
     this.contentEditor
       .addEventListener("start", this.enableEditMode.bind(this));
     this.contentEditor
@@ -63,9 +70,13 @@ export default class extends NestedComponentEditor {
   enableEditMode() {
     this.editMode = true;
     super.enableEditMode();
+    this.mutationObserver.observe(this.root, {
+      childList: true, subtree: true, attributes: true, characterData: true
+    });
   }
 
   disableEditMode() {
+    this.mutationObserver.disconnect();
     this.editMode = false;
     super.disableEditMode();
     this.clearContentEditor();
