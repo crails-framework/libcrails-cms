@@ -38,6 +38,13 @@ using namespace Crails::Cms;
     <% yields-end -%>
   </div>
 
+  <div class="opengraph-form">
+    <%= partial("admin/opengraph_form", {
+      {"form", reinterpret_cast<Crails::FormBuilderBase*>(&form)},
+      {"model", reinterpret_cast<const Crails::Cms::Editable*>(&model)}
+    }) %>
+  </div>
+
   <% if (has_partial(extra_partial)) do -%>
     <!-- extra partial <%= extra_partial %> -->
     <%= partial(extra_partial, {{"form", &form}}) %>

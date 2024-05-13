@@ -1,0 +1,31 @@
+#include <crails/i18n.hpp>
+#include <crails/html_form_builder.hpp>
+#include <crails/icons.hpp>
+#include "../../../models/editable.hpp"
+#include "../../../views/style.hpp"
+
+const Crails::Cms::Style&    style = Crails::Cms::Style::singleton::require();
+const Crails::Cms::Editable& @model;
+
+// END LINKING
+
+<%
+Crails::FormBuilder<Crails::Cms::Editable> form(
+  *Crails::cast<Crails::FormBuilderBase*>(vars, "form"),
+  model
+)
+%>
+
+<%= style.form_group() yields %>
+  <%= form.label_for("description", i18n::t("form.label.description")) %>
+  <%= form.text_area("description", &Crails::Cms::Editable::get_description, {{"maxlength",std::to_string(Crails::Cms::Editable::description_length)}}) %>
+<% yields-end %>
+<%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
+  <%= form.label_for("thumbnail", i18n::t("form.label.thumbnail")) %>
+  <%= form.text_field("thumbnail", &Crails::Cms::Editable::get_thumbnail_url) %>
+  <%= tag("button", {{"class",style.button_classes()}}) yields %>
+    <%= Crails::fonticon_tag(Crails::FontIcon::FilePicture) %>
+    <%= i18n::t("admin.image-library") %>
+  <% yields-end %>
+  <img />
+<% yields-end %>

@@ -23,19 +23,10 @@ using namespace Crails::Cms;
     <%= form.label_for("title", i18n::t("form.label.title")) %>
     <%= form.text_field("title", &Crails::Cms::BlogPost::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
   <% yields-end %>
-  <%= style.form_group() yields %>
-    <%= form.label_for("description", i18n::t("form.label.description")) %>
-    <%= form.text_area("description", &Crails::Cms::BlogPost::get_description, {{"maxlength",std::to_string(Crails::Cms::Editable::description_length)}}) %>
-  <% yields-end %>
-  <%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
-    <%= form.label_for("thumbnail", i18n::t("form.label.thumbnail")) %>
-    <%= form.text_field("thumbnail", &Crails::Cms::BlogPost::get_thumbnail_url) %>
-    <%= tag("button", {{"class",style.button_classes()}}) yields %>
-      <%= Crails::fonticon_tag(Crails::FontIcon::FilePicture) %>
-      <%= i18n::t("admin.image-library") %>
-    <% yields-end %>
-    <img />
-  <% yields-end %>
+  <%= partial("admin/opengraph_form", {
+    {"form", reinterpret_cast<Crails::FormBuilderBase*>(&form)},
+    {"model", reinterpret_cast<const Crails::Cms::Editable*>(&model)}
+  }) %>
   <% if (can_publish) do -%>
     <%= style.form_group() yields %>
       <%= form.label_for("published", i18n::t("form.label.published")) %>
