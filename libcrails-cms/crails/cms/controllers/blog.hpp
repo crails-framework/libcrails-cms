@@ -83,6 +83,7 @@ namespace Crails::Cms
     {
       InjectableIndex injectable(Super::vars, Super::response);
 
+      injectable.set_accepted_formats(Super::get_accept_header());
       injectable.run_with_paginator(Super::params.as_data(), paginator);
     }
 

@@ -11,7 +11,7 @@ Injectable::Injectable(const Crails::SharedVars& vars, Crails::RenderTarget& sin
 void Injectable::render(const std::string_view view, Crails::SharedVars local_vars)
 {
   local_vars = Crails::merge(local_vars, vars);
-  renderer = Crails::Renderer::pick_renderer(string(view), "text/html");
+  renderer = Crails::Renderer::pick_renderer(string(view), formats);
   renderer->render_template(string(view), sink, local_vars);
 }
 

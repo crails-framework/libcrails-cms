@@ -15,12 +15,14 @@ namespace Crails::Cms
     Crails::RenderTarget&         sink;
     const Crails::Renderer*       renderer;
     Crails::Odb::ConnectionHandle database;
+    std::string                   formats = "text/html";
   public:
     Injectable(const Crails::SharedVars& vars, Crails::RenderTarget& sink);
 
     virtual void run() = 0;
     void render(const std::string_view view, Crails::SharedVars local_vars = {});
     void render_text(const std::string_view text);
+    void set_accepted_formats(const std::string& value) { formats = value; }
   };
 
   struct InjectableTraits
