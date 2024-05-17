@@ -1,4 +1,6 @@
 #include "local_route.hpp"
+#include <crails/utils/split.hpp>
+#include <crails/utils/join.hpp>
 
 namespace Crails::Cms
 {
@@ -6,6 +8,20 @@ namespace Crails::Cms
   {
     route = Crails::cast<std::string>(vars, varname);
     initialize(route);
+  }
+
+  LocalRoute LocalRoute::parent(unsigned short depth) const
+  {
+    auto parts = split(route, '/');
+
+    if (depth < parts.size())
+    {
+      auto last = parts.begin();
+
+      std::advance(last, parts.size() - depth);
+      return LocalRoute(join(parts.begin(), last, '/'));
+    }
+    return LocalRoute("");
   }
    
   void LocalRoute::initialize(const std::string& route)

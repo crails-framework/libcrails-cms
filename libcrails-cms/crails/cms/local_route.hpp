@@ -15,6 +15,8 @@ namespace Crails::Cms
     template<typename... Args>
     std::string make(Args... args) const { return route + '/' + fragment(args...); }
 
+    LocalRoute parent(unsigned short depth = 1) const;
+
   private:
     void initialize(const std::string& route);
 
