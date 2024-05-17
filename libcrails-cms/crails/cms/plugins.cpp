@@ -86,7 +86,7 @@ namespace Crails::Cms
     }
     std::cout << "/cms/plugins/admin.js: length=" << admin_javascript.length() << std::endl << std::string_view(admin_javascript.c_str(), admin_javascript.length()) << std::endl << std::endl;
     assets.add("application.js", javascript.c_str(), javascript.length());
-    assets.add("application.css", stylesheet.c_str(), javascript.length());
+    assets.add("application.css", stylesheet.c_str(), stylesheet.length());
     assets.add("admin.js", admin_javascript.c_str(), admin_javascript.length());
     assets.add("admin.css", admin_stylesheet.c_str(), admin_stylesheet.length());
   }
