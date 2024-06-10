@@ -1,8 +1,10 @@
 #include <crails/i18n.hpp>
 #include <crails/params.hpp>
 #include "../../../views/style.hpp"
+#include "../../../models/settings.hpp"
 
-const Crails::Cms::Style& @style = Crails::Cms::Style::singleton::get();
+const Crails::Cms::Settings* @settings = nullptr;
+const Crails::Cms::Style& @style = settings ? &(settings->get_style()) : const_cast<const Crails::Cms::Style*>(Crails::Cms::Style::singleton::get());
 Crails::Params& @params;
 
 using namespace Crails::Cms;
