@@ -141,9 +141,9 @@ export function adminCKEditor(elementOrName, options = {}) {
         styles: {
           options: [
             { name: 'left-side', title: 'Left side', icon: imageLeftIcon, className: 'image-style-left-side', modelElements: ['imageBlock'] },
-            { name: 'right-side', title: 'Right side', icon: imageRightIcon, className: 'image-style-side', modelElements: ['imageBlock'] },
+            { name: 'right-side', title: 'Right side', icon: imageRightIcon, className: 'image-style-right-side', modelElements: ['imageBlock'] },
             { name: 'inline' },
-	    { name: 'block' }
+	          { name: 'block' }
           ]
         },
         toolbar: [
