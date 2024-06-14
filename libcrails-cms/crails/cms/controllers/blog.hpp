@@ -66,6 +66,7 @@ namespace Crails::Cms
         PostList models;
         odb::query<Post> query = Post::template make_index_query<odb::query<Post>>(params);
 
+        query = odb::query<Post>::published == true && query;
         view_vars["is_injected"] = injecting;
         if (injecting)
           view_vars["local_route"] = "/blog";
