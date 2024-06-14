@@ -200,7 +200,7 @@ export default class extends CmsDialog {
     Style.apply("paginator", root);
     root.append(makeButton(1));
     root.append(document.createElement("div"));
-    for (let i = rangeStart ; i < rangeEnd && i < pageCount ; ++i)
+    for (let i = rangeStart ; i <= rangeEnd && i < pageCount ; ++i)
       root.append(makeButton(i));
     root.append(document.createElement("div"));
     root.append(makeButton(pageCount));
