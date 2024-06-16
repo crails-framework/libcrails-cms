@@ -28,6 +28,8 @@ void Crails::Cms::Settings::edit(Data params)
     set_enable_user_subscribe(params["enable_user_subscribe"].as<bool>());
   if (params["matomo_url"].exists())
     set_matomo_url(params["matomo_url"].as<std::string>());
+  if (params["matomo_id"].exists())
+    set_matomo_id(params["matomo_id"].as<unsigned long>());
   if (params["plugins"].exists())
     update_plugins(params["plugins"].to_vector<std::string>());
   else if (params["with_plugins"].exists())
@@ -44,6 +46,7 @@ void Crails::Cms::Settings::merge_data(Data out) const
   out["footer"] = this->footer;
   out["enable_user_subscribe"] = this->enable_user_subscribe;
   out["matomo_url"] = this->matomo_url;
+  out["matomo_id"] = this->matomo_id;
 }
 
 std::string Crails::Cms::Settings::to_json() const

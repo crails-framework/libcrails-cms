@@ -79,9 +79,16 @@ using namespace Crails::Cms;
     <% yields-end %>
   <% end -%>
 
+  <h4><%= i18n::t("admin.settings-analytics") %></h4>
+
   <%= style.form_group() yields %>
     <%= form.label_for("matomo_url", i18n::t("form.label.matomo_url")) %>
     <%= form.text_field("matomo_url", &Crails::Cms::Settings::get_matomo_url) %>
+  <% yields-end %>
+
+  <%= style.form_group() yields %>
+    <%= form.label_for("matomo_id", i18n::t("form.label.matomo_id")) %>
+    <%= form.number_field("matomo_id", &Crails::Cms::Settings::get_matomo_id) %>
   <% yields-end %>
 <% yields-end %>
 

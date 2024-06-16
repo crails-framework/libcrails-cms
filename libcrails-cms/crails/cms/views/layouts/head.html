@@ -30,5 +30,8 @@ const std::string @rss = "";
 <% end -%>
 
 <% if (settings.get_matomo_url().length()) do -%>
-  <%= partial("layouts/matomo", {{"matomo_hostname", settings.get_matomo_url()}}) %>
+  <%= partial("layouts/matomo", {
+    {"matomo_hostname", std::string_view(settings.get_matomo_url())},
+    {"matomo_id", settings.get_matomo_id()}
+  }) %>
 <% end -%>
