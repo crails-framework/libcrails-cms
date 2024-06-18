@@ -1,5 +1,6 @@
 #include "../../../models/settings.hpp"
 #include "../../../views/layout.hpp"
+#include "../../../views/newsfeed.hpp"
 #include "../../../opengraph.hpp"
 #include "../../../plugins.hpp"
 
@@ -8,6 +9,7 @@ const Crails::Cms::OpenGraph* @open_graph = nullptr;
 const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
 const Crails::Cms::LayoutVariables& variables = settings.get_layout().get_variables();
 const std::string @rss = "";
+const Crails::Cms::NewsFeed @newsfeed = Crails::Cms::NewsFeed(rss);
 
 // END LINKING
     
@@ -17,7 +19,8 @@ const std::string @rss = "";
 <% if (settings.get_favicon().length()) do -%>
   <%= tag("link", {{"rel","icon"},{"href",settings.get_favicon()}}) %>
 <% end -%>
-<% if (rss.length()) do -%>    
+<% if (newsfeed.exists()) do -%>
+  <%= newsfeed.render(settings) %>
   <%= tag("link", {{"rel","alternate"},{"href", rss},{"type","application/rss+xml"}}) %>
 <% end -%>
 <% if (plugins && plugins->has_plugins()) do -%>
