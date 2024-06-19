@@ -29,19 +29,15 @@ function GridComponentEditor(parentClass = ComponentEditor) {
     }
 
     get columnSpan() {
-      return parseInt(this.root.dataset.columnSpan);
+      return this.gridModel.currentSpanForElement(this.root);
     }
 
     set columnSpan(value) {
-      this.root.dataset.columnSpan = value;
-      this.resetColumnSpan();
-      this.gridModel.componentClassList(value).forEach(klass => {
-        this.root.classList.add(klass);
-      });
+      this.gridModel.updateElementCurrentSpan(this.root, value);
     }
 
     resetColumnSpan() {
-      this.gridModel.resetColumnSpan(this.root);
+      this.gridModel.resetElementSizes(this.root);
     }
 
     create() {
@@ -51,18 +47,79 @@ function GridComponentEditor(parentClass = ComponentEditor) {
   };
 }
 
+GridComponentEditor.sizes = {
+  Small: 3, Medium: 2, Large: 1, VeryLarge: 0
+};
+
 GridComponentEditor.Model = class {
+  set currentSize(value) {
+    GridComponentEditor.currentSize = value;
+  }
+  get currentSize() {
+    return GridComponentEditor.currentSize == undefined
+      ? GridComponentEditor.sizes.Medium
+      : GridComponentEditor.currentSize;
+  }
+  get sizes() { return GridComponentEditor.sizes; }
   get maxColumns() { return 12; }
   get gridClassList() { return ["pure-g"]; }
-  get componentClassPattern() { return /^pure-u/; }
-  componentClassList(span) {
-    const ratio = 24 / this.maxColumns;
-    return [`pure-u-md-${span * ratio}-24`, 'pure-u-sm-1-1'];
+  get componentClassPattern() { return /^pure-u-(sm|md|lg|xxl)-([0-9]+)-([0-9]+)/; }
+  mediaSizeName(value) { return ['xxl', 'lg', 'md', 'sm'][value]; }
+  sizeFromMediaName(value) {
+    return {
+      'sm': this.sizes.Small, 'md': this.sizes.Medium,
+      'lg': this.sizes.Large, 'xxl': this.sizes.VeryLarge
+    }[value];
   }
-  componentClassListByRatio(ratio) {
-    return this.componentClassList(this.maxColumns * ratio);
+  extractSizeAndSpanFromClassMatch(match) {
+    return { media: match[1], span: parseInt(match[2]) / parseInt(match[3]) };
   }
-  resetColumnSpan(element) {
+  sizesForComponent(component) {
+    return this.sizesForElement(component.root);
+  }
+  sizesForElement(element) {
+    const list = {};
+    element.classList.forEach(className => {
+      const match = this.componentClassPattern.exec(className);
+      if (match !== null) {
+        const { media, span } = this.extractSizeAndSpanFromClassMatch(match);
+        const key = this.sizeFromMediaName(media);
+        const value = span * this.maxColumns;
+        if (key) { list[key] = value; }
+      }
+    });
+    return list;
+  }
+  currentSpanForElement(element) {
+    const sizes = this.sizesForElement(element);
+    const value = sizes[this.currentSize];
+    return value || this.maxColumns;
+  }
+  updateElementCurrentSpan(element, span) {
+    this.updateElementSpan(element, this.currentSize, span);
+  }
+  updateElementSpan(element, size, span) {
+    const sizes = this.sizesForElement(element);
+    sizes[size] = span;
+    if (!sizes[GridComponentEditor.sizes.Small]) {
+      sizes[GridComponentEditor.sizes.Small] = this.maxColumns;
+    }
+    this.updateElementSizes(element, sizes);
+  }
+  updateElementSizes(element, sizes) {
+    this.resetElementSizes(element);
+    for (let key in sizes) {
+      const sizeName = this.mediaSizeName(key);
+      element.classList.add(this.classNameForSpan(sizeName, sizes[key]));
+    }
+  }
+  classNameForSpan(media, span) {
+    const ratio = (span / this.maxColumns) * 24;
+    if (ratio == 24)
+      return `pure-u-${media}-1-1`;
+    return `pure-u-${media}-${ratio}-24`;
+  }
+  resetElementSizes(element) {
     let i = 0;
     while (i < element.classList.length) {
       const klass = element.classList[i];
