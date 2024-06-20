@@ -16,14 +16,19 @@ function addColumnProperty(gridModel, sizeKey, self) {
   const sizeId = gridModel.sizes[sizeKey];
 
   self.properties[name] = {
+    type: "range",
     category: "grid",
     position: self.gridModel.sizes[sizeKey],
-    min: 1, max: gridModel.maxColumns,
+    min: gridModel.minColumns, max: gridModel.maxColumns,
     target: self,
     getter: () => {
+      console.log("Get component grid span", self);
+      console.log("Media = ", sizeKey, ", SizeID = ", sizeId);
       return gridModel.spanForElement(self.root, sizeId);
     },
     setter: (value) => {
+      console.log("Update component grid span", self);
+      console.log("Media = ", sizeKey, ", SizeID = ", sizeId, " value = ", value);
       if (value != null)
         gridModel.updateElementSpan(self.root, sizeId, value);
       else
@@ -41,9 +46,9 @@ function GridComponentEditor(parentClass = ComponentEditor) {
     }
 
     initializeColumnProperties() {
-      for (let sizeKey in Object.keys(this.gridModel.sizes)) {
+      Object.keys(this.gridModel.sizes).forEach(sizeKey => {
         addColumnProperty(this.gridModel, sizeKey, this);
-      }
+      });
     }
 
     initializeProperties() {
@@ -85,6 +90,7 @@ GridComponentEditor.Model = class {
       : GridComponentEditor.currentSize;
   }
   get sizes() { return GridComponentEditor.sizes; }
+  get minColumns() { return 0; }
   get maxColumns() { return 12; }
   get gridClassList() { return ["pure-g"]; }
   get componentClassPattern() { return /^pure-u-(sm|md|lg|xxl)-([0-9]+)-([0-9]+)/; }
@@ -120,12 +126,12 @@ GridComponentEditor.Model = class {
   spanForElement(element, sizeId) {
     const sizes = this.sizesForElement(element);
     const value = sizes[sizeId];
-    return value || this.maxColumns;
+    return value;
   }
   unsetElementSpan(element, sizeId) {
-    const sizes = this.sizeForElement(element);
+    const sizes = this.sizesForElement(element);
     delete sizes[sizeId];
-    this.updateElementSizes(sizes);
+    this.updateElementSizes(element, sizes);
   }
   updateElementCurrentSpan(element, span) {
     this.updateElementSpan(element, this.currentSize, span);
@@ -133,7 +139,7 @@ GridComponentEditor.Model = class {
   updateElementSpan(element, size, span) {
     const sizes = this.sizesForElement(element);
     sizes[size] = span;
-    if (!sizes[GridComponentEditor.sizes.Small]) {
+    if (sizes[GridComponentEditor.sizes.Small] === null) {
       sizes[GridComponentEditor.sizes.Small] = this.maxColumns;
     }
     this.updateElementSizes(element, sizes);
@@ -147,8 +153,12 @@ GridComponentEditor.Model = class {
   }
   classNameForSpan(media, span) {
     const ratio = (span / this.maxColumns) * 24;
-    if (ratio == 24)
+    switch (ratio) {
+    case 0:
+      return `pure-u-${media}-0-1`;
+    case 24:
       return `pure-u-${media}-1-1`;
+    }
     return `pure-u-${media}-${ratio}-24`;
   }
   resetElementSizes(element) {

@@ -83,7 +83,7 @@ function makeOptionalInput(inputGroup, input, value) {
   wrapper.classList.add("optional-checkbox");
   wrapper.appendChild(checkbox);
   makeCheckboxInput(checkbox);
-  checkbox.checked = value && (typeof value !== "string" || value.length > 0) && value !== "null";
+  checkbox.checked = value !== null && value !== undefined && !isNaN(value) && value !== "null";
   checkbox.addEventListener("change", update);
   update();
 }

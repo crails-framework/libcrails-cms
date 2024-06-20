@@ -1,0 +1,13 @@
+@media screen and (min-width: 35.5em) {
+  .pure-u-sm-0-1 { display: none; }
+}
+
+@media screen and (min-width: 48em) {
+  .pure-u-sm-0-1 { display: inline-block; }
+  .pure-u-md-0-1 { display: none; }
+}
+
+@media screen and (min-width: 64em) {
+  .pure-u-md-0-1 { display: inline-block; }
+  .pure-u-xl-0-1 { display: none; }
+}
