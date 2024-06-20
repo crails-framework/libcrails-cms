@@ -104,7 +104,9 @@ export default class {
     const property = this.properties[name];
 
     if (property !== undefined) {
-      if (property.attribute !== undefined)
+      if (property.setter !== undefined)
+        property.setter(value);
+      else if (property.attribute !== undefined)
         property.target[property.attribute] = value;
       else if (property.style !== undefined) {
         if (property.style == "backgroundImage")
@@ -120,7 +122,9 @@ export default class {
     const property = this.properties[name];
 
     if (property !== undefined) {
-      if (property.attribute !== undefined)
+      if (property.getter !== undefined)
+        return property.getter();
+      else if (property.attribute !== undefined)
         return property.target[property.attribute];
       else if (property.style == "backgroundImage")
         return imageFromStyle(property.target.style[property.style]);

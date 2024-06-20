@@ -11,6 +11,28 @@ function isGridContainer(component, gridModel) {
   return false;
 }
 
+function addColumnProperty(gridModel, sizeKey, self) {
+  const name = `column${sizeKey}Span`;
+  const sizeId = gridModel.sizes[sizeKey];
+
+  self.properties[name] = {
+    category: "grid",
+    position: self.gridModel.sizes[sizeKey],
+    min: 1, max: gridModel.maxColumns,
+    target: self,
+    getter: () => {
+      return gridModel.spanForElement(self.root, sizeId);
+    },
+    setter: (value) => {
+      if (value != null)
+        gridModel.updateElementSpan(self.root, sizeId, value);
+      else
+        gridModel.unsetElementSpan(self.root, sizeId);
+    },
+    optional: true
+  };
+}
+
 function GridComponentEditor(parentClass = ComponentEditor) {
   return class extends parentClass {
     constructor(parent, element, components) {
@@ -18,13 +40,15 @@ function GridComponentEditor(parentClass = ComponentEditor) {
       this.gridModel = GridComponentEditor.model;
     }
 
-    initializeProperties() {
-      if (isGridContainer(this.parent, this.gridModel)) {
-        this.properties.columnSpan = {
-          category: "grid",
-          type: "range", min: 1, max: this.gridModel.maxColumns, target: this, attribute: "columnSpan"
-        };
+    initializeColumnProperties() {
+      for (let sizeKey in Object.keys(this.gridModel.sizes)) {
+        addColumnProperty(this.gridModel, sizeKey, this);
       }
+    }
+
+    initializeProperties() {
+      if (isGridContainer(this.parent, this.gridModel))
+        this.initializeColumnProperties();
       super.initializeProperties();
     }
 
@@ -91,9 +115,17 @@ GridComponentEditor.Model = class {
     return list;
   }
   currentSpanForElement(element) {
+    return this.spanForElement(element, this.currentSize);
+  }
+  spanForElement(element, sizeId) {
     const sizes = this.sizesForElement(element);
-    const value = sizes[this.currentSize];
+    const value = sizes[sizeId];
     return value || this.maxColumns;
+  }
+  unsetElementSpan(element, sizeId) {
+    const sizes = this.sizeForElement(element);
+    delete sizes[sizeId];
+    this.updateElementSizes(sizes);
   }
   updateElementCurrentSpan(element, span) {
     this.updateElementSpan(element, this.currentSize, span);
