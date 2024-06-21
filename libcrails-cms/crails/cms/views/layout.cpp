@@ -66,6 +66,16 @@ Layouts::~Layouts()
   for (const auto* plugin : plugins) delete plugin;
 }
 
+const Layout* Layouts::default_layout_for_theme(const string& theme) const
+{
+  for (const auto* layout : layouts)
+  {
+    if (layout->get_type() == DocumentLayoutType || layout->get_name() == theme)
+      return layout;
+  }
+  return nullptr;
+}
+
 const Layout& Layouts::default_layout() const
 {
   if (layouts.size() == 0)

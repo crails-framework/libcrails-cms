@@ -66,6 +66,7 @@ namespace Crails::Cms
     void use_admin_style(const std::string& name) const;
 
     virtual const Layout& default_layout() const;
+    const Layout* default_layout_for_theme(const std::string& theme) const;
     const Layout* find(const std::string& name) const;
     const Layout& require(const std::string& name) const;
     const std::vector<const Layout*>& get_layouts() const { return layouts; }

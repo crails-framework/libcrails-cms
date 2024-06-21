@@ -24,6 +24,8 @@ namespace Crails::Cms
 
       if (Super::params["with_cms_layout"].exists())
         model.set_layout_name(Super::params["with_cms_layout"].template as<std::string>());
+      else
+        model.set_layout_name(default_layout_name());
       Super::vars["page_subtitle"] = i18n::t("admin.new-page");
       Super::render_editor(model);
     }
@@ -36,6 +38,14 @@ namespace Crails::Cms
       Super::vars["page_title"] = std::string(model.get_title());
       Super::vars["page_subtitle"] = i18n::t("admin.page-edition");
       Super::render_editor(model);
+    }
+
+    std::string default_layout_name() const
+    {
+      const Layouts* layouts = Crails::Cms::Layouts::singleton::get();
+      const Layout* default_layout = layouts->default_layout_for_theme(Super::settings->get_theme());
+
+      return default_layout ? default_layout->get_name() : std::string();
     }
   };
 }

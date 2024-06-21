@@ -111,10 +111,10 @@ GridComponentEditor.Model = class {
     const list = {};
     element.classList.forEach(className => {
       const match = this.componentClassPattern.exec(className);
-      if (match !== null) {
-        const { media, span } = this.extractSizeAndSpanFromClassMatch(match);
-        const key = this.sizeFromMediaName(media);
-        const value = span * this.maxColumns;
+      const sizeData = match && this.extractSizeAndSpanFromClassMatch(match);
+      if (sizeData !== null) {
+        const key = this.sizeFromMediaName(sizeData.media);
+        const value = sizeData.span * this.maxColumns;
         if (key) { list[key] = value; }
       }
     });
@@ -139,7 +139,8 @@ GridComponentEditor.Model = class {
   updateElementSpan(element, size, span) {
     const sizes = this.sizesForElement(element);
     sizes[size] = span;
-    if (sizes[GridComponentEditor.sizes.Small] === null) {
+    const smallSize = sizes[GridComponentEditor.sizes.Small];
+    if (smallSize === null || smallSize === undefined) {
       sizes[GridComponentEditor.sizes.Small] = this.maxColumns;
     }
     this.updateElementSizes(element, sizes);
