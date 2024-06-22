@@ -22,13 +22,9 @@ function addColumnProperty(gridModel, sizeKey, self) {
     min: gridModel.minColumns, max: gridModel.maxColumns,
     target: self,
     getter: () => {
-      console.log("Get component grid span", self);
-      console.log("Media = ", sizeKey, ", SizeID = ", sizeId);
       return gridModel.spanForElement(self.root, sizeId);
     },
     setter: (value) => {
-      console.log("Update component grid span", self);
-      console.log("Media = ", sizeKey, ", SizeID = ", sizeId, " value = ", value);
       if (value != null)
         gridModel.updateElementSpan(self.root, sizeId, value);
       else
@@ -70,7 +66,8 @@ function GridComponentEditor(parentClass = ComponentEditor) {
     }
 
     create() {
-      this.columnSpan = this.gridModel.maxColumns;
+      if (isGridContainer(this.parent, this.gridModel))
+        this.columnSpan = this.gridModel.maxColumns;
       super.create();
     }
   };
