@@ -4,6 +4,7 @@ import GridComponentEditor from "./grid_component_editor.js";
 export default class extends GridComponentEditor(NestedComponentEditor) {
   constructor(parent, element, components) {
     super(parent, element, components);
+    this.root.classList.add("cms-slider");
     this.root.dataset.interval = 0;
     this.root.dataset.mode = "carousel";
     this.root.dataset.items = 1;

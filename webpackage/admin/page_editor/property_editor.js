@@ -147,6 +147,11 @@ export default class extends ProudCmsDialog {
         input.type = "color";
         Style.apply("button", input);
         break ;
+      case "number":
+        input.type = "number";
+        input.min = component.properties[property].min;
+        input.max = component.properties[property].max;
+        break ;
       case "range":
         makeRangeInput(inputGroup, input, component.properties[property]);
         break ;

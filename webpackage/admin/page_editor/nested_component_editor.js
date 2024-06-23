@@ -5,6 +5,12 @@ import DefaultControlMenu from "./component_controls.js";
 import {withInjections} from "./injected_component_editor.js";
 import InjectableComponentEditor from "./injected_component_editor.js";
 
+function probeComponentTypes(self) {
+  if (self.componentTypes)
+    return self.componentTypes;
+  return self.parent ? probeComponentTypes(self.parent) : undefined;
+}
+
 function animate(element, property, duration, transformCallback) {
   return new Promise(solve => {
     element.style.transition = `${property} ${duration}ms`;
@@ -68,7 +74,7 @@ export default class NestedComponentEditor extends ComponentEditor {
     super(parent, element);
     if (withInjections() && !componentTypes.injectable)
       componentTypes.injectable = InjectableComponentEditor;
-    this.componentTypes = componentTypes || {};
+    this.componentTypes = componentTypes || probeComponentTypes(parent) || {};
     this.components = [];
     this.actions = new ControlMenu(this);
   }
