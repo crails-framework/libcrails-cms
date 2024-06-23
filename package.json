@@ -20,6 +20,8 @@
     "ContentTools": "^1.6.16",
     "css-loader": "^5.2.7",
     "dirty-form": "^0.4.0",
+    "highlight.js": "^11.9.0",
+    "indent.js": "^0.3.5",
     "javascript-menu-editor": "github:Plaristote/javascript-menu-editor",
     "postcss-loader": "^4.3.0",
     "raw-loader": "^4.0.2",

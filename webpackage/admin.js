@@ -12,6 +12,7 @@ import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
 import DirtyForm from "./admin/dirty_form.js";
 import SortableRelationshipTable from "./admin/sortable_relationship.js";
+import HtmlTextArea from "./admin/html_textarea.js";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -37,6 +38,7 @@ import ImageComponentEditor from "./admin/page_editor/image_component_editor.js"
 import ListComponentEditor from "./admin/page_editor/list_component_editor.js";
 import InjectedComponentEditor from "./admin/page_editor/injected_component_editor.js";
 import SocialComponentEditor from "./admin/page_editor/social_footer_component_editor.js";
+import HtmlComponentEditor from "./admin/page_editor/html_component_editor.js";
 import CreatePageEditor from "./admin/page_editor.js";
 import DefaultControlMenu from "./admin/page_editor/component_controls.js";
 
@@ -56,6 +58,7 @@ window.PageEditor = {
   "ListComponentEditor": ListComponentEditor,
   "InjectedComponentEditor": InjectedComponentEditor,
   "SocialComponentEditor": SocialComponentEditor,
+  "HtmlComponentEditor": HtmlComponentEditor,
   "DefaultControlMenu": DefaultControlMenu
 };
 
@@ -77,6 +80,7 @@ window.ProudCmsPicker = ProudCmsPicker;
 window.Cms = {
   ContentTools: ContentTools,
   CKEditor:     CKEditorExports,
+  HtmlTextArea: HtmlTextArea,
   Dialog:       ProudCmsDialog,
   PickerDialog: ProudCmsPicker,
   PageEditor:   PageEditor,
