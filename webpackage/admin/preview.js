@@ -24,6 +24,6 @@ export default function(form, action) {
   }).then(html => {
     const morphedHtml = replaceJavascriptSrc(html);
     const blob = URL.createObjectURL(new Blob([morphedHtml], {type: 'text/html'}));
-    window.open(blob, "_blank");
+    window.open(blob, "cms_preview");
   });
 }
