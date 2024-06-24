@@ -10,8 +10,9 @@
 using namespace Crails::Cms;
 using namespace std;
 
-typedef void             (PluginFunction)(void);
-typedef std::string_view (PluginAssetGetter)(void);
+typedef void              (PluginFunction)(void);
+typedef string_view       (PluginAssetGetter)(void);
+typedef PageList::PathMap (PluginUrlsGetter)(void);
 
 static void run_plugin_function(const dylib* library, const char* function_name)
 {
@@ -34,6 +35,18 @@ static std::string_view get_plugin_asset(const dylib* library, const char* funct
     return (*function)();
   }
   return std::string_view();
+}
+
+static PageList::PathMap get_plugin_urls(const dylib* library, const char* function_name)
+{
+  if (library && library->has_symbol(function_name))
+  {
+    PluginUrlsGetter* function;
+
+    function = library->get_function<PluginUrlsGetter>(function_name);
+    return (*function)();
+  }
+  return {};
 }
 
 Plugin::Plugin(const filesystem::path& path) : filepath(path)
@@ -102,7 +115,7 @@ void Plugin::unload()
 
 void Plugin::initialize()
 {
-  const std::lock_guard<std::mutex> lock(mutex_);
+  const lock_guard<std::mutex> lock(mutex_);
 
   load();
   run_plugin_function(library, "initialize");
@@ -110,7 +123,7 @@ void Plugin::initialize()
 
 void Plugin::install()
 {
-  const std::lock_guard<std::mutex> lock(mutex_);
+  const lock_guard<std::mutex> lock(mutex_);
 
   load();
   run_plugin_function(library, "install");
@@ -118,28 +131,38 @@ void Plugin::install()
 
 void Plugin::uninstall()
 {
-  const std::lock_guard<std::mutex> lock(mutex_);
+  const lock_guard<std::mutex> lock(mutex_);
 
   load();
   run_plugin_function(library, "uninstall");
 }
 
-std::string_view Plugin::javascript() const
+string_view Plugin::javascript() const
 {
   return get_plugin_asset(library, "plugin_javascript");
 }
 
-std::string_view Plugin::stylesheet() const
+string_view Plugin::stylesheet() const
 {
   return get_plugin_asset(library, "plugin_stylesheet");
 }
 
-std::string_view Plugin::admin_javascript() const
+string_view Plugin::admin_javascript() const
 {
   return get_plugin_asset(library, "plugin_admin_javascript");
 }
 
-std::string_view Plugin::admin_stylesheet() const
+string_view Plugin::admin_stylesheet() const
 {
   return get_plugin_asset(library, "plugin_admin_stylesheet");
+}
+
+PageList::PathMap Plugin::pages() const
+{
+  return get_plugin_urls(library, "plugin_page_list");
+}
+
+PageList::PathMap Plugin::feeds() const
+{
+  return get_plugin_urls(library, "plugin_feed_list");
 }
