@@ -26,6 +26,7 @@ export default class extends GridComponentEditor() {
 
   create() {
     this.content = document.createElement("div")
+    this.content.textContent = i18n.t("admin.page-editor.html-editor-placeholder");
     this.root.appendChild(this.content);
     super.create();
   }
@@ -57,8 +58,7 @@ export default class extends GridComponentEditor() {
     const cancelButton = document.createElement("div");
     const editor = new HtmlTextArea(input);
 
-    input.value = this.content.innerHTML;
-    editor.updateCode();
+    input.value = this.html;
     actionButtons.push(createActionButton("fullscreen", this.toggleFullscreen.bind(this)));
     actionButtons.push(createActionButton("image", this.insertPicture.bind(this)));
     actionButtons.forEach(button => actionGroup.appendChild(button));
@@ -83,6 +83,7 @@ export default class extends GridComponentEditor() {
     acceptButton.addEventListener("click", this.endEditing.bind(this, true));
     cancelButton.addEventListener("click", this.endEditing.bind(this, false));
     editor.replaceTextArea();
+    editor.updateCode();
     return wrapper;
   }
 

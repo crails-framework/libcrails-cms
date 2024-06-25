@@ -157,6 +157,10 @@ export default class NestedComponentEditor extends ComponentEditor {
     return animate(component.root, "top", 500, () => {
       component.root.style.top = 0;
     }).then(() => {
+      window.scroll({
+        top: component.root.getBoundingClientRect().top + window.scrollY,
+        behavior: 'smooth'
+      });
       this.componentsChanged();
       if (typeof crailscms_on_content_loaded == "function")
         crailscms_on_content_loaded(component.root);
