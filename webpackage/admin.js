@@ -65,9 +65,11 @@ window.PageEditor = {
 import ContentTools from "ContentTools";
 import ImageContentTools from "./admin/page_editor/content_tools/image.js";
 import FontContentTools from "./admin/page_editor/content_tools/font.js";
+import overloadCtPropertiesDialog from "./admin/page_editor/ct_properties_dialog.js";
 
 window.ContentTools = ContentTools;
 window.initializeContentTools = function() {
+  overloadCtPropertiesDialog();
   ContentTools.ToolShelf._tools.heading.tagName = 'h2';
   ContentTools.ToolShelf._tools.subheading.tagName = 'h3';
   new ImageContentTools();

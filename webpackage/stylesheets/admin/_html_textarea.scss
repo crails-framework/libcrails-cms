@@ -81,3 +81,20 @@ body > .fullscreen-component {
     }
   }
 }
+
+.ct-properties-dialog__code .cms-html-textarea {
+  textarea.ct-properties-dialog__inner-html, .hljs {
+    padding: 0 !important;
+    white-space: pre-wrap;
+  }
+
+  textarea.ct-properties-dialog__inner-html {
+    height: inherit;
+    overflow-y: hidden;
+  }
+
+  pre {
+    height: 100%;
+    width: 100%;
+  }
+}

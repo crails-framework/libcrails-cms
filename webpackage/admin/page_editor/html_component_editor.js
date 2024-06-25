@@ -5,6 +5,8 @@ import FilePicker from "../file_picker.js";
 import Style from "../../style.js";
 import i18n from "../../i18n.js";
 
+let indentSize;
+
 function createActionButton(name, callback) {
   const button = document.createElement("div");
 
@@ -36,7 +38,9 @@ export default class extends GridComponentEditor() {
   }
 
   get html() {
-    return indent.indent.html(this.content.innerHTML, { tabString: "  " });
+    return indent.indent.html(this.content.innerHTML, {
+      tabString: ' '.repeat(indentSize)
+    });
   }
 
   set html(value) {
