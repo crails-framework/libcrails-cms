@@ -44,7 +44,7 @@ using namespace Crails::Cms;
 </div>
 
 <script>
-var menuEditor = new MenuEditor('myEditor', { 
+var menuEditor = new Cms.MenuEditor('myEditor', { 
   maxLevel: 2,
   labelEdit: '<%= Crails::fonticon_tag(Crails::FontIcon::Edit) %>',
   labelRemove: '<%= Crails::fonticon_tag(Crails::FontIcon::Destroy) %>',
@@ -54,6 +54,7 @@ var menuEditor = new MenuEditor('myEditor', {
   secondaryButtonClass: '<%= style.button_classes() + style.small_button_classes() %>',
   primaryButtonClass: '<%= style.confirm_button_classes() + style.small_button_classes() %>',
   dangerButtonClass: '<%= style.danger_button_classes() + style.small_button_classes() %>',
+  textConfirmDelete: '<%= i18n::t("admin.confirm-remove-item") %>',
   onChanged: function() { document.querySelector("#menuEditorOutput").value = menuEditor.getString(); },
   listOptions: {
     opener: {

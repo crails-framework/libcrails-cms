@@ -13,6 +13,7 @@ import createSelectField from "./admin/selectField.js";
 import DirtyForm from "./admin/dirty_form.js";
 import SortableRelationshipTable from "./admin/sortable_relationship.js";
 import HtmlTextArea from "./admin/html_textarea.js";
+import MenuEditor from "javascript-menu-editor";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -41,9 +42,6 @@ import SocialComponentEditor from "./admin/page_editor/social_footer_component_e
 import HtmlComponentEditor from "./admin/page_editor/html_component_editor.js";
 import CreatePageEditor from "./admin/page_editor.js";
 import DefaultControlMenu from "./admin/page_editor/component_controls.js";
-
-import MenuEditor from "javascript-menu-editor";
-window.MenuEditor = MenuEditor;
 
 window.PageEditor = {
   "create": CreatePageEditor,
