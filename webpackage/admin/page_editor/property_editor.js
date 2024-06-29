@@ -1,5 +1,5 @@
 import i18n from "../../i18n.js";
-import ProudCmsDialog from "../dialog.js";
+import Dialog from "../dialog.js";
 import FilePicker from "../file_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
 import Style from "../../style.js";
@@ -83,12 +83,13 @@ function makeOptionalInput(inputGroup, input, value) {
   wrapper.classList.add("optional-checkbox");
   wrapper.appendChild(checkbox);
   makeCheckboxInput(checkbox);
-  checkbox.checked = value !== null && value !== undefined && !isNaN(value) && value !== "null";
+  checkbox.checked = value !== null && value !== undefined && !isNaN(value) && value != "" && value !== "null";
+  console.log("initializing optional input", inputGroup, input, ", value=", value, ", checked=", checkbox.checked);
   checkbox.addEventListener("change", update);
   update();
 }
 
-export default class extends ProudCmsDialog {
+export default class extends Dialog {
   constructor(component) {
     const title = document.createElement("div");
     const confirmButton = document.createElement("button");

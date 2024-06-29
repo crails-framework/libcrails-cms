@@ -13,6 +13,7 @@ import createSelectField from "./admin/selectField.js";
 import DirtyForm from "./admin/dirty_form.js";
 import SortableRelationshipTable from "./admin/sortable_relationship.js";
 import HtmlTextArea from "./admin/html_textarea.js";
+import MultiplePictureInput from "./admin/page_editor/multiple_picture_input.js";
 import MenuEditor from "javascript-menu-editor";
 import "./admin/plugin_index.js";
 
@@ -89,6 +90,9 @@ window.Cms = {
   DirtyForm:    DirtyForm,
   Style:        Style,
   i18n:         i18n,
+  inputs: {
+    MultiplePictureInput: MultiplePictureInput,
+  },
   initializers: {
     ContentTools:   initializeContentTools,
     CKEditor:       adminCKEditor,

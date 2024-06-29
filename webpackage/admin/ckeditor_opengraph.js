@@ -44,7 +44,7 @@ function generateDatasetFromModel(modelElement) {
 }
 
 export default class extends Plugin {
-  static toolName = "proudcmsOpenGraph";
+  static toolName = "cmsOpenGraph";
 
   init() {
     this.defineSchema();
