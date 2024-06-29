@@ -1,5 +1,6 @@
 import Style from "../../style.js";
 import FilePicker from "../file_picker.js";
+import SortableTable from "../sortable_table.js";
 import {setActionInnerHTML} from "./controls.js";
 
 function makeRowControls(handle, file, row, column) {
@@ -7,21 +8,11 @@ function makeRowControls(handle, file, row, column) {
   const downButton = document.createElement("button");
   const removeButton = document.createElement("button");
 
-  [upButton, downButton, removeButton].forEach(button => Style.apply("button", button));
-  setActionInnerHTML(upButton, "up");
-  column.appendChild(upButton);
-  setActionInnerHTML(downButton, "down");
-  column.appendChild(downButton);
+  Style.ready.then(function() {
+    Style.apply("dangerButton", removeButton);
+  });
   setActionInnerHTML(removeButton, "remove");
   column.appendChild(removeButton);
-  upButton.addEventListener("click", event => {
-    event.preventDefault();
-    handle.moveUp(row);
-  });
-  downButton.addEventListener("click", event => {
-    event.preventDefault();
-    handle.moveDown(row);
-  });
   removeButton.addEventListener("click", event => {
     event.preventDefault();
     handle.remove(row);
@@ -30,6 +21,7 @@ function makeRowControls(handle, file, row, column) {
 
 function makeRow(handle, file) {
   const row = document.createElement("tr");
+  const dragColumn = document.createElement("td");
   const nameColumn = document.createElement("td");
   const previewColumn = document.createElement("td");
   const controlsColumn = document.createElement("td");
@@ -37,8 +29,10 @@ function makeRow(handle, file) {
 
   preview.src = file.miniature_url;
   nameColumn.textContent = file.name;
+  dragColumn.innerHTML = '<span class="drag-handle"></span>';
   makeRowControls(handle, file, row, controlsColumn);
   previewColumn.appendChild(preview);
+  row.appendChild(dragColumn);
   row.appendChild(previewColumn);
   row.appendChild(nameColumn);
   row.appendChild(controlsColumn);
@@ -58,7 +52,7 @@ function makeAppendButton(handle) {
 
 function updateValue(handle) {
   const input = handle.input;
-  const rows = handle.table.querySelectorAll("tr[data-type='file']");
+  const rows = handle.tbody.querySelectorAll("tr[data-type='file']");
   const array = [];
 
   for (let row of rows)
@@ -68,9 +62,11 @@ function updateValue(handle) {
 
 function loadValue(handle) {
   try {
-    const value = JSON.parse(handle.input.value);
+    if (handle.input.value) {
+      const value = JSON.parse(handle.input.value);
 
-    value.forEach(handle.addFile.bind(handle));
+      value.forEach(handle.addFile.bind(handle));
+    }
   } catch (err) {
     console.log("Failde to load multiple-picture-input value:", err);
     console.log(handle.input.value);
@@ -83,11 +79,23 @@ export default class {
 
     this.input = input;
     this.table = document.createElement("table");
+    this.tbody = document.createElement("tbody");
+    this.table.appendChild(this.tbody);
     this.table.classList.add("multiple-picture-input");
-    this.filePicker = filePicker || (new FilePicker());
+    this.table.dataset.dragHandle = "drag-handle";
+    this.sortableTable = new SortableTable(this.table);
+    this.sortableTable.onSwappedRows = this.onSwappedRows.bind(this);
+    this.filePicker = filePicker || (new FilePicker({
+      title: i18n.t("admin.image-library"),
+      mimetype: "image/*"
+    }));
     input.type = "hidden";
     input.parentElement.insertBefore(addButton, input);
     input.parentElement.insertBefore(this.table, addButton);
+    loadValue(this);
+  }
+
+  reloadInputValue() {
     loadValue(this);
   }
 
@@ -98,22 +106,27 @@ export default class {
 
   addFile(file) {
     const row = makeRow(this, file);
-    this.table.insertBefore(row, this.table.lastElementChild);
+    this.tbody.appendChild(row);
     updateValue(this);
   }
 
   moveUp(row) {
-    this.table.insertBefore(row, row.previousElementSibling);
+    this.tbody.insertBefore(row, row.previousElementSibling);
     updateValue(this);
   }
 
   moveDown(row) {
-    this.table.insertBefore(row, row.nextElementSibling.nextElementSibling);
+    this.tbody.insertBefore(row, row.nextElementSibling.nextElementSibling);
     updateValue(this);
   }
 
+  onSwappedRows() {
+    setTimeout(() => { updateValue(this); }, 0); // updates the value *after* the DOM has been upated
+    return Promise.resolve(true);
+  }
+
   remove(row) {
-    this.table.removeChild(row);
+    this.tbody.removeChild(row);
     updateValue(this);
   }
 }
