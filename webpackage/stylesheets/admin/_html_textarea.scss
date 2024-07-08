@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap');
 
+@mixin textarea-font {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 400;
+  font-size: 12pt;
+  line-height: 20pt;
+}
+
 .html-editor {
   .btn-group:first-of-type {
     text-align: center;
@@ -33,20 +40,14 @@
       padding: 0;
       height: calc(100% - 30px);
       width: calc(100% - 30px);
-      font-family: "Roboto Mono", monospace;
-      font-weight: 400;
-      font-size: 12pt;
-      line-height: 150%;
+      @include textarea-font;
       overflow-y: scroll;
       overflow-x: auto;
     }
   }
 
   textarea {
-    font-family: "Roboto Mono", monospace;
-    font-weight: 400;
-    font-size: 12pt;
-    line-height: 150%;
+    @include textarea-font;
     position: absolute;
     top: 0;
     left: 0;
