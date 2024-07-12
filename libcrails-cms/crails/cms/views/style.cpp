@@ -164,7 +164,7 @@ string Cms::Style::thumbnail(const ClassList& classes, const std::string& src) c
 {
   if (!src.length())
     return string();
-  return HtmlTemplate::tag("img", {{"class",classes + "thumbnail"},{"src",src}});
+  return HtmlTemplate::tag("img", {{"class",classes + "thumbnail"},{"src",src},{"alt",""}});
 }
 
 string Cms::Style::nav(const ClassList& classes, function<string()> yield) const

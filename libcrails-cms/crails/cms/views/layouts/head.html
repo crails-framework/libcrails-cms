@@ -24,7 +24,7 @@ const Crails::Cms::NewsFeed @newsfeed = Crails::Cms::NewsFeed(rss);
   <%= tag("link", {{"rel","alternate"},{"href", rss},{"type","application/rss+xml"}}) %>
 <% end -%>
 <% if (plugins && plugins->has_plugins()) do -%>
-  <%= tag("link", {{"rel","stylesheet"},{"src",Crails::Cms::Plugins::application_css_uri}}) %>
+  <%= tag("link", {{"rel","stylesheet"},{"href",Crails::Cms::Plugins::application_css_uri}}) %>
   <%= tag("script", {{"src",Crails::Cms::Plugins::application_js_uri}}) %>
 <% end -%>
 
