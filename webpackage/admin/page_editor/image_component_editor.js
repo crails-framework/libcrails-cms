@@ -3,6 +3,7 @@ import GridComponentEditor from "./grid_component_editor.js";
 export default class extends GridComponentEditor() {
   initializeProperties() {
     this.properties.image = { type: "image", target: this.image, attribute: "src" };
+    this.properties.imageAlt = { type: "text", target: this.image, attribute: "alt" };
     this.properties.width = { type: "number", target: this, attribute: "imageWidth", optional: true };
     this.properties.height = { type: "number", target: this, attribute: "imageHeight", optional: true };
     super.initializeProperties();
