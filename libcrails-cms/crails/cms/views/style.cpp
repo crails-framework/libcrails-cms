@@ -194,3 +194,8 @@ string Cms::Style::breadcrumbs(const BreadcrumbsList& crumbs) const
     });
   });
 }
+
+string Cms::Style::anchor_tag(const string& name) const
+{
+  return HtmlTemplate::tag("div", {{"class", "anchor-item"}, {"id", name}});
+}

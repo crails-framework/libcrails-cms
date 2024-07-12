@@ -73,6 +73,7 @@ namespace Crails::Cms
     std::string nav(std::function<std::string()> yield) const { return nav({}, yield); }
     virtual std::string nav(const ClassList& classes, std::function<std::string()> yield) const;
     virtual std::string breadcrumbs(const BreadcrumbsList& crumbs) const;
+    virtual std::string anchor_tag(const std::string& name) const;
 
     virtual std::vector<std::string> stylesheets() const;
     virtual std::vector<std::string> admin_stylesheets() const;
