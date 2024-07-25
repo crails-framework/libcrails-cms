@@ -1,7 +1,6 @@
-import ContentTools from "ContentTools";
 import i18n from "../../../i18n.js";
 import Style from "../../../style.js";
-import ProudCmsDialog from "../../dialog.js";
+import CmsDialog from "../../dialog.js";
 
 function makeFormGroup(name, input) {
   const wrapper = document.createElement("div");
@@ -55,7 +54,7 @@ function makeFontColorInput(dialog) {
   return makeFormGroup("color", input);
 }
 
-class FontDialog extends ProudCmsDialog {
+class FontDialog extends CmsDialog {
   constructor(element) {
     const title = document.createElement("div");
     const confirmButton = document.createElement("button");
@@ -115,30 +114,33 @@ class FontDialog extends ProudCmsDialog {
   }
 }
 
-export default class extends ContentTools.Tool {
-  constructor() {
-    super();
-    this.icon = "font-size";
-    this.label = "Fonts";
-    ContentTools.ToolShelf.stow(this, "fonts");
-    ContentTools.DEFAULT_TOOLS[0].push("fonts");
-  }
+export default function(iframe) {
+  const ContentTools = iframe.contentWindow.Cms.ContentTools;
+  return class extends ContentTools.Tool {
+    constructor() {
+      super();
+      this.icon = "font-size";
+      this.label = "Fonts";
+      ContentTools.ToolShelf.stow(this, "fonts");
+      ContentTools.DEFAULT_TOOLS[0].push("fonts");
+    }
 
-  canApply(element, selection) {
-    return element != null;
-  }
+    canApply(element, selection) {
+      return element != null;
+    }
 
-  isApplied(element, selection) {
-    if (element)
-      return element._domElement.style.fontFamily.length > 0;
-    return false;
-  }
+    isApplied(element, selection) {
+      if (element)
+        return element._domElement.style.fontFamily.length > 0;
+      return false;
+    }
 
-  apply(element, selection, callback) {
-    const dialog = new FontDialog(element._domElement);
+    apply(element, selection, callback) {
+      const dialog = new FontDialog(element._domElement);
 
-    dialog.onAccepted = function() { callback(true); };
-    dialog.onAborted = function() { callback(false); };
-    dialog.open();
-  }
-};
+      dialog.onAccepted = function() { callback(true); };
+      dialog.onAborted = function() { callback(false); };
+      dialog.open();
+    }
+  };
+}

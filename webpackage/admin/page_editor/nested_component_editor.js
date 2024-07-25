@@ -91,7 +91,7 @@ export default class NestedComponentEditor extends ComponentEditor {
     return this.componentElements[this.componentElements.length - 1];
   }
 
-  get insertAnchor() {
+  get lastAnchor() {
     const lastComponentElement = this.lastComponentElement;
     return lastComponentElement
       ? lastComponentElement.nextElementSibling
@@ -122,6 +122,25 @@ export default class NestedComponentEditor extends ComponentEditor {
   componentsChanged() {
   }
 
+  componentAnchors() {
+    let anchors = [];
+
+    this.components.forEach(child => {
+      anchors.push({
+        parent:      this,
+        container:   this.container,
+        nextSibling: child.root
+      });
+      anchors = anchors.concat(child.componentAnchors());
+    });
+    anchors.push({
+      parent: this,
+      container: this.container,
+      nextSibling: this.lastAnchor
+    });
+    return anchors;
+  }
+
   collectEditableElements() {
     const list = [];
     const owned = getOwnedEditableContent(this);
@@ -142,15 +161,16 @@ export default class NestedComponentEditor extends ComponentEditor {
     return -1;
   }
 
-  addComponent(type) {
+  addComponent(type, insertAnchor) {
     console.log("Adding component", type, "to", this);
     const component = new this.componentTypes[type](this);
     component.root.$component = component;
     component.create();
     component.componentType = type;
     this.components.push(component);
-    this.container.insertBefore(component.root, this.insertAnchor);
+    this.container.insertBefore(component.root, insertAnchor || this.lastAnchor);
     this.container.appendChild(component.root);
+    this.layout.closeComponentAdder();
     this.layout.updateEditableComponents();
     component.enableEditMode();
     component.root.style.top = window.innerHeight; 

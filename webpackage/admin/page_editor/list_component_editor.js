@@ -3,7 +3,7 @@ import NestedComponentEditor from "./nested_component_editor.js";
 function ListItemComponentEditor(parentClass = ComponentEditor) {
   return class extends parentClass {
     constructor(parent, element, components) {
-      if (!element) element = document.createElement("li");
+      if (!element) element = this.document.createElement("li");
       super(parent, element, components);
     }
   };
@@ -15,6 +15,6 @@ export default class ListComponentEditor extends NestedComponentEditor {
       componentTypes[componentName] = ListItemComponentEditor(componentTypes[componentName]);
     });
     super(parent, element, componentTypes);
-    this.root = element || document.createElement("ul");
+    this.root = element || this.document.createElement("ul");
   }
 }

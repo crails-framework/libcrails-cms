@@ -10,7 +10,7 @@ export default class extends GridComponentEditor() {
   }
 
   create() {
-    const image = document.createElement("img");
+    const image = this.document.createElement("img");
 
     this.root.appendChild(image);
     super.create();

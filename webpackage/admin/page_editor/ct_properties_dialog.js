@@ -1,4 +1,3 @@
-import ContentTools from "ContentTools";
 import HtmlTextArea from "../html_textarea.js";
 import indent from "indent.js";
 
@@ -12,7 +11,7 @@ function formatHtml(source) {
   });
 }
 
-export default function() {
+export default function(ContentTools) {
   const callback = ContentTools.PropertiesDialog.prototype.mount;
 
   ContentTools.PropertiesDialog.prototype.mount = function() {

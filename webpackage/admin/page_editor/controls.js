@@ -69,11 +69,10 @@ export class MetaAction extends Action {
 export class ControlMenu {
   constructor() {
     this.root = document.createElement("nav");
-    this.root.classList.add("proudcms-page-editor-controls");
+    this.root.classList.add("cms-page-editor-controls");
     this.title = document.createElement("span");
     this.title.textContent = i18n.t(`admin.page-editor.components.${name}`);
     this.ul = document.createElement("ul");
-    Style.apply("menu", this.ul);
     this.root.appendChild(this.title);
     this.root.appendChild(this.ul);
     this.actions = [];
@@ -124,6 +123,7 @@ export class ControlMenu {
   onResized() {
     const action = this.root.offsetWidth >= (2 * this.buttonsWidth) ? "remove" : "add";
 
-    this.title.classList[action]("hidden");
+    if (this.title)
+      this.title.classList[action]("hidden");
   }
 }

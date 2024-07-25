@@ -52,7 +52,7 @@ export default class extends ComponentEditor {
   }
 
   createSocialButton(type) {
-    const link = document.createElement("a");
+    const link = this.document.createElement("a");
 
     link.textContent = type;
     return link;

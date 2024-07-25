@@ -2,10 +2,11 @@
 #include "../../../views/layout.hpp"
 #include "../../../views/injector.hpp"
 #include "../../../lib/assets.hpp"
+#include <iomanip>
 
 const Crails::Cms::Settings& @settings;
-const Crails::Cms::Layout& @proudcms_layout;
-const Crails::Cms::LayoutVariables variables = proudcms_layout.get_variables();
+const Crails::Cms::Layout& @cms_layout;
+const Crails::Cms::LayoutVariables variables = cms_layout.get_variables();
 std::string @form_id;
 std::string @field_name;
 std::string @mode = "default";
@@ -18,37 +19,46 @@ std::string @mode = "default";
   <% end -%>
 </div>
 
-<% if (proudcms_layout.get_type() == Crails::Cms::ComponentLayoutType) do -%>
-  <%= tag("link", {{"rel","stylesheet"},{"type","text/css"},{"href",CrailsCmsAssets::content_tools_css}}) %>
-  <script>initializeContentTools()</script>
-<% end -%>
-
 <% if (variables.size()) do -%>
   <%= render_css_variables(variables, settings.get_theme_settings()) %>
 <% end -%>
 
-<% for (const auto& stylesheet : proudcms_layout.get_editor_stylesheets()) do %>
+<% for (const auto& stylesheet : cms_layout.get_editor_stylesheets()) do %>
   <%= tag("link", {{"rel","stylesheet"},{"href",stylesheet}}) %>
 <% end %>
 
-<% for (const auto& javascript : proudcms_layout.get_editor_javascripts()) do %>
+<% for (const auto& javascript : cms_layout.get_editor_javascripts()) do %>
   <%= tag("script", {{"src",javascript}}) %>
 <% end %>
 
 <script>
-<% switch (proudcms_layout.get_type()) do -%>
+<% switch (cms_layout.get_type()) do -%>
 <% case Crails::Cms::DocumentLayoutType: -%>
 
   Cms.initializers.CKEditor("<%= field_name %>");
 
 <% break -%>
+<% case Crails::Cms::HtmlLayoutType: -%>
+
+  Cms.HtmlTextArea.create("<%= field_name %>");
+
+<% break -%>
 <% case Crails::Cms::ComponentLayoutType: -%>
 
-  PageEditor.create(
-    <%= proudcms_layout.get_component_layout_name() %>,
+  const stylesheets = [];
+  const javascripts = [<%= std::quoted(CrailsCmsAssets::admin_js) %>];
+
+  stylesheets.push(<%= std::quoted(CrailsCmsAssets::content_tools_css) %>);
+  <% for (const auto& stylesheet : cms_layout.get_stylesheets()) do -%>
+    stylesheets.push(<%= std::quoted(stylesheet) %>);
+  <% end -%>
+
+  Cms.PageEditor.create(
+    <%= cms_layout.get_component_layout_name() %>,
     document.querySelector("#<%= form_id %>"),
     "<%= field_name %>",
-    "<%= mode %>"
+    "<%= mode %>",
+    { stylesheets, javascripts }
   ).then(function(pageEditor) {
     window.pageEditor = pageEditor;
     if (typeof crailscms_on_content_loaded == "function")

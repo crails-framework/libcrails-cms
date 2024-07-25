@@ -37,8 +37,8 @@ export default class InjectableComponentEditor extends GridComponentEditor(Compo
   }
 
   create() {
-    const injector = document.createElement("inject");
-    const placeholder = document.createElement("div");
+    const injector = this.document.createElement("inject");
+    const placeholder = this.document.createElement("div");
 
     this.root.appendChild(injector);
     injector.appendChild(placeholder);

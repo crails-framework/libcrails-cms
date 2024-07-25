@@ -1,29 +1,39 @@
 import i18n from "../i18n.js";
 import Style from "../style.js";
+import createIFrame from "./page_editor/iframe.js";
+import createToolbar from "./page_editor/toolbar.js";
 
-export default function(layout, form, fieldName, mode) {
+export default function(layout, form, fieldName, mode, resources) {
   return Promise.all([i18n.ready, Style.ready]).then(function() {
-    const element = form.querySelector(".proudcms-page-editor");
+    //const element = form.querySelector(".cms-page-editor");
     const textarea = form.querySelector(`textarea[name='${fieldName}']`);
     const hasFooter = form.querySelector("input[name='page[has_footer]'");
-    const pageEditor = new layout(element, mode);
+    const iframe = createIFrame(textarea, resources);
 
-    textarea.style.display = 'none';
-    element.innerHTML = textarea.value;
-    pageEditor.bindElements();
-    pageEditor.updateEditableComponents();
-    pageEditor.contentEditor.start();
-    pageEditor.targetInput = textarea;
-    form.addEventListener("submit", function(event) {
-      try {
-        pageEditor.save(pageEditor.targetInput);
-        if (hasFooter)
-          hasFooter.value = pageEditor.hasFooter ? 1 : 0;
-      } catch (err) {
-        event.preventDefault();
-        console.warn("PageEditor saved to fail:", err);
-      }
+    return iframe.ready.then(function() {
+      iframe.contentDocument.body.innerHTML = textarea.value;
+      Cms.initializers.ContentTools(iframe);
+    }).then(function() {
+      const pageEditor = new layout(iframe, mode);
+      const toolbar = createToolbar(pageEditor);
+
+      textarea.style.display = 'none';
+      //element.innerHTML = textarea.value;
+      pageEditor.bindElements();
+      pageEditor.updateEditableComponents();
+      //pageEditor.contentEditor.start();
+      pageEditor.targetInput = textarea;
+      form.addEventListener("submit", function(event) {
+        try {
+          pageEditor.save(pageEditor.targetInput);
+          if (hasFooter)
+            hasFooter.value = pageEditor.hasFooter ? 1 : 0;
+        } catch (err) {
+          event.preventDefault();
+          console.warn("PageEditor saved to fail:", err);
+        }
+      });
+      return pageEditor;
     });
-    return pageEditor;
   });
 }

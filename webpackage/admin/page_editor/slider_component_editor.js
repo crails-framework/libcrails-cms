@@ -22,8 +22,8 @@ export default class extends GridComponentEditor(NestedComponentEditor) {
   }
 
   create() {
-    const wrapper = document.createElement("div");
-    const slider = document.createElement("div");
+    const wrapper = this.document.createElement("div");
+    const slider = this.document.createElement("div");
 
     slider.classList.add("cms-slider");
     wrapper.appendChild(slider);

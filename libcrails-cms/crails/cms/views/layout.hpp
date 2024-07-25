@@ -12,7 +12,8 @@ namespace Crails::Cms
   enum LayoutType
   {
     ComponentLayoutType,
-    DocumentLayoutType
+    DocumentLayoutType,
+    HtmlLayoutType
   };
 
   class Style;

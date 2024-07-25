@@ -67,16 +67,29 @@ import FontContentTools from "./admin/page_editor/content_tools/font.js";
 import overloadCtPropertiesDialog from "./admin/page_editor/ct_properties_dialog.js";
 
 window.ContentTools = ContentTools;
-window.initializeContentTools = function() {
-  overloadCtPropertiesDialog();
+window.initializeContentTools = function(iframe) {
+  const ContentTools = iframe.contentWindow.Cms.ContentTools;
+  const imageToolClass = ImageContentTools(iframe);
+  const fontToolClass = FontContentTools(iframe);
+
+  overloadCtPropertiesDialog(ContentTools);
   ContentTools.ToolShelf._tools.heading.tagName = 'h2';
   ContentTools.ToolShelf._tools.subheading.tagName = 'h3';
-  new ImageContentTools();
-  new FontContentTools();
+  new imageToolClass();
+  new fontToolClass();
 };
 
 window.ProudCmsDialog = ProudCmsDialog;
 window.ProudCmsPicker = ProudCmsPicker;
+
+function createHtmlEditor(elementOrName) {
+  const element = typeof elementOrName == "string"
+    ? document.querySelector(`textarea[name='${elementOrName}']`)
+    : elementOrName;
+  const instance = new HtmlTextArea(element);
+  instance.replaceTextArea();
+  return instance;
+}
 
 window.Cms = {
   ContentTools: ContentTools,
@@ -95,6 +108,7 @@ window.Cms = {
   },
   initializers: {
     ContentTools:   initializeContentTools,
+    HtmlEditor:     createHtmlEditor,
     CKEditor:       adminCKEditor,
     CKEditorButton: adminCKEditorButton,
     Uppy:           createUppy,

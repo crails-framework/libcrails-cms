@@ -98,6 +98,9 @@ GridComponentEditor.Model = class {
       'lg': this.sizes.Large, 'xxl': this.sizes.VeryLarge
     }[value];
   }
+  widthFromSize(sizeId) {
+    return [500, 601, 993, 1201][sizeId];
+  }
   extractSizeAndSpanFromClassMatch(match) {
     return { media: match[1], span: parseInt(match[2]) / parseInt(match[3]) };
   }

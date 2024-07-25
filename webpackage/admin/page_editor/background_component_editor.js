@@ -45,7 +45,7 @@ export default function (parentClass = ComponentEditor) {
     }
 
     create() {
-      const style = document.createElement("style");
+      const style = this.document.createElement("style");
 
       style.dataset.type = "background";
       this.root.classList.add("background-component");

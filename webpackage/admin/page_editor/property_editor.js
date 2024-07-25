@@ -1,5 +1,4 @@
 import i18n from "../../i18n.js";
-import Dialog from "../dialog.js";
 import FilePicker from "../file_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
 import Style from "../../style.js";
@@ -89,27 +88,18 @@ function makeOptionalInput(inputGroup, input, value) {
   update();
 }
 
-export default class extends Dialog {
+export default class {
   constructor(component) {
     const title = document.createElement("div");
-    const confirmButton = document.createElement("button");
     const content = document.createElement("div");
-    const controls = document.createElement("div");
 
-    Style.apply("modalContent", content);
-    Style.apply("modalControls", controls);
-    content.appendChild(title);
-    controls.appendChild(confirmButton);
-    super();
+    //content.appendChild(title);
     this.component = component;
+    this.content = content;
     title.classList.add("popup-title");
     title.textContent = i18n.t("admin.page-editor.property-editor");
-    confirmButton.textContent = i18n.t("admin.confirm");
-    this.popup.appendChild(content);
-    this.popup.appendChild(controls);
-    this.popup.classList.add("page-property-editor");
-    Style.apply("form", this.popup);
-    Style.apply("confirmButton", confirmButton);
+    content.classList.add("page-property-editor");
+    Style.apply("form", content);
     this.inputs = {};
     for (let property in component.properties) {
       const formGroup = document.createElement("div");
@@ -167,13 +157,20 @@ export default class extends Dialog {
       content.appendChild(formGroup);
       this.inputs[property] = input;
     }
-    confirmButton.addEventListener("click", this.accepted.bind(this));
-    this.open();
+    Cms.PageEditor.Toolbar.setControls(content);
     if (typeof crailscms_on_content_loaded == "function")
-      crailscms_on_content_loaded(this.popup);
+      crailscms_on_content_loaded(content);
+    this.scheduleAutoUpdate();
   }
 
-  accepted() {
+  scheduleAutoUpdate() {
+    if (this.content.parentElement) {
+      setTimeout(this.scheduleAutoUpdate.bind(this), 1500);
+      this.apply();
+    }
+  }
+
+  apply() {
     for (let property in this.inputs) {
       let value = this.inputs[property].value;
 
@@ -183,7 +180,6 @@ export default class extends Dialog {
         value = this.inputs[property].checked;
       this.component.updateProperty(property, value);
     }
-    this.close();
   }
 }
 

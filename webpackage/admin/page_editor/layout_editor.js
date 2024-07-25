@@ -1,5 +1,6 @@
 import i18n from "../../i18n.js";
 import NestedComponentEditor from "./nested_component_editor.js";
+import ComponentAnchors from "./component_anchors.js";
 import {ControlMenu} from "./nested_component_editor.js";
 import {Action} from "./controls.js";
 import Sticky from "sticky-js";
@@ -35,10 +36,14 @@ class LayoutMenu extends ControlMenu {
 }
 
 export default class extends NestedComponentEditor {
-  constructor(element, componentTypes) {
-    super(null, element, componentTypes);
+  constructor(iframe, componentTypes) {
+    super(null, iframe.contentDocument.body, componentTypes);
+    window.pageEditor = this;
+    this.iframe = iframe;
+    this.document.body.addEventListener("click", this.setEditorActive.bind(this, true));
     this.actions = new LayoutMenu(this);
     this.mutationObserver = new MutationObserver(onRootComponentMutation);
+    this.anchors = new ComponentAnchors(this);
     this.contentEditor
       .addEventListener("start", this.enableEditMode.bind(this));
     this.contentEditor
@@ -46,8 +51,47 @@ export default class extends NestedComponentEditor {
     this.bindElements();
     this.editMode = false;
     this.contentEditor.init([]);
-    if (typeof crailscms_on_content_loaded == "function")
-      crailscms_on_content_loaded(this.root);
+  }
+
+  get document() {
+    return this.iframe.contentDocument;
+  }
+
+  get window() {
+    return this.iframe.contentWindow;
+  }
+
+  updatePageEditorLayout(value) {
+    const classList = document.body.classList;
+    classList.remove(`cms-page-editor-${this.pageEditorLayout}`);
+    classList.add(`cms-page-editor-${value}`);
+    this.pageEditorLayout = value;
+  }
+
+  setEditorActive(value) {
+    const className = "cms-page-editor-active";
+    const classList = document.body.classList;
+    const method = value ? 'add' : 'remove';
+
+    if (value && classList.contains(className))
+      return ;
+    classList[method](className);
+    if (value) {
+      this.updatePageEditorLayout("horizontal");
+      this.contentEditor.start();
+    } else {
+      this.anchors.disable();
+      this.contentEditor.stop(true);
+      this.disableEditMode();
+    }
+  }
+
+  startComponentAdder() {
+    this.anchors.enable();
+  }
+
+  closeComponentAdder() {
+    this.anchors.disable();
   }
 
   enableStickyness() {
@@ -57,9 +101,7 @@ export default class extends NestedComponentEditor {
   save(element) {
     if (this.editMode)
       this.contentEditor.stop(true);
-    super.toggleControls(false);
     element.value = this.root.innerHTML;
-    super.toggleControls(true);
   }
 
   updateEditableComponents() {
@@ -82,12 +124,8 @@ export default class extends NestedComponentEditor {
     this.clearContentEditor();
   }
 
-  toggleControls() {
-    super.toggleControls(true);
-  }
-
   clearContentEditor() {
-    for (let element of document.querySelectorAll("[contenteditable]")) {
+    for (let element of this.document.querySelectorAll("[contenteditable]")) {
       element.removeAttribute("contentEditable");
       ['ce-element', 'ce-element--type-text', 'ce-element--focused'].forEach(klass => {
         element.classList.remove(klass);

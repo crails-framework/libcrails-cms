@@ -1,4 +1,3 @@
-import DefaultControlMenu from "./component_controls.js";
 import make_id from "../random_string.js";
 
 function imageFromStyle(cssContent) {
@@ -19,18 +18,36 @@ function rgba(r, g, b, a) {
   return rgb(r, g, b) + rgbaValue(a);
 }
 
+function onComponentClicked(event) {
+  let element = event.target;
+
+  window.mouseEvent = event;
+  while (element && !element.dataset.component)
+    element = element.parentElement;
+  if (element == this.root && window.Cms.PageEditor.Toolbar)
+    window.Cms.PageEditor.Toolbar.setActiveComponent(this);
+}
+
 export default class {
   constructor(parent, element = null) {
     this.parent = parent;
     this.properties = {};
-    this.actions = new DefaultControlMenu(this);
-    this.root = element || document.createElement("div");
+    this.root = element || this.document.createElement("div");
+    this.root.addEventListener("click", onComponentClicked.bind(this));
     if (!this.id || !this.id.length)
       this.root.dataset.id = make_id();
   }
 
   get id() {
     return this.root.dataset.id;
+  }
+
+  get document() {
+    return this.parent && this.parent.document ? this.parent.document : document;
+  }
+
+  get window() {
+    return this.parent ? this.parent.window : window;
   }
 
   get layout() {
@@ -40,7 +57,7 @@ export default class {
   }
   
   get contentEditor() {
-    return ContentTools.EditorApp.get();
+    return this.window.eval("Cms").ContentTools.EditorApp.get();
   }
 
   get componentType() {
@@ -59,7 +76,15 @@ export default class {
 
   set componentType(value) {
     this.root.dataset.component = value;
-    this.actions.name = value;
+  }
+
+  isAncestorOf(component) {
+    while (component) {
+      if (component.parent == this)
+        return true;
+      component = component.parent;
+    }
+    return false;
   }
 
   create() {
@@ -72,17 +97,19 @@ export default class {
   }
 
   initializeProperties() {
-    this.actions.initializeActions();
   }
 
   enableEditMode() {
-    this.toggleControls(true);
   }
 
   disableEditMode() {
-    this.toggleControls(false);
   }
 
+  componentAnchors() {
+    return [];
+  }
+
+/*
   toggleControls(visible) {
     try {
       if (visible)
@@ -91,7 +118,7 @@ export default class {
         this.root.removeChild(this.actions.root);
     } catch {}
   }
-
+*/
   bindElements() {
     this.initializeProperties();
   }
