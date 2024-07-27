@@ -1,5 +1,6 @@
 import {ControlMenu, Action} from "./controls.js";
 import PropertyEditor from "./property_editor.js";
+import i18n from "../../i18n.js";
 
 export default class extends ControlMenu {
   constructor(componentEditor) {
@@ -13,11 +14,16 @@ export default class extends ControlMenu {
 
   initializeActions() {
     this.clear();
+    this.addAction(new Action("move", this.startMove.bind(this)));
     this.addAction(new Action("up", this.moveUp.bind(this)));
     this.addAction(new Action("down", this.moveDown.bind(this)));
-    if (this.hasProperties)
-      this.addAction(new Action("settings", this.settings.bind(this)));
     this.addAction(new Action("remove", this.remove.bind(this)));
+  }
+
+  startMove() {
+    const anchorsController = this.componentEditor.layout.anchors;
+    anchorsController.target = this.componentEditor;
+    anchorsController.enable('insert');
   }
 
   moveUp() {
@@ -28,12 +34,10 @@ export default class extends ControlMenu {
     this.componentEditor.parent.moveDown(this.componentEditor);
   }
 
-  settings() {
-    new PropertyEditor(this.componentEditor);
-  }
-
   remove() {
-    this.componentEditor.parent.removeComponent(this.componentEditor);
+    if (confirm(i18n.t("admin.page-editor.confirm-component-delete"))) {
+      this.componentEditor.parent.removeComponent(this.componentEditor);
+    }
   }
 }
 

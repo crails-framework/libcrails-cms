@@ -12,6 +12,7 @@ export function setActionInnerHTML(element, name) {
     element.dataset.tooltipPosition = "top";
     element.dataset.tooltip = label;
   } else {
+    console.log("(i) missing icon", name);
     element.innerText = label;
   }
 }
@@ -37,7 +38,7 @@ export class Action {
   }
 
   withText(text) {
-    this.label.textContent = text;
+    this.label.textContent = this.label.dataset.tooltip = text;
     return this;
   }
 }

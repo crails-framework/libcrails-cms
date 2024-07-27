@@ -13,25 +13,34 @@ function onRootComponentMutation() {
   }
 }
 
-class LayoutMenu extends ControlMenu {
-  constructor(componentEditor) {
-    super(componentEditor);
-    this.root.classList.add(sticky_controls_class);
-    this.name = "layout";
-  }
+function onEscapePressed(pageEditor) {
+  if (pageEditor.anchors.enabled)
+    pageEditor.anchors.disable();
+  else
+    pageEditor.setEditorActive(false);
+}
 
-  initializeActions() {
-    super.initializeActions();
-    ["up", "down", "remove", "settings"].forEach(name => {
-      this.removeAction(name);
-    });
-    this.addAction(new Action("edit", () => {
-      this.componentEditor.contentEditor.start();
-    }));
-    this.addAction(new Action("stop", () => {
-      this.componentEditor.contentEditor.stop(true);
-      this.componentEditor.disableEditMode();
-    }));
+function keyManager(pageEditor, event) {
+  if (pageEditor.isActive()) {
+    if (event.altKey) {
+      switch (event.keyCode) {
+        case 65: // A
+          event.preventDefault();
+          pageEditor.startComponentAdder();
+          return ;
+        case 77: // M
+          pageEditor.anchors.target = pageEditor.toolbar.currentComponent;
+          pageEditor.anchors.enable('insert');
+          event.preventDefault();
+      }
+    } else {
+      switch (event.keyCode) {
+      case 27: // Escape
+        event.preventDefault();
+        onEscapePressed(pageEditor);
+        return ;
+      }
+    }
   }
 }
 
@@ -39,9 +48,9 @@ export default class extends NestedComponentEditor {
   constructor(iframe, componentTypes) {
     super(null, iframe.contentDocument.body, componentTypes);
     window.pageEditor = this;
+    document.addEventListener("keyup", keyManager.bind(this, this));
     this.iframe = iframe;
     this.document.body.addEventListener("click", this.setEditorActive.bind(this, true));
-    this.actions = new LayoutMenu(this);
     this.mutationObserver = new MutationObserver(onRootComponentMutation);
     this.anchors = new ComponentAnchors(this);
     this.contentEditor
@@ -66,6 +75,10 @@ export default class extends NestedComponentEditor {
     classList.remove(`cms-page-editor-${this.pageEditorLayout}`);
     classList.add(`cms-page-editor-${value}`);
     this.pageEditorLayout = value;
+  }
+
+  isActive() {
+    return document.body.classList.contains("cms-page-editor-active");
   }
 
   setEditorActive(value) {

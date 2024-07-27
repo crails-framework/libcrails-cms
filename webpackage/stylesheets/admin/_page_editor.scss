@@ -64,6 +64,11 @@ body.cms-page-editor-active {
     .cms-page-editor-toolbar {
       right: 0;
       height: $cms-page-editor-toolbar-width;
+      .nav-wrapper:nth-of-type(2), .component-menu {
+        display: inline-block !important;
+        width: 50%;
+        vertical-align: top;
+      }
     }
   }
 }

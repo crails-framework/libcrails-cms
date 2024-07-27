@@ -129,6 +129,7 @@ export default class NestedComponentEditor extends ComponentEditor {
       anchors.push({
         parent:      this,
         container:   this.container,
+        component:   child,
         nextSibling: child.root
       });
       anchors = anchors.concat(child.componentAnchors());
@@ -136,6 +137,7 @@ export default class NestedComponentEditor extends ComponentEditor {
     anchors.push({
       parent: this,
       container: this.container,
+      component: this,
       nextSibling: this.lastAnchor
     });
     return anchors;
@@ -161,32 +163,55 @@ export default class NestedComponentEditor extends ComponentEditor {
     return -1;
   }
 
-  addComponent(type, insertAnchor) {
-    console.log("Adding component", type, "to", this);
-    const component = new this.componentTypes[type](this);
-    component.root.$component = component;
-    component.create();
-    component.componentType = type;
+  canInsert(component) {
+    const types = Object.keys(this.componentTypes);
+    for (let name in this.componentTypes) {
+      if (this.componentTypes[name] == component.constructor)
+        return true;
+    }
+    return false;
+  }
+
+  insertComponent(component, insertAnchor) {
+    let startPosition = { top: window.innerHeight, left: 0 };
+
+    if (component.parent && component.parent !== this) {
+      startPosition = component.root.getBoundingClientRect();
+      component.parent.removeComponent(component);
+    }
     this.components.push(component);
-    this.container.insertBefore(component.root, insertAnchor || this.lastAnchor);
-    this.container.appendChild(component.root);
-    this.layout.closeComponentAdder();
-    this.layout.updateEditableComponents();
+    this.container.insertBefore(component.root, insertAnchor);
     component.enableEditMode();
-    component.root.style.top = window.innerHeight; 
-    return animate(component.root, "top", 500, () => {
+    component.root.style.top = startPosition.top;
+    component.root.style.left = startPosition.left;
+    return animate(component.root, "all", 500, () => {
       component.root.style.top = 0;
+      component.root.style.left = 0;
     }).then(() => {
       window.scroll({
         top: component.root.getBoundingClientRect().top + window.scrollY,
         behavior: 'smooth'
       });
       this.componentsChanged();
+    }).catch(err => {
+      console.error("Exception happened in insertComponent", err);
+    });
+  }
+
+  addComponent(type, insertAnchor) {
+    console.log("Adding component", type, "to", this, "at", insertAnchor);
+    const component = new this.componentTypes[type](this);
+    component.root.$component = component;
+    component.create();
+    component.componentType = type;
+    return this.insertComponent(component, insertAnchor || this.lastAnchor).then(() => {
+      this.layout.updateEditableComponents();
+      component.enableEditMode();
       if (typeof crailscms_on_content_loaded == "function")
         crailscms_on_content_loaded(component.root);
       return component;
     }).catch(err => {
-      console.log("Exception happened in addComponent", err);
+      console.error("Exception happened in addComponent", err);
     });
   }
 

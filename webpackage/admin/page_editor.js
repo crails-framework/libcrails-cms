@@ -15,13 +15,11 @@ export default function(layout, form, fieldName, mode, resources) {
       Cms.initializers.ContentTools(iframe);
     }).then(function() {
       const pageEditor = new layout(iframe, mode);
-      const toolbar = createToolbar(pageEditor);
 
       textarea.style.display = 'none';
-      //element.innerHTML = textarea.value;
+      pageEditor.toolbar = createToolbar(pageEditor);
       pageEditor.bindElements();
       pageEditor.updateEditableComponents();
-      //pageEditor.contentEditor.start();
       pageEditor.targetInput = textarea;
       form.addEventListener("submit", function(event) {
         try {

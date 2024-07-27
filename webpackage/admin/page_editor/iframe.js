@@ -32,7 +32,8 @@ function customStyle(iframe) {
   style.innerHTML = `[data-component][data-cms-active='1'] {
     outline-style: dashed;
     outline-color: yellow;
-    outline-width: 2px;
+    outline-width: 5px;
+    outline-offset: -5px;
   }
   .ct-widget.ct-ignition--ready .ct-ignition__button--edit {
     display: none !important;
