@@ -14,6 +14,7 @@ const std::string_view ckeditor_version = "35.4.0";
 // END LINKING
 <script>
   function crailscms_on_content_loaded(document) {<%= style->javascript_on_content_loaded() %>}
+  function crailscms_on_content_unload(document) {<%= style->javascript_on_content_unload() %>}
   document.addEventListener("DOMContentLoaded", function() { crailscms_on_content_loaded(document); });
 </script>
 

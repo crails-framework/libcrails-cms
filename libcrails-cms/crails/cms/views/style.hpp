@@ -80,5 +80,6 @@ namespace Crails::Cms
     virtual std::string_view admin_layout() const;
     virtual std::string_view wizard_layout() const;
     virtual std::string javascript_on_content_loaded() const { return std::string(); }
+    virtual std::string javascript_on_content_unload() const { return std::string(); }
   };
 }
