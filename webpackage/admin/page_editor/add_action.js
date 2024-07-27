@@ -7,7 +7,7 @@ function createAddComponentAction(list, componentEditor, callback) {
 
     for (let type of types) {
       list.addAction(new Action(type, function() {
-        componentEditor.addComponent(type);
+        callback(type);
       }).withText(i18n.t(`admin.page-editor.components.${type}`)));
     }
     return list;
@@ -20,5 +20,8 @@ function createAddComponentAction(list, componentEditor, callback) {
 }
 
 export default function(anchor) {
-  return createAddComponentAction(this, this.anchor.parent, this.insert.bind(this));
+  return createAddComponentAction(this, anchor.parent, function(componentType) {
+  anchor.parent.addComponent(componentType, anchor.nextSibling);
+  pageEditor.closeComponentAdder();
+});
 }

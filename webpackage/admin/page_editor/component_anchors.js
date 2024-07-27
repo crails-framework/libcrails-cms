@@ -53,9 +53,9 @@ export default class {
   }
 
   clear() {
-    while (this.container.children.length) {
-      this.container.removeChild(this.container.children[0]);
-    }
+    if (typeof crailscms_on_content_unload == "function")
+      crailscms_on_content_unload(this.container);
+    this.container.innerHTML = "";
   }
 
   updateAnchors() {
@@ -65,7 +65,7 @@ export default class {
         const action = this.actionType(anchor, this.target);
         const position = anchorPosition(anchor, this.iframe);
 
-        Style.apply("button", action.root);
+        Style.apply("button", action.label);
         action.root.style.position = "absolute";
         action.root.style.top = `${position.y}px`;
         action.root.style.left = `${position.x}px`;
