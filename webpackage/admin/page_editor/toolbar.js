@@ -2,6 +2,7 @@ import i18n from "../../i18n.js";
 import {Action, MetaAction, ControlMenu} from "./controls.js";
 import PropertyEditor from "./property_editor.js";
 import GridComponentEditor from "./grid_component_editor.js";
+import ComponentControls from "./component_controls.js";
 
 function displaySizeAction() {
   const group = new MetaAction("display-size");
@@ -45,6 +46,7 @@ function createMainMenu(pageEditor) {
 function getComponentAncestry(component) {
   const crumbs = [];
 
+  component = component.parent;
   while (component) {
     crumbs.push(component);
     component = component.parent;
@@ -78,18 +80,23 @@ class Toolbar {
     this.pageEditor = pageEditor;
     this.root = document.createElement("div");
     this.crumbs = document.createElement("nav");
+    this.componentMenuWrapper = document.createElement("div");
+    this.componentMenuWrapper.classList.add("component-menu");
     this.controlsWrapper = document.createElement("div");
     this.controlsWrapper.classList.add("toolbar-controls");
     this.root.classList.add("cms-page-editor-toolbar");
     this.menu = createMainMenu(pageEditor);
     this.root.appendChild(this.menu.root);
     this.root.appendChild(this.crumbs);
+    this.root.appendChild(this.componentMenuWrapper);
     this.root.appendChild(this.controlsWrapper);
 
     Style.apply("horizontalMenuWrapper", this.crumbs);
   }
 
   setActiveComponent(component) {
+    let menu;
+
     if (this.currentComponent == component)
       return ;
     if (this.currentComponent)
@@ -99,6 +106,9 @@ class Toolbar {
     this.propertyEditor = new PropertyEditor(component);
     this.crumbs.innerHTML = "";
     this.crumbs.appendChild(makeComponentCrumbs(this, component));
+    menu = new ComponentControls(component);
+    this.componentMenuWrapper.innerHTML = "";
+    this.componentMenuWrapper.appendChild(menu.root);
   }
 
   setControls(element) {

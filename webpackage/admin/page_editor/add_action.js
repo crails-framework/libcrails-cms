@@ -21,7 +21,9 @@ function createAddComponentAction(list, componentEditor, callback) {
 
 export default function(anchor) {
   return createAddComponentAction(this, anchor.parent, function(componentType) {
-  anchor.parent.addComponent(componentType, anchor.nextSibling);
+  anchor.parent.addComponent(componentType, anchor.nextSibling).then(component => {
+    Cms.PageEditor.Toolbar.setActiveComponent(component);
+  });
   pageEditor.closeComponentAdder();
 });
 }

@@ -48,8 +48,7 @@ export default class {
 
   disable() {
     this.container.style.display = "none";
-    delete this.actionType;
-    delete this.target;
+    this.target = this.actionType = undefined;
   }
 
   clear() {
