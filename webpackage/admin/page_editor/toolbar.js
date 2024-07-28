@@ -4,16 +4,22 @@ import PropertyEditor from "./property_editor.js";
 import GridComponentEditor from "./grid_component_editor.js";
 import ComponentControls from "./component_controls.js";
 
-function displaySizeAction() {
+function displaySizeAction(pageEditor) {
   const group = new MetaAction("device");
+  const gridModel = GridComponentEditor.model;
+  const style = pageEditor.iframe.style;
 
   group.withText(i18n.t("admin.page-editor.action.display-size"));
+  group.addAction(new Action("display-sizes.natural", function() {
+    style.width = "100%";
+    gridModel.currentSize = undefined;
+  }););
   for (let key in GridComponentEditor.sizes) {
     const action = new Action(`display-sizes.${key}`, function() {
       const sizeId = GridComponentEditor.sizes[key];
 
-      window.pageEditor.iframe.style.maxWidth = GridComponentEditor.model.widthFromSize(sizeId);
-      GridComponentEditor.model.currentSize = sizeId;
+      style.width = gridModel.widthFromSize(sizeId) + "px";
+      gridModel.currentSize = sizeId;
     });
 
     group.addAction(action);
@@ -37,11 +43,10 @@ function createMainMenu(pageEditor) {
   menu.addAction(new Action("add", () => {
     pageEditor.startComponentAdder();
   }));
-  menu.addAction(displaySizeAction());
+  menu.addAction(displaySizeAction(pageEditor));
   menu.addAction(swapEditorLayoutAction(pageEditor));
   menu.addAction(new Action("exit", () => {
     pageEditor.setEditorActive(false);
-    pageEditor.toolbar.setActiveComponent(null);
   }));
   return menu;
 }

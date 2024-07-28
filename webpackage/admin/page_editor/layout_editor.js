@@ -48,9 +48,9 @@ export default class extends NestedComponentEditor {
   constructor(iframe, componentTypes) {
     super(null, iframe.contentDocument.body, componentTypes);
     window.pageEditor = this;
-    document.addEventListener("keyup", keyManager.bind(this, this));
     this.iframe = iframe;
     this.document.body.addEventListener("click", this.setEditorActive.bind(this, true));
+    [document, this.document].forEach(el => el.addEventListener("keyup", keyManager.bind(this, this)));
     this.mutationObserver = new MutationObserver(onRootComponentMutation);
     this.anchors = new ComponentAnchors(this);
     this.contentEditor
@@ -93,6 +93,7 @@ export default class extends NestedComponentEditor {
       this.updatePageEditorLayout("horizontal");
       this.contentEditor.start();
     } else {
+      this.toolbar.setActiveComponent(null);
       this.anchors.disable();
       this.contentEditor.stop(true);
       this.disableEditMode();

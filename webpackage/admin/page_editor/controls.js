@@ -38,7 +38,10 @@ export class Action {
   }
 
   withText(text) {
-    this.label.textContent = this.label.dataset.tooltip = text;
+    if (this.label.dataset.tooltip)
+      this.label.dataset.tooltip = text;
+    else
+      this.label.textContent = text;
     return this;
   }
 }
