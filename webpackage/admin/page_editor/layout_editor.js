@@ -3,9 +3,8 @@ import NestedComponentEditor from "./nested_component_editor.js";
 import ComponentAnchors from "./component_anchors.js";
 import {ControlMenu} from "./nested_component_editor.js";
 import {Action} from "./controls.js";
+import actions from "./actions.js";
 import Sticky from "sticky-js";
-
-const sticky_controls_class = "proudcms-sticky-controls";
 
 function onRootComponentMutation() {
   if (window.mainFormWatcher) {
@@ -44,10 +43,14 @@ function keyManager(pageEditor, event) {
   }
 }
 
+import {ContentToolsWatcher} from "./content_tools/history.js";
+
 export default class extends NestedComponentEditor {
   constructor(iframe, componentTypes) {
     super(null, iframe.contentDocument.body, componentTypes);
     window.pageEditor = this;
+    this.history = actions;
+    this.ctWatcher = new ContentToolsWatcher(this);
     this.iframe = iframe;
     this.document.body.addEventListener("click", this.setEditorActive.bind(this, true));
     [document, this.document].forEach(el => el.addEventListener("keyup", keyManager.bind(this, this)));
@@ -92,6 +95,7 @@ export default class extends NestedComponentEditor {
     if (value) {
       this.updatePageEditorLayout("horizontal");
       this.contentEditor.start();
+      this.ctWatcher.watch();
     } else {
       this.toolbar.setActiveComponent(null);
       this.anchors.disable();
@@ -108,10 +112,6 @@ export default class extends NestedComponentEditor {
     this.anchors.disable();
   }
 
-  enableStickyness() {
-    this.sticky = new Sticky("." + sticky_controls_class);
-  }
-
   save(element) {
     if (this.editMode)
       this.contentEditor.stop(true);
@@ -120,7 +120,6 @@ export default class extends NestedComponentEditor {
 
   updateEditableComponents() {
     this.contentEditor.syncRegions(this.collectEditableElements());
-    this.enableStickyness();
   }
 
   enableEditMode() {

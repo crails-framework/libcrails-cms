@@ -4,8 +4,8 @@ function updateIFrameHeight(iframe) {
   let height = window.innerHeight - rect.y;
 
   if (controls)
-    height -= controls.getBoundingClientRect().height;
-  iframe.wrapper.style.height = `${height}px`;
+    height = controls.getBoundingClientRect().height;
+  iframe.wrapper.style.height = `${Math.max(200, height - 130)}px`;
 }
 
 function waitForIframeJavaScript(iframe, resolve) {

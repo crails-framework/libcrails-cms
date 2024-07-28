@@ -1,11 +1,13 @@
 import {ControlMenu, Action} from "./controls.js";
 import PropertyEditor from "./property_editor.js";
 import i18n from "../../i18n.js";
+import {ComponentRemovalAction} from "./actions.js";
 
 export default class extends ControlMenu {
   constructor(componentEditor) {
     super();
     this.componentEditor = componentEditor;
+    this.name = componentEditor.componentName;
   }
 
   get hasProperties() {
@@ -36,7 +38,8 @@ export default class extends ControlMenu {
 
   remove() {
     if (confirm(i18n.t("admin.page-editor.confirm-component-delete"))) {
-      this.componentEditor.parent.removeComponent(this.componentEditor);
+      const action = new ComponentRemovalAction(this.componentEditor);
+      action.run();
     }
   }
 }

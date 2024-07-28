@@ -39,7 +39,7 @@ export default class {
     this.container.addEventListener("mousewheel", this.containerScrolled.bind(this));
     this.component = component;
     this.iframe.contentWindow.addEventListener("scroll", this.scheduleAnchorsUpdate.bind(this));
-    this.iframe.contentWindow.addEventListener("resize", this.scheduleAnchorsUpdate.bind(this));
+    //this.iframe.contentWindow.addEventListener("resize", this.scheduleAnchorsUpdate.bind(this));
     this.iframe.parentElement.appendChild(this.container);
     this.disable();
   }
@@ -79,6 +79,7 @@ export default class {
 
   updateAnchors() {
     if (this.enabled) {
+      console.error("UPDATE ANCHORS CALLED");
       this.clear();
       this.anchors.forEach(anchor => {
         if (!this.target || isValidAnchorFor(this.target, anchor)) {

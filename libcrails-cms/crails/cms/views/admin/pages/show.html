@@ -55,8 +55,6 @@ using namespace Crails::Cms;
   <%= form.text_area("body", model.get_body()) %>
 
   <%= form.hidden_field("has_footer", std::string(model.get_has_footer() ? "1" : "0")) %>
-
-  <div class="cms-page-editor" style="position:relative" data-sticky-container>
   </div>
 <% yields-end %>
 

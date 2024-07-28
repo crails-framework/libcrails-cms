@@ -64,6 +64,16 @@ export default class {
     return this.root.dataset.component;
   }
 
+  get componentName() {
+    const types = this.parent?.componentTypes;
+
+    for (let key in types) {
+      if (types[key] == this.constructor)
+        return key;
+    }
+    return this.constructor.name;
+  }
+
   get previousComponent() {
     return this.root.previousElementSibling
          ? this.root.previousElementSibling.$component : null;

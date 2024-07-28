@@ -65,8 +65,8 @@ import ContentTools from "ContentTools";
 import ImageContentTools from "./admin/page_editor/content_tools/image.js";
 import FontContentTools from "./admin/page_editor/content_tools/font.js";
 import overloadCtPropertiesDialog from "./admin/page_editor/ct_properties_dialog.js";
+import overloadCtHistory from "./admin/page_editor/content_tools/history.js";
 
-window.ContentTools = ContentTools;
 window.initializeContentTools = function(iframe) {
   const ContentTools = iframe.contentWindow.Cms.ContentTools;
   const imageToolClass = ImageContentTools(iframe);
@@ -75,6 +75,7 @@ window.initializeContentTools = function(iframe) {
   overloadCtPropertiesDialog(ContentTools);
   ContentTools.ToolShelf._tools.heading.tagName = 'h2';
   ContentTools.ToolShelf._tools.subheading.tagName = 'h3';
+  ContentTools.History = overloadCtHistory(iframe);
   new imageToolClass();
   new fontToolClass();
 };

@@ -7,18 +7,20 @@ import ComponentControls from "./component_controls.js";
 function displaySizeAction(pageEditor) {
   const group = new MetaAction("device");
   const gridModel = GridComponentEditor.model;
-  const style = pageEditor.iframe.style;
+  const styles = [pageEditor.iframe.style, pageEditor.anchors.container.style];
 
   group.withText(i18n.t("admin.page-editor.action.display-size"));
   group.addAction(new Action("display-sizes.natural", function() {
-    style.width = "100%";
+    styles.forEach(style => style.width = "100%");
     gridModel.currentSize = undefined;
-  }););
+  }));
   for (let key in GridComponentEditor.sizes) {
     const action = new Action(`display-sizes.${key}`, function() {
       const sizeId = GridComponentEditor.sizes[key];
 
-      style.width = gridModel.widthFromSize(sizeId) + "px";
+      styles.forEach(style => {
+        style.width = gridModel.widthFromSize(sizeId) + "px";
+      });
       gridModel.currentSize = sizeId;
     });
 
@@ -123,14 +125,15 @@ class Toolbar {
       this.crumbs.appendChild(makeComponentCrumbs(this, component));
       menu = new ComponentControls(component);
       this.componentMenuWrapper.appendChild(menu.root);
-      menu.name = component.constructor.name;
       menu.initializeActions();
     }
   }
 
-  setControls(element) {
+  setControls(content) {
+    if (typeof crailscms_on_content_unload == "function")
+      crailscms_on_content_unload(this.controlsWrapper);
     this.controlsWrapper.innerHTML = "";
-    this.controlsWrapper.appendChild(element);
+    this.controlsWrapper.appendChild(content);
   }
 }
 

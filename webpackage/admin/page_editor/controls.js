@@ -12,7 +12,6 @@ export function setActionInnerHTML(element, name) {
     element.dataset.tooltipPosition = "top";
     element.dataset.tooltip = label;
   } else {
-    console.log("(i) missing icon", name);
     element.innerText = label;
   }
 }

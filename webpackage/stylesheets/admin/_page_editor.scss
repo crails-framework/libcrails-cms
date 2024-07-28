@@ -8,7 +8,7 @@ nav.cms-sticky-controls {
   width: 100%;
   margin: 0 auto;
   background-color: lightgray;
-  iframe {
+  iframe, .anchors-container {
     display: block;
     width: 100%;
     height: 100%;
@@ -17,11 +17,8 @@ nav.cms-sticky-controls {
     box-shadow: gray 0 0 10px;
   }
   .anchors-container {
-    position: absolute;
     background-color: rgba(0,0,0,0.3);
-    top: 0; left: 0; width: 100%; height: 100%;
-    margin: 0;
-    padding: 0;
+    transform: translateY(-100%);
   }
 }
 
@@ -37,6 +34,7 @@ body.cms-page-editor-active {
     z-index: 1000;
     right: 0; bottom: 0;
     overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .cms-page-editor-toolbar {
@@ -64,11 +62,22 @@ body.cms-page-editor-active {
     }
     .cms-page-editor-toolbar {
       right: 0;
+      transition: height 250ms ease-in-out;
       height: $cms-page-editor-toolbar-width;
-      .nav-wrapper:nth-of-type(2), .component-menu {
+      nav:nth-of-type(2), .component-menu {
         display: inline-block !important;
         width: 50%;
         vertical-align: top;
+      }
+      .toolbar-controls {
+        transition: height 250ms ease-in-out;
+        height: 228px;
+      }
+      &:hover {
+        height: 441px;
+        .toolbar-controls {
+          height: 370px;
+        }
       }
     }
   }
@@ -84,6 +93,7 @@ body.cms-page-editor-active {
   box-shadow: gray 0 0 10px;
 
   .toolbar-controls {
+    box-sizing: border-box;
     padding: 1em;
     width: 100%;
     overflow-y: scroll;
@@ -91,10 +101,26 @@ body.cms-page-editor-active {
 }
 
 body:not(.custom-admin-style) {
-  .cms-page-editor {
-    margin-bottom: 4em;
+  &.cms-page-editor-active {
+    &.cms-page-editor-vertical {
+      .cms-page-editor-toolbar {
+        nav:nth-of-type(2) {
+          border: 1px solid black;
+          border-bottom: 0;
+        }
+      }
+    }
+    &.cms-page-editor-horizontal {
+      .cms-page-editor-toolbar {
+        nav:nth-of-type(2) {
+          border-bottom: 1px dotted black;
+        }
+        .component-menu > nav {
+          height: 35px !important;
+        }
+      }
+    }
   }
-
   nav.cms-page-editor-controls {
     position: relative !important;
     overflow: hidden;

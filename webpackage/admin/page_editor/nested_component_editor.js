@@ -4,6 +4,7 @@ import {MetaAction, Action} from "./controls.js";
 import DefaultControlMenu from "./component_controls.js";
 import {withInjections} from "./injected_component_editor.js";
 import InjectableComponentEditor from "./injected_component_editor.js";
+import {ComponentInsertAction} from "./actions.js";
 
 function probeComponentTypes(self) {
   if (self.componentTypes)
@@ -42,21 +43,23 @@ function createAddComponentAction(componentEditor) {
   return null;
 }
 
-function getOwnedEditableContent(componentEditor) {
+export function getOwnedEditableContent(componentEditor) {
   const list = [];
   const candidates = componentEditor.root.querySelectorAll("[data-editable]");
 
-  for (let i = 0 ; i < candidates.length ; ++i) {
-    const candidate = candidates[i];
-    let owned = true;
-    for (let component of componentEditor.components) {
-      if (component.root.contains(candidate)) {
-        owned = false;
-        break ;
+  if (componentEditor.components) {
+    for (let i = 0 ; i < candidates.length ; ++i) {
+      const candidate = candidates[i];
+      let owned = true;
+      for (let component of componentEditor.components) {
+        if (component.root.contains(candidate)) {
+          owned = false;
+          break ;
+        }
       }
+      if (owned)
+        list.push(candidate);
     }
-    if (owned)
-      list.push(candidate);
   }
   return candidates;
 }
@@ -201,10 +204,15 @@ export default class NestedComponentEditor extends ComponentEditor {
   addComponent(type, insertAnchor) {
     console.log("Adding component", type, "to", this, "at", insertAnchor);
     const component = new this.componentTypes[type](this);
+    const action = new ComponentInsertAction(
+      component, this, insertAnchor || this.lastAnchor
+    );
+
+    action.oldParent = null;
     component.root.$component = component;
     component.create();
     component.componentType = type;
-    return this.insertComponent(component, insertAnchor || this.lastAnchor).then(() => {
+    return action.run().then(() => {
       this.layout.updateEditableComponents();
       component.enableEditMode();
       if (typeof crailscms_on_content_loaded == "function")

@@ -1,3 +1,4 @@
+import {ComponentPropertyAction} from "./actions.js";
 import i18n from "../../i18n.js";
 import FilePicker from "../file_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
@@ -83,7 +84,6 @@ function makeOptionalInput(inputGroup, input, value) {
   wrapper.appendChild(checkbox);
   makeCheckboxInput(checkbox);
   checkbox.checked = value !== null && value !== undefined && !isNaN(value) && value != "" && value !== "null";
-  console.log("initializing optional input", inputGroup, input, ", value=", value, ", checked=", checkbox.checked);
   checkbox.addEventListener("change", update);
   update();
 }
@@ -172,13 +172,19 @@ export default class {
 
   apply() {
     for (let property in this.inputs) {
-      let value = this.inputs[property].value;
+      const input = this.inputs[property];
+      const oldValue = this.component.propertyValue(property);
+      let value = input.value;
 
       if (this.inputs[property].disabled)
         value = null;
       else if (this.inputs[property].type == "checkbox")
         value = this.inputs[property].checked;
-      this.component.updateProperty(property, value);
+      if (value != oldValue) {
+        (new ComponentPropertyAction(
+          this.component, property, value, oldValue
+        )).withInput(input).run();
+      }
     }
   }
 }
