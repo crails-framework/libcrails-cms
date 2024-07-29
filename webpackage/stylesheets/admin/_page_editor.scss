@@ -19,6 +19,18 @@ nav.cms-sticky-controls {
   .anchors-container {
     background-color: rgba(0,0,0,0.3);
     transform: translateY(-100%);
+    > li {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      &.layout-anchor:first-of-type {
+        transform: translateX(-50%);
+      }
+      &.layout-anchor:last-of-type {
+        transform: translate(-50%, -100%);
+        left: auto !important;
+        right: 0;
+      }
+    }
   }
 }
 

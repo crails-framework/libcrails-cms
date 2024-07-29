@@ -73,26 +73,6 @@ export class HistoryAction {
   }
 }
 
-/*
-export class SnapshotHistoryAction extends HistoryAction {
-  constructor(history, index) {
-    super("ct-snapshot");
-    this.history = history;
-    this.index = index;
-  }
-
-  apply() {
-    this.history.goToSnapshot(this.index);
-    return super.apply();
-  }
-
-  unapply() {
-    this.history.goToSnapshot(this.index - 1);
-    return super.unapply();
-  }
-}
-*/
-
 export class EditableSnapshot extends HistoryAction {
   constructor(component, editable, oldHtml, newHtml) {
     super("editable-snapshot");
@@ -108,14 +88,18 @@ export class EditableSnapshot extends HistoryAction {
 
   apply() {
     this.editable.innerHTML = this.editable.$snapshot = this.newHtml;
-    this.component.layout.updateEditableComponents();
+    this.reloadContentTools();
     return super.apply();
   }
 
   unapply() {
     this.editable.innerHTML = this.editable.$snapshot = this.oldHtml;
-    this.component.layout.updateEditableComponents();
+    this.reloadContentTools();
     return super.unapply();
+  }
+
+  reloadContentTools() {
+    this.component.layout.restartContentEditor();
   }
 }
 

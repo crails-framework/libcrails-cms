@@ -51,7 +51,7 @@ export class ContentToolsWatcher {
       action.state = 1;
       editable.$snapshotPending = false;
       if (action.oldValue == freshValue || action.isSame(actions.currentAction())) {
-        console.log("Skipping snapshot action", action, action.oldValue == freshValue, action.isSame(actions.currentAction());
+        console.log("Skipping snapshot action", action, action.oldValue == freshValue, action.isSame(actions.currentAction()));
         return ;
       } else if (freshValue == newValue) {
         editable.$snapshot = freshValue;

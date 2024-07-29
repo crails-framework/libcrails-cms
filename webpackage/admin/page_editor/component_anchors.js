@@ -2,6 +2,24 @@ import AddAction from "./add_action.js";
 import InsertAction from "./insert_action.js";
 import Funnel from "../funnel.js";
 
+function areSameAnchors(a, b) {
+  return a.container === b.container && a.nextSibling === b.nextSibling;
+}
+
+function removeDuplicateAnchors(result) {
+  for (let i = 0 ; i < result.length ; ++i) {
+    let ii = i + 1;
+    while (ii < result.length) {
+      if (areSameAnchors(result[i], result[ii])) {
+        result.splice(ii, 1);
+      } else {
+        ii++;
+      }
+    }
+  }
+  return result;
+}
+
 function anchorPosition(anchor, iframe) {
   const sibling = anchor.nextSibling;
   let rect;
@@ -25,14 +43,14 @@ function transformScrollDelta(value) {
   // baseline has an exponentially decreasing slope,
   // having little influence on big changes, but strongly
   // increasing small changes.
-  const baseline = Math.pow(25, -Math.abs(value));
+  const baseline = Math.pow(50, -Math.abs(value));
 
-  return baseline * sign + value;
+  return baseline * sign + value * 2.5;
 }
 
 export default class {
   constructor(component) {
-    this.anchorFunnel = new Funnel(150);
+    this.anchorFunnel = new Funnel(500);
     this.container = document.createElement("ul");
     this.container.classList.add("anchors-container");
     this.container.addEventListener("click", this.containerClicked.bind(this));
@@ -45,7 +63,9 @@ export default class {
   }
 
   get anchors() {
-    return this.component.componentAnchors();
+    return removeDuplicateAnchors(
+      this.component.componentAnchors()
+    );
   }
 
   get iframe() {
@@ -79,6 +99,7 @@ export default class {
 
   updateAnchors() {
     if (this.enabled) {
+      const layout = this.component.layout;
       console.error("UPDATE ANCHORS CALLED");
       this.clear();
       this.anchors.forEach(anchor => {
@@ -87,9 +108,12 @@ export default class {
           const position = anchorPosition(anchor, this.iframe);
 
           Style.apply("button", action.label);
-          action.root.style.position = "absolute";
           action.root.style.top = `${position.y}px`;
           action.root.style.left = `${position.x}px`;
+          if (position.x == 0)
+            action.root.style.left = "50%";
+          if (anchor.component === layout)
+            action.root.classList.add("layout-anchor");
           this.container.appendChild(action.root);
         }
       });

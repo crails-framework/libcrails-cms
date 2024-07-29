@@ -119,16 +119,6 @@ export default class {
     return [];
   }
 
-/*
-  toggleControls(visible) {
-    try {
-      if (visible)
-        this.root.insertBefore(this.actions.root, this.root.children[0]);
-      else
-        this.root.removeChild(this.actions.root);
-    } catch {}
-  }
-*/
   bindElements() {
     this.initializeProperties();
   }

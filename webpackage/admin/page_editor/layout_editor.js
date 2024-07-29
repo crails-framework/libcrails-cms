@@ -93,15 +93,19 @@ export default class extends NestedComponentEditor {
       return ;
     classList[method](className);
     if (value) {
-      this.updatePageEditorLayout("horizontal");
+      this.updatePageEditorLayout("vertical");
       this.contentEditor.start();
       this.ctWatcher.watch();
     } else {
       this.toolbar.setActiveComponent(null);
       this.anchors.disable();
       this.contentEditor.stop(true);
-      this.disableEditMode();
     }
+  }
+
+  restartContentEditor() {
+    this.contentEditor.stop(true);
+    this.contentEditor.start();
   }
 
   startComponentAdder() {
