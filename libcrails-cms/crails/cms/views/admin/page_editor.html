@@ -23,14 +23,6 @@ std::string @mode = "default";
   <%= render_css_variables(variables, settings.get_theme_settings()) %>
 <% end -%>
 
-<% for (const auto& stylesheet : cms_layout.get_editor_stylesheets()) do %>
-  <%= tag("link", {{"rel","stylesheet"},{"href",stylesheet}}) %>
-<% end %>
-
-<% for (const auto& javascript : cms_layout.get_editor_javascripts()) do %>
-  <%= tag("script", {{"src",javascript}}) %>
-<% end %>
-
 <script>
 <% switch (cms_layout.get_type()) do -%>
 <% case Crails::Cms::DocumentLayoutType: -%>
