@@ -13,6 +13,7 @@ import createSelectField from "./admin/selectField.js";
 import DirtyForm from "./admin/dirty_form.js";
 import SortableRelationshipTable from "./admin/sortable_relationship.js";
 import HtmlTextArea from "./admin/html_textarea.js";
+import {initializeHighlight} from "./admin/html_textarea.js";
 import MultiplePictureInput from "./admin/page_editor/multiple_picture_input.js";
 import MenuEditor from "javascript-menu-editor";
 import "./admin/plugin_index.js";
@@ -78,6 +79,7 @@ window.initializeContentTools = function(iframe) {
   ContentTools.History = overloadCtHistory(iframe);
   new imageToolClass();
   new fontToolClass();
+  iframe.contentWindow.Cms.initializers.Hljs();
 };
 
 window.ProudCmsDialog = ProudCmsDialog;
@@ -109,6 +111,7 @@ window.Cms = {
   },
   initializers: {
     ContentTools:   initializeContentTools,
+    Hljs:           initializeHighlight,
     HtmlEditor:     createHtmlEditor,
     CKEditor:       adminCKEditor,
     CKEditorButton: adminCKEditorButton,

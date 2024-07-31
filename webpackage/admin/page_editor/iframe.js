@@ -27,20 +27,6 @@ function importMetaTag(iframe, name) {
   }
 }
 
-function customStyle(iframe) {
-  const style = iframe.contentDocument.createElement("style");
-  style.innerHTML = `[data-component][data-cms-active='1'] {
-    outline-style: dashed;
-    outline-color: yellow;
-    outline-width: 5px;
-    outline-offset: -5px;
-  }
-  .ct-widget.ct-ignition--ready .ct-ignition__button--edit {
-    display: none !important;
-  }`;
-  return style;
-}
-
 export default function createIFrame(textarea, resources = {}) {
   const wrapper = document.createElement("div");
   const iframe = document.createElement("iframe");
@@ -49,7 +35,6 @@ export default function createIFrame(textarea, resources = {}) {
   wrapper.appendChild(iframe);
   textarea.parentElement.insertBefore(wrapper, textarea);
   iframe.contentDocument.body.classList.add("page-editor-frame");
-  iframe.contentDocument.head.appendChild(customStyle(iframe));
   iframe.wrapper = wrapper;
   iframe.ready = new Promise(resolve => {
     waitForIframeJavaScript(iframe, resolve);

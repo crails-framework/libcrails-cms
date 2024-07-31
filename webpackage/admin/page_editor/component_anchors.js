@@ -50,7 +50,7 @@ function transformScrollDelta(value) {
 
 export default class {
   constructor(component) {
-    this.anchorFunnel = new Funnel(500);
+    this.anchorFunnel = new Funnel(300);
     this.container = document.createElement("ul");
     this.container.classList.add("anchors-container");
     this.container.addEventListener("click", this.containerClicked.bind(this));
@@ -94,6 +94,8 @@ export default class {
   }
 
   scheduleAnchorsUpdate() {
+    if (!this.container.classList.contains("loading"))
+      this.container.classList.add("loading");
     this.anchorFunnel.trigger(this.updateAnchors.bind(this));
   }
 
@@ -101,6 +103,7 @@ export default class {
     if (this.enabled) {
       const layout = this.component.layout;
       console.error("UPDATE ANCHORS CALLED");
+      this.container.classList.remove("loading");
       this.clear();
       this.anchors.forEach(anchor => {
         if (!this.target || isValidAnchorFor(this.target, anchor)) {
@@ -112,7 +115,7 @@ export default class {
           action.root.style.left = `${position.x}px`;
           if (position.x == 0)
             action.root.style.left = "50%";
-          if (anchor.component === layout)
+          if (anchor.container === layout.container)
             action.root.classList.add("layout-anchor");
           this.container.appendChild(action.root);
         }

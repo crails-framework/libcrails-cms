@@ -4,7 +4,7 @@ import xmlHighlight from "highlight.js/lib/languages/xml";
 let styleEnabled = false;
 const highlightStyle = "foundation";
 
-function initializeHighlight() {
+export function initializeHighlight() {
   const link = document.createElement("link");
 
   hljs.registerLanguage('html', xmlHighlight);

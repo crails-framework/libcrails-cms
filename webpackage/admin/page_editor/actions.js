@@ -4,6 +4,7 @@ export default actions = new class {
   constructor() {
     this.actions = [];
     this.actionsIndex = 0;
+    this.done = Promise.resolve();
   }
 
   canRedo() {
@@ -29,25 +30,25 @@ export default actions = new class {
   undo() {
     const action = this.actions[this.actionsIndex - 1];
 
-    console.log("Undoing action", this.actionsIndex - 1, action && action.state, action);
-    if (action) {
+    if (action && action.state) {
       this.actionsIndex -= 1;
-      if (action.state)
+      return this.done.then(() => {
         return action.unapply();
+      });
     }
-    return Promise.resolve(1);
+    return this.done;
   }
 
   redo() {
     const action = this.actions[this.actionsIndex];
 
-    console.log("Redoing action", this.actionsIndex, action && action.state, action);
-    if (action) {
+    if (action && !action.state) {
       this.actionsIndex += 1;
-      if (!action.state)
+      return this.done.then(() => {
         return action.apply();
+      });
     }
-    return Promise.resolve(1);
+    return this.done;
   }
 
   store(action) {
@@ -86,15 +87,25 @@ export class EditableSnapshot extends HistoryAction {
     return action && this.editable == action.editable && this.newHtml == action.newHtml;
   }
 
+  get contentEditor() {
+    return this.component.contentEditor;
+  }
+
   apply() {
+    const contentEditor = this.contentEditor;
+    contentEditor.syncRegions([]);
     this.editable.innerHTML = this.editable.$snapshot = this.newHtml;
-    this.reloadContentTools();
+    //this.editable.setAttribute('contenteditable', '');
+    contentEditor.syncRegions([this.editable]);
     return super.apply();
   }
 
   unapply() {
+    const contentEditor = this.contentEditor;
+    contentEditor.syncRegions([]);
     this.editable.innerHTML = this.editable.$snapshot = this.oldHtml;
-    this.reloadContentTools();
+    //this.editable.setAttribute('contenteditable', '');
+    contentEditor.syncRegions([this.editable]);
     return super.unapply();
   }
 

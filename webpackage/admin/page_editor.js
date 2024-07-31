@@ -2,6 +2,7 @@ import i18n from "../i18n.js";
 import Style from "../style.js";
 import createIFrame from "./page_editor/iframe.js";
 import createToolbar from "./page_editor/toolbar.js";
+import overloadCtHistoryTools from "./page_editor/content_tools/undo.js";
 
 export default function(layout, form, fieldName, mode, resources) {
   return Promise.all([i18n.ready, Style.ready]).then(function() {
@@ -21,6 +22,7 @@ export default function(layout, form, fieldName, mode, resources) {
       pageEditor.bindElements();
       pageEditor.updateEditableComponents();
       pageEditor.targetInput = textarea;
+      overloadCtHistoryTools(pageEditor);
       form.addEventListener("submit", function(event) {
         try {
           pageEditor.save(pageEditor.targetInput);

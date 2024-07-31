@@ -1,0 +1,12 @@
+@import "html_textarea";
+
+[data-component][data-cms-active='1'] {
+  outline-style: dashed;
+  outline-color: yellow;
+  outline-width: 5px;
+  outline-offset: -5px;
+}
+
+.ct-widget.ct-ignition--ready .ct-ignition__button--edit {
+  display: none !important;
+}

@@ -19,7 +19,12 @@ function onEscapePressed(pageEditor) {
     pageEditor.setEditorActive(false);
 }
 
-function keyManager(pageEditor, event) {
+function keyDownManager(pageEditor, event) {
+  if (event.ctrlKey && ['z', 'Z', 'y'].includes(event.key))
+    event.preventDefault();
+}
+
+function keyUpManager(pageEditor, event) {
   if (pageEditor.isActive()) {
     if (event.altKey) {
       switch (event.keyCode) {
@@ -31,6 +36,20 @@ function keyManager(pageEditor, event) {
           pageEditor.anchors.target = pageEditor.toolbar.currentComponent;
           pageEditor.anchors.enable('insert');
           event.preventDefault();
+          return ;
+      }
+    } else if (event.ctrlKey) {
+      switch (event.keyCode) {
+        case 90: // Z
+          if (!this.shiftKey) {
+            event.preventDefault();
+            pageEditor.history.undo();
+            return ;
+          }
+        case 89: // Y
+          event.preventDefault();
+          pageEditor.history.redo();
+          return ;
       }
     } else {
       switch (event.keyCode) {
@@ -53,7 +72,14 @@ export default class extends NestedComponentEditor {
     this.ctWatcher = new ContentToolsWatcher(this);
     this.iframe = iframe;
     this.document.body.addEventListener("click", this.setEditorActive.bind(this, true));
-    [document, this.document].forEach(el => el.addEventListener("keyup", keyManager.bind(this, this)));
+    [document, this.document].forEach(el => {
+      el.addEventListener("keyup", keyUpManager.bind(this, this));
+      el.addEventListener("keydown", keyDownManager.bind(this, this));
+    });
+    [document, this.document].forEach(el => {
+      el.addEventListener("keydown", (event) => {
+      });
+    });
     this.mutationObserver = new MutationObserver(onRootComponentMutation);
     this.anchors = new ComponentAnchors(this);
     this.contentEditor
@@ -157,10 +183,10 @@ export default class extends NestedComponentEditor {
     return false;
   }
 
-  addComponent(type) {
+  addComponent(type, insertAnchor) {
     const hadFooter = this.hasFooter;
 
-    return super.addComponent(type).then(component => {
+    return super.addComponent(type, insertAnchor).then(component => {
       if (component.isFooter && hadFooter) {
         alert(i18n.t("admin.page-editor.only-one-footer-allowed"));
         this.removeComponent(component);

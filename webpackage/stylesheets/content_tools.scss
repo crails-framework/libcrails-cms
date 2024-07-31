@@ -4,3 +4,5 @@ $image-path-prefix: "/cms/assets/content-tools-";
 .ct-tool--font-size:before {
   content: "\ea61";
 }
+
+@import "admin/page_editor_iframe";

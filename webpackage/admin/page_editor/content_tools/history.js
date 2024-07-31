@@ -3,11 +3,21 @@ import actions from "../actions.js";
 import {EditableSnapshot} from "../actions.js";
 import {getOwnedEditableContent} from "../nested_component_editor.js";
 
-function normalizeHtml(html) {
-  ['over', 'focused'].forEach(fragment => {
-    html = html.replaceAll(` ce-element--${fragment}`, "");
-  });
-  return html.replace(/\s*contenteditable(="")?/g, "");;
+const ctClassMatcher = /\bce-element[^\s]*\b/g;
+
+function purgeTagsFromContentTools(el) {
+  el.className = el.className.replace(ctClassMatcher, '').trim();
+  el.removeAttribute('contenteditable');
+  for (let child of el.children) {
+    purgeTagsFromContentTools(child);
+  }
+}
+
+function getNormalizedHtml(el) {
+  const clone = el.cloneNode(true);
+
+  purgeTagsFromContentTools(clone);
+  return clone.innerHTML;
 }
 
 export class ContentToolsWatcher {
@@ -27,7 +37,7 @@ export class ContentToolsWatcher {
 
     editables.forEach(editable => {
       if (!editable.$snapshotPending) {
-        const newValue = normalizeHtml(editable.innerHTML);
+        const newValue = getNormalizedHtml(editable);
         const oldValue = editable.$snapshot;
 
         if (oldValue === undefined) {
@@ -43,7 +53,7 @@ export class ContentToolsWatcher {
   scheduleSnapshot(component, editable, newValue, oldValue) {
     editable.$snapshotPending = true;
     setTimeout(() => {
-      const freshValue = normalizeHtml(editable.innerHTML);
+      const freshValue = getNormalizedHtml(editable);
       const action = new EditableSnapshot(
         component, editable, oldValue, freshValue
       );
@@ -52,6 +62,7 @@ export class ContentToolsWatcher {
       editable.$snapshotPending = false;
       if (action.oldValue == freshValue || action.isSame(actions.currentAction())) {
         console.log("Skipping snapshot action", action, action.oldValue == freshValue, action.isSame(actions.currentAction()));
+        editable.$snapshot = freshValue;
         return ;
       } else if (freshValue == newValue) {
         editable.$snapshot = freshValue;
@@ -66,10 +77,6 @@ export class ContentToolsWatcher {
 export default function (iframe) {
   const ContentTools = iframe.contentWindow.Cms.ContentTools;
   const History = class extends ContentTools.History {
-    constructor(regions) {
-      super(regions);
-    }
-
     canRedo() {
       return actions.canRedo();
     }
@@ -83,34 +90,12 @@ export default function (iframe) {
     }
 
     redo() {
-      actions.redo();
       return this.snapshot();
     }
 
     undo() {
-      actions.undo();
       return this.snapshot();
     }
-
-    goTo(index) {
-      actions.goTo(index);
-      return this.snapshot();
-    }
-
-    goToSnapshot(snapshotIndex) {
-      super.goTo(snapshotIndex);
-    }
-/*
-    _store() {
-      super._store();
-      if (actions.lastUpdate + 2500 < Date.now()) {
-        //console.log("-> New snapshot action", Date.now());
-        //actions.store(
-        //  new SnapshotHistoryAction(this, this._snapshotIndex)
-        //);
-      }
-    }
-*/
   }
 
   return History;

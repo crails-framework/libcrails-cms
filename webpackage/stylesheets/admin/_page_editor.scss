@@ -19,8 +19,13 @@ nav.cms-sticky-controls {
   .anchors-container {
     background-color: rgba(0,0,0,0.3);
     transform: translateY(-100%);
+    list-style: none;
+    &.loading > li {
+      opacity: 0;
+    }
     > li {
       position: absolute;
+      transition: opacity 100ms ease-in;
       transform: translate(-50%, -50%);
       &.layout-anchor:first-of-type {
         transform: translateX(-50%);
@@ -73,6 +78,8 @@ body.cms-page-editor-active {
       height: calc(100% - #{$cms-page-editor-toolbar-width}) !important;
     }
     .cms-page-editor-toolbar {
+      display: flex;
+      flex-direction: column;
       right: 0;
       transition: height 250ms ease-in-out;
       height: $cms-page-editor-toolbar-width;
@@ -84,6 +91,8 @@ body.cms-page-editor-active {
       .toolbar-controls {
         transition: height 250ms ease-in-out;
         height: 228px;
+        flex-grow: 1;
+        overflow-y: auto;
       }
       &:hover {
         height: 441px;

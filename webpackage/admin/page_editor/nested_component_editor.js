@@ -146,6 +146,7 @@ export default class NestedComponentEditor extends ComponentEditor {
     return anchors;
   }
 
+  // shouldn't this just collect all elements with data-editable property ?
   collectEditableElements() {
     const list = [];
     const owned = getOwnedEditableContent(this);
