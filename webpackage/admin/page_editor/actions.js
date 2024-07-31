@@ -183,3 +183,33 @@ export class ComponentInsertAction extends HistoryAction {
   }
 }
 
+export class ComponentSwapAction extends HistoryAction {
+  constructor(component, direction) {
+    super(`swap-${direction}`);
+    this.component = component;
+    this.direction = direction;
+  }
+
+  apply() {
+    return this[this.direction]().then(() => this.state = 1);
+  }
+
+  unapply() {
+    return this.invertApply().then(() => this.state = 0);
+  }
+
+  invertApply() {
+    switch (this.direction) {
+      case 'up': return this.down();
+      case 'down': return this.up();
+    }
+  }
+
+  up() {
+    return this.component.parent.moveUp(this.component);
+  }
+
+  down() {
+    return this.component.parent.moveDown(this.component);
+  }
+}

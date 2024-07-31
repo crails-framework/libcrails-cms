@@ -1,7 +1,7 @@
 import {ControlMenu, Action} from "./controls.js";
 import PropertyEditor from "./property_editor.js";
 import i18n from "../../i18n.js";
-import {ComponentRemovalAction} from "./actions.js";
+import {ComponentRemovalAction, ComponentSwapAction} from "./actions.js";
 
 export default class extends ControlMenu {
   constructor(componentEditor) {
@@ -29,11 +29,21 @@ export default class extends ControlMenu {
   }
 
   moveUp() {
-    this.componentEditor.parent.moveUp(this.componentEditor);
+    const parent = this.componentEditor.parent;
+    const action = new ComponentSwapAction(this.componentEditor, 'up');
+    const canMoveUp = parent.componentElements[0] != this.componentEditor.root;
+
+    if (canMoveUp)
+      action.run();
   }
 
   moveDown() {
-    this.componentEditor.parent.moveDown(this.componentEditor);
+    const parent = this.componentEditor.parent;
+    const action = new ComponentSwapAction(this.componentEditor, 'down');
+    const canMoveDown = parent.lastComponentElement != this.componentEditor.root;
+
+    if (canMoveDown)
+      action.run();
   }
 
   remove() {
