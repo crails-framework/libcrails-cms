@@ -5,4 +5,8 @@ $image-path-prefix: "/cms/assets/content-tools-";
   content: "\ea61";
 }
 
+.ct-tool--align-justify:before {
+  content: "\2630";
+}
+
 @import "admin/page_editor_iframe";

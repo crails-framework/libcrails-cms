@@ -17,7 +17,7 @@
     "@ckeditor/ckeditor5-table": "^41.2.1",
     "@ckeditor/ckeditor5-theme-lark": "^41.2.1",
     "@uppy/locales": "^3.5.2",
-    "ContentTools": "^1.6.16",
+    "ContentTools": "github:Plaristote/ContentTools",
     "css-loader": "^5.2.7",
     "dirty-form": "^0.4.0",
     "highlight.js": "^11.9.0",
