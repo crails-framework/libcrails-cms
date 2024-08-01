@@ -121,8 +121,12 @@ export default class extends NestedComponentEditor {
     if (value) {
       this.updatePageEditorLayout("vertical");
       this.contentEditor.start();
+      this.contentEditor.toolbox().unmount();
       this.ctWatcher.watch();
+      this.ctToolbox.mount();
+      this.ctToolbox.show();
     } else {
+      this.ctToolbox.unmount();
       this.toolbar.setActiveComponent(null);
       this.anchors.disable();
       this.contentEditor.stop(true);

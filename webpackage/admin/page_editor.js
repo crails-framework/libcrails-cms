@@ -3,6 +3,7 @@ import Style from "../style.js";
 import createIFrame from "./page_editor/iframe.js";
 import createToolbar from "./page_editor/toolbar.js";
 import overloadCtHistoryTools from "./page_editor/content_tools/undo.js";
+import overloadCtToolbox from "./page_editor/content_tools/toolbar.js";
 
 export default function(layout, form, fieldName, mode, resources) {
   return Promise.all([i18n.ready, Style.ready]).then(function() {
@@ -19,6 +20,7 @@ export default function(layout, form, fieldName, mode, resources) {
 
       textarea.style.display = 'none';
       pageEditor.toolbar = createToolbar(pageEditor);
+      pageEditor.ctToolbox = overloadCtToolbox(pageEditor.window.Cms.ContentTools);
       pageEditor.bindElements();
       pageEditor.updateEditableComponents();
       pageEditor.targetInput = textarea;

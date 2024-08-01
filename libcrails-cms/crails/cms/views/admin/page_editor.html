@@ -23,6 +23,8 @@ std::string @mode = "default";
   <%= render_css_variables(variables, settings.get_theme_settings()) %>
 <% end -%>
 
+<%= tag("link", {{"rel","stylesheet"},{"href",CrailsCmsAssets::content_tools_css}}) %>
+
 <% for (const auto& javascript : cms_layout.get_editor_javascripts()) do %>
   <%= tag("script", {{"src",javascript}}) %>
 <% end %>

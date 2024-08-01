@@ -23,5 +23,5 @@ export default function(ContentTools) {
     htmlTextArea.updateCode();
     htmlTextArea.replaceTextArea();
     window.ctHtmlTextArea = htmlTextArea;
-  }
+  };
 }
