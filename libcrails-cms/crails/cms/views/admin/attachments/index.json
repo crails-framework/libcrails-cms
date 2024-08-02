@@ -28,8 +28,16 @@ json([&]()
     json("url_alt", model->as_attachment().get_url());
     if (model->get_type() == Crails::Cms::ImageAttachment)
     {
+      const Crails::BasicImage miniature = model->get_miniature();
+      auto size = model->as_image().size();
+      auto miniature_size = miniature.size();
+
+      json("width", size.first);
+      json("height", size.second;)
       json("miniature_url", url + "/thumbnail");
-      json("miniature_url_alt", model->get_miniature().get_url());
+      json("miniature_url_alt", miniature.get_url());
+      json("miniature_width", miniature_size.first);
+      json("miniature_height", miniature_size.second);
     }
     if (model->get_processing())
       json("processing", true);
