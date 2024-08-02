@@ -47,6 +47,8 @@ std::string @mode = "default";
   const javascripts = [<%= std::quoted(CrailsCmsAssets::admin_js) %>];
 
   stylesheets.push(<%= std::quoted(CrailsCmsAssets::content_tools_css) %>);
+  // <%= cms_layout.get_stylesheets().size() %>
+
   <% for (const auto& stylesheet : cms_layout.get_stylesheets()) do -%>
     stylesheets.push(<%= std::quoted(stylesheet) %>);
   <% end -%>

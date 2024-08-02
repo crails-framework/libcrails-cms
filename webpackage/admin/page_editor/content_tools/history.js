@@ -6,8 +6,15 @@ import {getOwnedEditableContent} from "../nested_component_editor.js";
 const ctClassMatcher = /\bce-element[^\s]*\b/g;
 
 function purgeTagsFromContentTools(el) {
+  const imageClass = "ce-element--type-image";
+  const isImage = el.classList.contains(imageClass);
+
   el.className = el.className.replace(ctClassMatcher, '').trim();
   el.removeAttribute('contenteditable');
+  if (isImage) {
+    el.classList.add("ce-element");
+    el.classList.add(imageClass);
+  }
   for (let child of el.children) {
     purgeTagsFromContentTools(child);
   }

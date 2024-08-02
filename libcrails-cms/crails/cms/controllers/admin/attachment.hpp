@@ -35,7 +35,6 @@ namespace Crails::Cms
       DataTree output;
 
       logger << Logger::Debug << "AdminAttachmentController: create has been called" << Logger::endl;
-      Super::params.as_data().output();
       for (const auto& file : Super::params.get_files())
       {
         Model model;

@@ -1,30 +1,39 @@
 import FilePicker from "../../file_picker.js";
 
+window.attemptDirectAction = false;
+
 class ImageUploader {
   constructor(dialog) {
     this.dialog = dialog;
     this.dialog.addEventListener("imageuploader.mount", this.onMounted.bind(this));
+    this.dialog.addEventListener("imageuploader.save", this.onSave.bind(this));
   }
 
-  onMounted(event) {
-    event.preventDefault();
-    this.dialog._domUpload.addEventListener("click", this.onRequireFile.bind(this));
+  onMounted() {
+    this.dialog.unmount();
+    this.onRequireFile();
   }
 
-  onRequireFile() {
-      const picker = new FilePicker({
-        title:      i18n.t("admin.image-library"),
-        mimetype:   "image/*",
-        filePicked: this.onFilePicked.bind(this),
-      });
+  onRequireFile(event) {
+    const picker = new FilePicker({
+      title:      i18n.t("admin.image-library"),
+      mimetype:   "image/*",
+      filePicked: this.onFilePicked.bind(this),
+    });
 
-      picker.open();
+    if (event)
+      event.preventDefault();
+    picker.open();
   }
 
   onFilePicked(file) {
-    ImageUploader.imagePath = file.url;
+    ImageUploader.imagePath = `/attachments/by-id/${file.id}`;
     ImageUploader.imageSize = [file.width, file.height];
-    this.dialog.populate(ImageUploader.imagePath, ImageUploader.imageSize);
+    this.onSave();
+  }
+
+  onSave() {
+    this.dialog.save(ImageUploader.imagePath, ImageUploader.imageSize);
   }
 }
 

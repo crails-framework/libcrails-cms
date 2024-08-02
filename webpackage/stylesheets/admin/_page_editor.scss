@@ -27,13 +27,15 @@ nav.cms-sticky-controls {
       position: absolute;
       transition: opacity 100ms ease-in;
       transform: translate(-50%, -50%);
+      &.layout-anchor {
+        left: auto !important;
+        right: 0;
+      }
       &.layout-anchor:first-of-type {
         transform: translateX(-50%);
       }
       &.layout-anchor:last-of-type {
         transform: translate(-50%, -100%);
-        left: auto !important;
-        right: 0;
       }
     }
   }

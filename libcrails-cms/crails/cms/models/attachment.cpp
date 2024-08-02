@@ -28,13 +28,23 @@ void Attachment::edit(Data params)
 
 void Attachment::merge_data(Data out) const
 {
+  out["id"] = this->get_id();
   out["name"] = this->name;
   out["type"] = this->type;
   out["description"] = this->description;
   out["mimetype"] = this->mimetype;
   out["url"] = this->as_attachment().get_url();
   if (type == ImageAttachment)
+  {
+    const auto size = as_image().size();
+    const auto miniature_size = get_miniature().size();
+
+    out["width"] = size.first;
+    out["height"] = size.second;
     out["miniature_url"] = this->get_miniature().get_url();
+    out["miniature_width"] = miniature_size.first;
+    out["miniature_height"] = miniature_size.second;
+  }
   out["tags"].from_vector(tags);
 }
 

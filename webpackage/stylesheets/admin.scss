@@ -87,6 +87,12 @@ form {
   .content {
     padding: 0 !important;
   }
+
+  + .pure-button-group {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2em;
+  }
 }
 
 label:first-letter {

@@ -21,6 +21,7 @@ json([&]()
   {
     string url = attachment_path + '/' + to_string(model->get_id());
 
+    json("id", model->get_id());
     json("name", model->get_name());
     json("description", model->get_description());
     json("mimetype", model->get_mimetype());

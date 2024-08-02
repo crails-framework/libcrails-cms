@@ -21,11 +21,10 @@ function rgba(r, g, b, a) {
 function onComponentClicked(event) {
   let element = event.target;
 
-  window.mouseEvent = event;
   while (element && !element.dataset.component)
     element = element.parentElement;
-  if (element == this.root && window.Cms.PageEditor.Toolbar)
-    window.Cms.PageEditor.Toolbar.setActiveComponent(this);
+  if (element == this.root)
+    this.layout.toolbar.setActiveComponent(this);
 }
 
 export default class {

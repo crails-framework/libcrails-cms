@@ -11,9 +11,11 @@ export default function(layout, form, fieldName, mode, resources) {
     const textarea = form.querySelector(`textarea[name='${fieldName}']`);
     const hasFooter = form.querySelector("input[name='page[has_footer]'");
     const iframe = createIFrame(textarea, resources);
+    const themeVariables = document.querySelector("#layout-variables");
 
     return iframe.ready.then(function() {
       iframe.contentDocument.body.innerHTML = textarea.value;
+      iframe.contentDocument.head.appendChild(themeVariables);
       Cms.initializers.ContentTools(iframe);
     }).then(function() {
       const pageEditor = new layout(iframe, mode);

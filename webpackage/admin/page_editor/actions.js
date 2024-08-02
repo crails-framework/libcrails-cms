@@ -95,7 +95,6 @@ export class EditableSnapshot extends HistoryAction {
     const contentEditor = this.contentEditor;
     contentEditor.syncRegions([]);
     this.editable.innerHTML = this.editable.$snapshot = this.newHtml;
-    //this.editable.setAttribute('contenteditable', '');
     contentEditor.syncRegions([this.editable]);
     return super.apply();
   }
@@ -104,13 +103,8 @@ export class EditableSnapshot extends HistoryAction {
     const contentEditor = this.contentEditor;
     contentEditor.syncRegions([]);
     this.editable.innerHTML = this.editable.$snapshot = this.oldHtml;
-    //this.editable.setAttribute('contenteditable', '');
     contentEditor.syncRegions([this.editable]);
     return super.unapply();
-  }
-
-  reloadContentTools() {
-    this.component.layout.restartContentEditor();
   }
 }
 

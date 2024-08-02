@@ -73,6 +73,16 @@ function makeRangeInput(inputGroup, input, property) {
   onUpdate();
 }
 
+function isValueNull(value) {
+  switch (typeof value) {
+    case 'number':
+      return isNaN(value);
+    case 'string':
+      return value == "" || value == "null";
+  }
+  return value == null;
+}
+
 function makeOptionalInput(inputGroup, input, value) {
   const wrapper = document.createElement("span");
   const checkbox = document.createElement("input");
@@ -83,7 +93,7 @@ function makeOptionalInput(inputGroup, input, value) {
   wrapper.classList.add("optional-checkbox");
   wrapper.appendChild(checkbox);
   makeCheckboxInput(checkbox);
-  checkbox.checked = value !== null && value !== undefined && !isNaN(value) && value != "" && value !== "null";
+  checkbox.checked = !isValueNull(value);
   checkbox.addEventListener("change", update);
   update();
 }
@@ -157,7 +167,7 @@ export default class {
       content.appendChild(formGroup);
       this.inputs[property] = input;
     }
-    Cms.PageEditor.Toolbar.setControls(content);
+    component.layout.toolbar.setControls(content);
     if (typeof crailscms_on_content_loaded == "function")
       crailscms_on_content_loaded(content);
     this.scheduleAutoUpdate();
@@ -180,6 +190,8 @@ export default class {
         value = null;
       else if (this.inputs[property].type == "checkbox")
         value = this.inputs[property].checked;
+      if (isValueNull(value) && isValueNull(oldValue))
+        return ;
       if (value != oldValue) {
         (new ComponentPropertyAction(
           this.component, property, value, oldValue
