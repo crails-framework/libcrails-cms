@@ -70,15 +70,14 @@ import overloadCtHistory from "./admin/page_editor/content_tools/history.js";
 
 window.initializeContentTools = function(iframe) {
   const ContentTools = iframe.contentWindow.Cms.ContentTools;
-  const imageToolClass = ImageContentTools(iframe); 
   const fontToolClass = FontContentTools(iframe);
 
   overloadCtPropertiesDialog(ContentTools);
+  ContentTools.IMAGE_UPLOADER = ImageContentTools;
   ContentTools.ToolShelf._tools.heading.tagName = 'h2';
   ContentTools.ToolShelf._tools.subheading.tagName = 'h3';
   ContentTools.History = overloadCtHistory(iframe);
   ContentTools.DEFAULT_TOOLS[0].push("align-justify");
-  new imageToolClass();
   new fontToolClass();
   iframe.contentWindow.Cms.initializers.Hljs();
 };

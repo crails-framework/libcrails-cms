@@ -33,7 +33,7 @@ json([&]()
       auto miniature_size = miniature.size();
 
       json("width", size.first);
-      json("height", size.second;)
+      json("height", size.second);
       json("miniature_url", url + "/thumbnail");
       json("miniature_url_alt", miniature.get_url());
       json("miniature_width", miniature_size.first);

@@ -1,67 +1,36 @@
 import FilePicker from "../../file_picker.js";
 
-export default function (iframe) {
-  const ContentTools = iframe.contentWindow.Cms.ContentTools;
-  return class extends ContentTools.Tool {
-    constructor() {
-      super();
-      this.icon = "image";
-      this.label = "Image";
-      ContentTools.ToolShelf.stow(this, "image");
-    }
+class ImageUploader {
+  constructor(dialog) {
+    this.dialog = dialog;
+    this.dialog.addEventListener("imageuploader.mount", this.onMounted.bind(this));
+  }
 
-    canApply(element, selection) {
-      return element != null;
-    }
+  onMounted(event) {
+    event.preventDefault();
+    this.dialog._domUpload.addEventListener("click", this.onRequireFile.bind(this));
+  }
 
-    isApplied(element, selection) {
-      if (element && element._domElement && element._domElement.children[0])
-        return element._domElement.children[0].tagName == "img";
-      return false;
-    }
-
-    apply(element, selection, callback) {
+  onRequireFile() {
       const picker = new FilePicker({
         title:      i18n.t("admin.image-library"),
         mimetype:   "image/*",
-        filePicked: this.onFilePicked.bind(this, element, selection, callback),
-        aborted:    this.onCanceled.bind(this, element, callback)
+        filePicked: this.onFilePicked.bind(this),
       });
 
-      element.storeState();
       picker.open();
-    }
+  }
 
-    onCanceled(element, callback) {
-      element.restoreState();
-      callback(false);
-    }
+  onFilePicked(file) {
+    ImageUploader.imagePath = file.url;
+    ImageUploader.imageSize = [file.width, file.height];
+    this.dialog.populate(ImageUploader.imagePath, ImageUploader.imageSize);
+  }
+}
 
-    onFilePicked(element, selection, callback, file) {
-      let from, to;
-      [from, to] = selection.get();
+ImageUploader.imagePath = "image.png";
+ImageUploader.imageSize = [350,350];
 
-      // #1 Doesn't do anything, but should work ?
-      const tag = new HTMLString.Tag("img", {
-        class: "ct-img",
-        src: file.url
-      });
-
-      element.content = element.content.format(selection.from, selection.to, tag);
-      element.updateInnerHTML();
-      element.taint();
-      // END #1
-
-      // #2 Works, but isn't the proper way to go
-      window.ctElement = element;
-      const base = element._cached || "<span></span>";
-      const html = base.substr(0, "<span>".length + from)
-        + `<img src="${file.url}" class="ct-img" />`
-        + base.substr("<span>".length + to);
-      element._domElement.innerHTML = html;
-      // END #2
-
-      callback(true);
-    }
-  };
+export default function (dialog) {
+  return new ImageUploader(dialog);
 }
