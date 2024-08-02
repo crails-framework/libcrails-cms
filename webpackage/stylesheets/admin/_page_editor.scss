@@ -66,8 +66,14 @@ body.cms-page-editor-active {
       height: auto !important;
     }
     .cms-page-editor-toolbar {
+      display: flex;
+      flex-direction: column;
       bottom: 0;
       width: $cms-page-editor-toolbar-width;
+      .toolbar-controls {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
     }
   }
 
@@ -78,8 +84,6 @@ body.cms-page-editor-active {
       height: calc(100% - #{$cms-page-editor-toolbar-width}) !important;
     }
     .cms-page-editor-toolbar {
-      display: flex;
-      flex-direction: column;
       right: 0;
       transition: height 250ms ease-in-out;
       height: $cms-page-editor-toolbar-width;
@@ -91,8 +95,6 @@ body.cms-page-editor-active {
       .toolbar-controls {
         transition: height 250ms ease-in-out;
         height: 228px;
-        flex-grow: 1;
-        overflow-y: auto;
       }
       &:hover {
         height: 441px;
