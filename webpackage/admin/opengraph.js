@@ -11,7 +11,6 @@ export function fetchOpenGraphFromUrl(url) {
   return fetch(`/admin/opengraph?url=${encodeURIComponent(url)}`).then(response => {
     return response.text();
   }).then(html => {
-    const parser = new DOMParser();
     const data = extractOpenGraphFromDocument(
       new DOMParser().parseFromString(html, 'text/html')
     );

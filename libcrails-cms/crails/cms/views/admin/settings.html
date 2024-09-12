@@ -13,7 +13,6 @@ const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
 const Crails::Cms::Settings& @model;
 Crails::FormBuilder<Crails::Cms::Settings> form = Crails::FormBuilder<Crails::Cms::Settings>(this, model);
 std::map<Crails::Odb::id_type, std::string> @page_options;
-const Crails::Cms::Layout& proudcms_layout = model.get_layout();
 
 using namespace Crails::Cms;
 
