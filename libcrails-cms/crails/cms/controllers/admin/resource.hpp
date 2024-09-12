@@ -2,6 +2,7 @@
 #include <crails/i18n.hpp>
 #include "../admin.hpp"
 #include "../../local_route.hpp"
+#include "../../validation_error.hpp"
 
 namespace Crails::Cms
 {
@@ -109,6 +110,14 @@ namespace Crails::Cms
     }
 
   protected:
+    ValidationError validate_uniqueness(const Model& model, const std::string_view field_name, odb::query<Model> query)
+    {
+      std::shared_ptr<Model> result;
+
+      Super::database.template find_one<Model>(result, query && odb::query<Model>::id != model.get_id());
+      return ValidationError("uniqueness", field_name, result == nullptr);
+    }
+
     virtual odb::query<Model> make_index_query() const
     {
       return odb::query<Model>(true);
