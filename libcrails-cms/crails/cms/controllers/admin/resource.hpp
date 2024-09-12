@@ -71,8 +71,8 @@ namespace Crails::Cms
       }
       else
       {
-        Super::flash["error"] = i18n::t("admin.flash.resource-not-created");
-        Super::redirect_to(get_route().make("new"));
+        Super::received_flash["error"] = i18n::t("admin.flash.resource-not-created");
+        render_editor(model);
       }
     }
 
@@ -89,7 +89,10 @@ namespace Crails::Cms
           Super::redirect_to(get_url_for(*model));
         }
         else
-          Super::flash["error"] = i18n::t("admin.flash.resource-not-updated");
+        {
+          Super::received_flash["error"] = i18n::t("admin.flash.resource-not-updated");
+          render_editor(*model);
+        }
       }
     }
 
