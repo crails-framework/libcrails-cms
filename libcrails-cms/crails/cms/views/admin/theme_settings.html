@@ -77,8 +77,8 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
 </div>
 
 <%= partial("admin/page_editor", {
-  {"proudcms_layout", &layout},
-  {"form_id",         std::string("main-form")},
-  {"field_name",      form.scoped_name("footer")},
-  {"mode",            std::string("footer")}
+  {"cms_layout", &layout},
+  {"form_id",    std::string("main-form")},
+  {"field_name", form.scoped_name("footer")},
+  {"mode",       std::string("footer")}
 }) %>
