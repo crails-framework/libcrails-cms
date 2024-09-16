@@ -6,7 +6,7 @@ using namespace std;
 
 static const string i18n_key_base("admin.validations.");
 
-static string message(const string_view type, const string_view field_name)
+string ValidationError::message(const string_view type, const string_view field_name)
 {
   return i18n::t(i18n_key_base + type.data(), pair<string, string_view>{"field", field_name});
 }

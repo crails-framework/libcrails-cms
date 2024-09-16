@@ -114,7 +114,7 @@ namespace Crails::Cms
     {
       std::shared_ptr<Model> result;
 
-      Super::database.template find_one<Model>(result, query && odb::query<Model>::id != model.get_id());
+      Super::database.template find_one(result, query && odb::query<Model>::id != model.get_id());
       return ValidationError("uniqueness", field_name, result == nullptr);
     }
 
