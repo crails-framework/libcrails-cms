@@ -5,6 +5,22 @@ using namespace Crails;
 using namespace Crails::Cms;
 using namespace std;
 
+static string find_scheme(const HttpRequest& request)
+{
+  HttpRequest::const_iterator header;
+
+  header = request.find("HTTP_X_FORWARDED_PROTO");
+  if (header != request.end())
+    return header->value().data();
+  else
+  {
+    header = request.find("HTTP_X_FORWARDED_SSL");
+    if (header != request.end())
+      return header->value() == "on" ? "https" : "http";
+  }
+  return "http";
+}
+
 static const map<HttpStatus, string> views{
   {HttpStatus::not_found,    "errors/not_found"},
   {HttpStatus::forbidden,    "errors/forbidden"},
@@ -29,24 +45,15 @@ void Crails::Cms::Controller::initialize()
   Super::initialize();
   find_settings();
   if (settings)
-    vars["settings"] = const_cast<const Crails::Cms::Settings*>(settings.get());
-  vars["render_footer"] = true;
-}
-
-static std::string find_scheme(const Crails::HttpRequest& request)
-{
-  Crails::HttpRequest::const_iterator header;
-
-  header = request.find("HTTP_X_FORWARDED_PROTO");
-  if (header != request.end())
-    return header->value().data();
-  else
   {
-    header = request.find("HTTP_X_FORWARDED_SSL");
-    if (header != request.end())
-      return header->value() == "on" ? "https" : "http";
+    const string& public_url = settings->get_public_url();
+    const string target(request.target().data(), request.target().length());
+
+    vars["settings"] = const_cast<const Cms::Settings*>(settings.get());
+    if (public_url.length())
+      vars["canonical_url"] = "https://" + public_url + target;
   }
-  return "http";
+  vars["render_footer"] = true;
 }
 
 void Crails::Cms::Controller::prepare_open_graph()
