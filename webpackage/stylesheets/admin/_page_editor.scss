@@ -31,11 +31,11 @@ nav.cms-sticky-controls {
         left: auto !important;
         right: 0;
       }
-      &.layout-anchor:first-of-type {
-        transform: translateX(-50%);
-      }
       &.layout-anchor:last-of-type {
         transform: translate(-50%, -100%);
+      }
+      &.layout-anchor:first-of-type {
+        transform: translateX(-50%);
       }
     }
   }

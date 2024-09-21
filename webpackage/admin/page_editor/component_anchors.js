@@ -102,7 +102,6 @@ export default class {
   updateAnchors() {
     if (this.enabled) {
       const layout = this.component.layout;
-      console.error("UPDATE ANCHORS CALLED");
       this.container.classList.remove("loading");
       this.clear();
       this.anchors.forEach(anchor => {
@@ -115,7 +114,7 @@ export default class {
           action.root.style.left = `${position.x}px`;
           if (position.x == 0)
             action.root.style.left = "50%";
-          if (anchor.container === layout.container)
+          if (anchor.container === layout.container && !layout.container.singleLevelLayout)
             action.root.classList.add("layout-anchor");
           this.container.appendChild(action.root);
         }
