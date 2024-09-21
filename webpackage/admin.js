@@ -14,6 +14,7 @@ import DirtyForm from "./admin/dirty_form.js";
 import SortableRelationshipTable from "./admin/sortable_relationship.js";
 import HtmlTextArea from "./admin/html_textarea.js";
 import {initializeHighlight} from "./admin/html_textarea.js";
+import UrlPickerDialog from "./admin/url_picker.js";
 import MultiplePictureInput from "./admin/page_editor/multiple_picture_input.js";
 import MenuEditor from "javascript-menu-editor";
 import "./admin/plugin_index.js";
@@ -95,17 +96,18 @@ function createHtmlEditor(elementOrName) {
 }
 
 window.Cms = {
-  ContentTools: ContentTools,
-  CKEditor:     CKEditorExports,
-  HtmlTextArea: HtmlTextArea,
-  Dialog:       ProudCmsDialog,
-  PickerDialog: ProudCmsPicker,
-  PageEditor:   PageEditor,
-  MenuEditor:   MenuEditor,
-  TomSelect:    TomSelect,
-  DirtyForm:    DirtyForm,
-  Style:        Style,
-  i18n:         i18n,
+  ContentTools:    ContentTools,
+  CKEditor:        CKEditorExports,
+  HtmlTextArea:    HtmlTextArea,
+  Dialog:          ProudCmsDialog,
+  PickerDialog:    ProudCmsPicker,
+  UrlPickerDialog: UrlPickerDialog,
+  PageEditor:      PageEditor,
+  MenuEditor:      MenuEditor,
+  TomSelect:       TomSelect,
+  DirtyForm:       DirtyForm,
+  Style:           Style,
+  i18n:            i18n,
   inputs: {
     MultiplePictureInput: MultiplePictureInput,
   },

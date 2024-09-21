@@ -20,6 +20,29 @@ static time_t latest_update_for(const UrlSet& urls)
   return result;
 }
 
+void Index::merge(Data data) const
+{
+  for (const Url& url : url_set())
+  {
+    DataTree object;
+
+    object["title"] = url.title;
+    object["href"] = url.location;
+    data.push_back(object.as_data());
+  }
+}
+
+void Map::merge(Data data) const
+{
+  for (auto it = begin() ; it != end() ; ++it)
+  {
+    const Index& index = *(it->second);
+    const string& name(it->first);
+
+    index.merge(data[name]);
+  }
+}
+
 void Index::render(const string& host_url, RenderTarget& target) const
 {
   ostringstream stream;

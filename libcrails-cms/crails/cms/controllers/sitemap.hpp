@@ -15,6 +15,7 @@ namespace Crails::Cms::SiteMap
     void initialize_plugin_indexes();
     void add_index(const std::string&, std::unique_ptr<Index>);
 
+    static void as_json_request(Crails::Context&, std::function<void()>);
     static void handle_request(Crails::Context&, std::function<void()>);
   private:
     void handle_urlset_request(Crails::Context&, const std::string&) const;

@@ -31,7 +31,6 @@ namespace Crails::Cms
 
     std::map<std::size_t, std::string> pathes;
     std::string attachment_admin_path;
-    std::string page_list_path;
   public:
     template<typename CONTROLLER>
     void set_path_for(Crails::Router& router)
@@ -66,11 +65,6 @@ namespace Crails::Cms
       return get_path_for<CONTROLLER>() + std::to_string(id);
     }
 
-    std::string get_page_list_path() const
-    {
-      return page_list_path;
-    }
-
     std::string get_attachments_admin_path() const
     {
       return attachment_admin_path;
@@ -91,14 +85,6 @@ namespace Crails::Cms
       router.match_action("GET",  "/plugins",     CONTROLLER, show_plugins);
       router.match_action("POST", "/plugins",     CONTROLLER, update);
       router.match_action("PUT",  "/plugins/:id", CONTROLLER, update);
-    }
-
-    template<typename CONTROLLER>
-    void register_admin_page_list_routes(Crails::Router& router)
-    {
-      page_list_path = router.get_current_scope();
-      set_path_for<CONTROLLER>(router);
-      router.match_action("GET", "/", CONTROLLER, index);
     }
 
     template<typename CONTROLLER>

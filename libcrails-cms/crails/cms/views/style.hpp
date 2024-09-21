@@ -46,6 +46,7 @@ namespace Crails::Cms
     virtual ClassList modal_classes() const { return {}; }
     virtual ClassList modal_content_classes() const { return {}; }
     virtual ClassList modal_controls_classes() const { return {}; }
+    virtual ClassList modal_title_classes() const { return {"popup-title"}; }
     virtual ClassList badge_classes() const { return {}; }
     virtual ClassList collection_classes() const { return {}; }
     virtual ClassList collection_item_classes() const { return {}; }

@@ -58,6 +58,7 @@ DataTree Cms::Style::as_data() const
   tree["modal"] = string(modal_classes());
   tree["modalContent"] = string(modal_content_classes());
   tree["modalControls"] = string(modal_controls_classes());
+  tree["modalTitle"] = string(modal_title_classes());
   tree["badge"] = string(badge_classes());
   tree["collection"] = string(collection_classes());
   tree["collectionItem"] = string(collection_item_classes());

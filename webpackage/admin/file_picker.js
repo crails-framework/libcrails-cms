@@ -83,7 +83,7 @@ export default class extends CmsDialog {
     const paginator = document.createElement("div");
 
     this.popup.innerHTML = "";
-    title.classList.add("popup-title");
+    Style.apply("modalTitle", title);
     title.classList.add("pure-u-3-5");
     title.textContent = this.plugin.title;
     this.popup.appendChild(title);

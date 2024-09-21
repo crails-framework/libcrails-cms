@@ -1,7 +1,10 @@
 #include "../../../routes.hpp"
+#include "../../../controllers/sitemap.hpp"
 
 const Crails::Cms::Routes& routes = Crails::Cms::Routes::singleton::require();
 
 // END LINKING
 <meta name="attachments-admin-path" content="<%= routes.get_attachments_admin_path() %>">
-<meta name="page-list-path" content="<%= routes.get_page_list_path() %>">
+<% if (Crails::Cms::SiteMap::Controller::singleton::get()) do -%>
+  <meta name="sitemap-path" content="<%= routes.get_path_for<Crails::Cms::SiteMap::Controller>() %>">
+<% end -%>

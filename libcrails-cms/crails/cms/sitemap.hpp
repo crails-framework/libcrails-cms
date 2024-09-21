@@ -1,6 +1,7 @@
 #pragma once
 #include <crails/utils/singleton.hpp>
 #include <crails/render_target.hpp>
+#include <crails/datatree.hpp>
 #include <vector>
 #include <map>
 #include <string_view>
@@ -24,10 +25,12 @@ namespace Crails::Cms::SiteMap
   {
     virtual UrlSet url_set() const = 0;
     void render(const std::string& host_url, RenderTarget&) const;
+    void merge(Data) const;
   };
 
   struct Map : public std::map<std::string, std::unique_ptr<Index>>
   {
     void render(const std::string& host_url, RenderTarget&) const;
+    void merge(Data) const;
   };
 }
