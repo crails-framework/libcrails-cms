@@ -1,8 +1,10 @@
+#include "../../../controllers/sitemap.hpp"
 #include "../../../models/settings.hpp"
 #include "../../../views/layout.hpp"
 #include "../../../views/newsfeed.hpp"
 #include "../../../opengraph.hpp"
 #include "../../../plugins.hpp"
+#include "../../../routes.hpp"
 
 const Crails::Cms::Settings& @settings;
 const Crails::Cms::OpenGraph* @open_graph = nullptr;
@@ -11,11 +13,19 @@ const Crails::Cms::LayoutVariables& variables = settings.get_layout().get_variab
 const std::string @rss = "";
 const std::string @canonical_url = "";
 const Crails::Cms::NewsFeed @newsfeed = Crails::Cms::NewsFeed(rss);
+const Crails::Cms::SiteMap::Controller* sitemap = Crails::Cms::SiteMap::Controller::singleton::get();
 
 // END LINKING
 
 <% if (canonical_url.length()) do -%>
   <%= tag("link", {{"rel","canonical"},{"href",canonical_url}}) %>
+<% end -%>
+<% if (sitemap) do -%>
+  <% const auto& routes = Crails::Cms::Routes::singleton::require() %>
+  <%= tag("link", {
+    {"rel","sitemap"},{"title","Sitemap"},{"type","application/xml"},
+    {"href",routes.get_path_for<Crails::Cms::SiteMap::Controller>()}
+  }) %>
 <% end -%>
 <% if (open_graph) do -%>
   <%= open_graph->render() %>

@@ -5,7 +5,7 @@
 # include <mutex>
 # include <string_view>
 # include <crails/utils/backtrace.hpp>
-# include "page_list.hpp"
+# include "sitemap.hpp"
 
 class dylib;
 
@@ -30,8 +30,7 @@ namespace Crails::Cms
     std::string name() const { return filepath.stem(); }
     std::string description() const;
     std::string base64_logo() const;
-    PageList::PathMap pages() const;
-    PageList::PathMap feeds() const;
+    std::unique_ptr<SiteMap::Index> sitemap_index() const;
     void install();
     void uninstall();
     void initialize();

@@ -10,9 +10,9 @@
 using namespace Crails::Cms;
 using namespace std;
 
-typedef void              (PluginFunction)(void);
-typedef string_view       (PluginAssetGetter)(void);
-typedef PageList::PathMap (PluginUrlsGetter)(void);
+typedef void                       (PluginFunction)(void);
+typedef string_view                (PluginAssetGetter)(void);
+typedef unique_ptr<SiteMap::Index> (PluginSitemapGetter)(void);
 
 static void run_plugin_function(const dylib* library, const char* function_name)
 {
@@ -35,18 +35,6 @@ static std::string_view get_plugin_asset(const dylib* library, const char* funct
     return (*function)();
   }
   return std::string_view();
-}
-
-static PageList::PathMap get_plugin_urls(const dylib* library, const char* function_name)
-{
-  if (library && library->has_symbol(function_name))
-  {
-    PluginUrlsGetter* function;
-
-    function = library->get_function<PluginUrlsGetter>(function_name);
-    return (*function)();
-  }
-  return {};
 }
 
 Plugin::Plugin(const filesystem::path& path) : filepath(path)
@@ -157,12 +145,16 @@ string_view Plugin::admin_stylesheet() const
   return get_plugin_asset(library, "plugin_admin_stylesheet");
 }
 
-PageList::PathMap Plugin::pages() const
+unique_ptr<SiteMap::Index> Plugin::sitemap_index() const
 {
-  return get_plugin_urls(library, "plugin_page_list");
-}
+  const char* function_name = "plugin_sitemap_index";
 
-PageList::PathMap Plugin::feeds() const
-{
-  return get_plugin_urls(library, "plugin_feed_list");
+  if (library && library->has_symbol(function_name))
+  {
+    PluginSitemapGetter* function;
+
+    function = library->get_function<PluginSitemapGetter>(function_name);
+    return std::move((*function)());
+  }
+  return nullptr;
 }

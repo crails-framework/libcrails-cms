@@ -76,6 +76,8 @@ namespace Crails::Cms
       return attachment_admin_path;
     }
 
+    void register_sitemap_routes(Crails::Router& router, const std::string& prefix = "/sitemap.xml");
+
     template<typename CONTROLLER>
     void register_settings_admin_routes(Crails::Router& router)
     {
