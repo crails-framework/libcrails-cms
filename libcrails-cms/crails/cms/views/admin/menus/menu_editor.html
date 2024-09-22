@@ -6,7 +6,7 @@ Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
 
 // END LINKING
 <div id="menuEditorForm">
-  <h4>Edit item</h4>
+  <h4><%= i18n::t("admin.edit-menu-item") %></h4>
   <div class="menu-editor-header">
     <form id="frmEdit" class="pure-form pure-form-stacked">
       <div class="form-group">
@@ -16,12 +16,13 @@ Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
         </div>
         <input type="hidden" name="icon" class="item-menu">
       </div>
-      <div class="form-group">
+      <div class="form-group url-group">
         <label for="href">URL</label>
         <input type="text" class="form-control item-menu" id="href" name="href" placeholder="URL">
+        <%= style.admin_search_button() %>
       </div>
       <div class="form-group">
-        <label for="target">Target</label>
+        <label for="target"><%= i18n::t("form.label.target") %></label>
         <select name="target" id="target" class="form-control item-menu">
           <option value="_self">Self</option>
           <option value="_blank">Blank</option>
@@ -29,8 +30,8 @@ Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
         </select>
       </div>
       <div class="form-group">
-        <label for="title">Tooltip</label>
-        <input type="text" name="title" class="form-control item-menu" id="title" placeholder="Tooltip">
+        <label for="title"><%= i18n::t("form.label.tooltip") %></label>
+        <input type="text" name="title" class="form-control item-menu" id="title" placeholder="<%= i18n::t("form.label.tooltip") %>">
       </div>
     </form>
   </div>

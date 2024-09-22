@@ -70,4 +70,12 @@ menuEditor.setInputContainer(document.querySelector("#menuEditorForm"));
 menuEditor.setUpdateButton(document.querySelector("#btnUpdate"));
 menuEditor.setAddButton(document.querySelector("#btnAdd"));
 menuEditor.setData(<%= model.get_data_as_json() %>);
+
+var urlInput = document.querySelector(".form-group.url-group input");
+var urlSearchButton = urlInput.nextElementSibling;
+urlSearchButton.addEventListener("click", function(event) {
+  var urlDialog = new Cms.UrlPickerDialog(function(url) { urlInput.value = url; });
+  event.preventDefault();
+  urlDialog.open();
+});
 </script>

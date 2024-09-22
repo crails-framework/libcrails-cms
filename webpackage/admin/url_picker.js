@@ -95,6 +95,8 @@ export default class extends CmsDialog {
       const name = document.createElement("div");
       const caption = document.createElement("div");
 
+      name.classList.add("name");
+      caption.classList.add("caption");
       name.textContent = urlData.title;
       caption.textContent = urlData.href;
       li.addEventListener("click", event => {
