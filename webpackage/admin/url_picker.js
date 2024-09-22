@@ -28,6 +28,7 @@ export default class extends CmsDialog {
     const url = document.head.querySelector("meta[name='sitemap-path']");
 
     super();
+    this.root.id = "cms-uri-picker";
     this.callback = callback;
     this.prerender();
     fetch(new Request(`${url.content}/json`)).then(response => {

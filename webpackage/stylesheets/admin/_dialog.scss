@@ -1,4 +1,4 @@
-.proudcms-dialog {
+.cms-dialog {
   z-index: 10000;
   position: fixed;
   top: 0;
@@ -19,7 +19,7 @@
 }
 
 body:not(.custom-admin-style) {
-  .proudcms-dialog {
+  .cms-dialog {
     > div {
       background-color: white;
       border: 2px solid black;

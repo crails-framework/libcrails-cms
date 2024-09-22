@@ -10,7 +10,7 @@ export default class {
     this.popup.style.transition = popupTransition;
     this.root = document.createElement("div");
     this.root.style.transition = overlayTransition;
-    this.root.classList.add("proudcms-dialog");
+    this.root.classList.add("cms-dialog");
     Style.ready.then(() => { Style.apply("modal", this.popup); });
     this.setVisibility(0);
     this.root.addEventListener("click", event => {

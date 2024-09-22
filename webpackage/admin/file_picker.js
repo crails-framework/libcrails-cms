@@ -36,7 +36,7 @@ export default class extends CmsDialog {
     window.picker = this;
     this.params = {};
     this.plugin = plugin;
-    this.root.id = "proudcms-file-picker";
+    this.root.id = "cms-file-picker";
     this.popup.classList.add("pure-g");
     Promise.all([i18n.ready, Style.ready]).then(() => {
       this.fetch();

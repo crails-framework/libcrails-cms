@@ -2,7 +2,7 @@ import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import {toWidget} from '@ckeditor/ckeditor5-widget/src/utils';
 import Widget from '@ckeditor/ckeditor5-widget/src/widget';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import proudcmsShareIcon from './icons/share.svg';
+import cmsShareIcon from './icons/share.svg';
 import Dialog from './opengraph_dialog.js';
 import {createOpenGraphView} from './opengraph.js';
 
@@ -108,7 +108,7 @@ export default class extends Plugin {
 
   createButton() {
     const button = new ButtonView();
-    button.set({label: "Embed shared link", icon: proudcmsShareIcon});
+    button.set({label: "Embed shared link", icon: cmsShareIcon});
     button.on("execute", this.buttonClicked.bind(this));
     return button;
   }
