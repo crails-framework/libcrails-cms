@@ -6,6 +6,10 @@ location: https://github.com/crails-framework/libcrails.git#master
 
 :
 role: prerequisite
+location: https://github.com/crails-framework/libcrails-action.git#master
+
+:
+role: prerequisite
 location: https://github.com/crails-framework/libcrails-design-patterns.git#master
 
 :
@@ -47,6 +51,10 @@ location: https://github.com/crails-framework/libcrails-image.git#master
 :
 role: prerequisite
 location: https://github.com/crails-framework/libcrails-multimedia.git#master
+
+:
+role: prerequisite
+location: https://github.com/crails-framework/libcrails-paginator.git#master
 
 :
 role: prerequisite

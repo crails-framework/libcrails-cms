@@ -19,5 +19,7 @@ depends: libcrails-image ^2.0.0
 depends: libcrails-multimedia ^2.0.0
 depends: libcrails-signin ^2.0.0
 depends: libcrails-router ^2.0.0
+depends: libcrails-action ^2.0.0
+depends: libcrails-paginator ^2.0.0
 depends: libdatatree ^2.0.0
 depends: libbacktrace ^1.0.0

@@ -1,4 +1,5 @@
 import intf_libs += libcrails%lib{crails}
+import intf_libs += libcrails-action%lib{crails-action}
 import intf_libs += libcrails-design-patterns%lib{crails-design-patterns}
 import intf_libs += libcrails-html-views%lib{crails-html-views}
 import intf_libs += libcrails-rss-views%lib{crails-rss-views}
@@ -13,6 +14,7 @@ import intf_libs += libcrails-logger%lib{crails-logger}
 import intf_libs += libcrails-odb%lib{crails-odb}
 import intf_libs += libcrails-image%lib{crails-image}
 import intf_libs += libcrails-multimedia%lib{crails-multimedia}
+import intf_libs += libcrails-paginator%lib{crails-paginator}
 import intf_libs += libcrails-signin%lib{crails-signin}
 import intf_libs += libcrails-router%lib{crails-router}
 import intf_libs += libdatatree%lib{datatree}
