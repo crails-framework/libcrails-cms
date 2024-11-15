@@ -52,7 +52,11 @@ using namespace Crails::Cms;
     <!-- no extra partial -->
   <% end -%>
 
-  <%= form.text_area("body", model.get_body()) %>
+  <% if (i18n::String::is_localized()) do -%>
+    <%= form.text_area("body", model.get_body().to_json()) %>
+  <% end else do -%>
+    <%= form.text_area("body", model.get_body().to_string()) %>
+  <% end -%>
 
   <%= form.hidden_field("has_footer", std::string(model.get_has_footer() ? "1" : "0")) %>
   </div>

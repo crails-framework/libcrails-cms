@@ -7,21 +7,19 @@ void Crails::Cms::Editable::edit(Data params)
   if (params["thumbnail"].exists())
     set_thumbnail_url(params["thumbnail"]);
   if (params["description"].exists())
-    set_description(params["description"]);
+    description.from_data(params["description"]);
   if (params["body"].exists())
   {
-    set_body(params["body"]);
-    if (description.length() == 0)
-      set_description(Crails::Cms::generate_excerpt_from_html(get_body()));
+    body.from_data(params["body"]);
+    Crails::Cms::generate_translated_excerpts_from_html(description, body);
   }
 }
 
 void Crails::Cms::Editable::merge_data(Data out) const
 {
   Sluggable::merge_data(out);
-  out["body"] = this->body;
-  if (this->description.length())
-    out["description"] = this->description;
+  out["body"].merge(this->body);
+  out["description"].merge(this->description);
   if (this->thumbnail.length())
     out["thumbnail"] = this->thumbnail;
 }
