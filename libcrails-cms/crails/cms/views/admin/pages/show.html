@@ -22,7 +22,7 @@ using namespace Crails::Cms;
   <div class="aligned-inputs">
     <div class="<%= style.form_group_classes() %>">
       <%= form.label_for("title", i18n::t("form.label.title")) %>
-      <%= form.text_field("title", &Crails::Cms::Page::get_title, {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
+      <%= form.i18n_text_field<i18n::String>("title", model.get_title(), {{"maxlength",std::to_string(Crails::Cms::Editable::title_length)}}) %>
     </div>
 
     <%= style.form_group() yields %>
@@ -52,7 +52,7 @@ using namespace Crails::Cms;
     <!-- no extra partial -->
   <% end -%>
 
-  <%= form.text_area("body", model.get_body()) %>
+  <%= form.i18n_text_area<i18n::String>("body", model.get_body()) %>
 
   <%= form.hidden_field("has_footer", std::string(model.get_has_footer() ? "1" : "0")) %>
   </div>

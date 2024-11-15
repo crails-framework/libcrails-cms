@@ -6,7 +6,7 @@ bool @preview = false;
 
 // END LINKING
 
-<%= Crails::Cms::Injector::run(page.get_body(), vars) %>
+<%= Crails::Cms::Injector::run(page.get_body().to_string(), vars) %>
 <% if (preview) do %>
   <%= partial("preview_script") %>
 <% end %>

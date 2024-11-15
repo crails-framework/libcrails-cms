@@ -16,6 +16,17 @@ static string trim_unfinished_words(string source)
 
 namespace Crails::Cms
 {
+  void generate_translated_excerpts_from_html(i18n::String& target, const i18n::String& html, size_t max_length)
+  {
+    for (const string& locale : html.as_data().get_keys())
+    {
+      Data translation = target[locale];
+
+      if (translation.is_blank())
+        translation = generate_excerpt_from_html(html[locale].as<string>(), max_length);
+    }
+  }
+
   string generate_excerpt_from_html(const string& html, size_t max_length)
   {
     string excerpt;
