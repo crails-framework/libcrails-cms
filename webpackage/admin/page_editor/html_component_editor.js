@@ -8,7 +8,7 @@ import i18n from "../../i18n.js";
 let indentSize;
 
 function createActionButton(name, callback) {
-  const button = document.createElement("div");
+  const button = document.createElement("button");
 
   button.textContent = name;
   button.addEventListener("click", function(event) {
@@ -54,8 +54,8 @@ export default class extends GridComponentEditor() {
     const actionGroup = document.createElement("div");
     const actionButtons = [];
     const buttonGroup = document.createElement("div");
-    const acceptButton = document.createElement("div");
-    const cancelButton = document.createElement("div");
+    const acceptButton = document.createElement("button");
+    const cancelButton = document.createElement("button");
     const editor = new HtmlTextArea(input);
 
     input.value = this.html;
