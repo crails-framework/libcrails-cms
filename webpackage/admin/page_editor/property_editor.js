@@ -180,7 +180,7 @@ export default class {
     }
   }
 
-  apply() {
+  apply(debug = false) {
     for (let property in this.inputs) {
       const input = this.inputs[property];
       const oldValue = this.component.propertyValue(property);
@@ -191,7 +191,7 @@ export default class {
       else if (this.inputs[property].type == "checkbox")
         value = this.inputs[property].checked;
       if (isValueNull(value) && isValueNull(oldValue))
-        return ;
+        continue ;
       if (value != oldValue) {
         (new ComponentPropertyAction(
           this.component, property, value, oldValue
