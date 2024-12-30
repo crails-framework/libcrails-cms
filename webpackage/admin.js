@@ -17,6 +17,7 @@ import {initializeHighlight} from "./admin/html_textarea.js";
 import UrlPickerDialog from "./admin/url_picker.js";
 import MultiplePictureInput from "./admin/page_editor/multiple_picture_input.js";
 import MenuEditor from "javascript-menu-editor";
+import indentjs from "indent.js";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -108,6 +109,7 @@ window.Cms = {
   DirtyForm:       DirtyForm,
   Style:           Style,
   i18n:            i18n,
+  indentjs:        indentjs,
   inputs: {
     MultiplePictureInput: MultiplePictureInput,
   },

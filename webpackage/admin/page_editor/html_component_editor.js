@@ -5,7 +5,7 @@ import FilePicker from "../file_picker.js";
 import Style from "../../style.js";
 import i18n from "../../i18n.js";
 
-let indentSize;
+let indentSize = 2;
 
 function createActionButton(name, callback) {
   const button = document.createElement("button");
@@ -45,7 +45,12 @@ export default class extends GridComponentEditor() {
   }
 
   set html(value) {
-    this.content.innerHTML = value;
+    const propertyEditor = this.layout.toolbar.propertyEditor;
+
+    if (propertyEditor && propertyEditor.component === this)
+      propertyEditor.inputs.html.value = value;
+    else
+      this.content.innerHTML = value;
   }
 
   createContentEditor() {
