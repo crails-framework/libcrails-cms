@@ -8,7 +8,7 @@ import iconHtml from "./icons.js";
 import TomSelect from "tom-select/dist/js/tom-select.base.js";
 
 function attachmentsAdminPath() {
-  return document.querySelector("meta[name='attachments-admin-path']").content;
+  return document.querySelector("meta[name='attachments-admin-path']")?.content || "/admin/attachments";
 }
 
 function makeUrl(url, params) {
