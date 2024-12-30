@@ -65,23 +65,34 @@ function getComponentAncestry(component) {
   return crumbs.reverse();
 }
 
+function componentTitle(component) {
+  const typename = component.root.dataset.component;
+
+  return i18n.t(`admin.page-editor.components.${typename}`);
+}
+
 function makeComponentCrumbs(toolbar, component) {
   const ul = document.createElement("ul");
+  const selfLi = document.createElement("li");
 
   Style.apply("menu", ul);
+  Style.apply("menuItem", selfLi);
+  selfLi.innerText = componentTitle(component);
   getComponentAncestry(component).forEach(component => {
     const li = document.createElement("li");
     const link = document.createElement("a");
+    const typename = component.root.dataset.component;
 
     Style.apply("menuItem", li);
     Style.apply("menuLink", link);
     li.appendChild(link);
     ul.appendChild(li);
-    link.innerText = component.constructor.name;
+    link.innerText = componentTitle(component);
     link.addEventListener("click", function() {
       toolbar.setActiveComponent(component);
     });
   });
+  ul.appendChild(selfLi);
   return ul;
 }
 
