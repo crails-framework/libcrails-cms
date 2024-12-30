@@ -1,4 +1,5 @@
 import GridComponentEditor from "./grid_component_editor.js";
+import {ComponentPropertyAction} from "./actions.js";
 import indent from "indent.js";
 import HtmlTextArea from "../html_textarea.js";
 import FilePicker from "../file_picker.js";
@@ -47,10 +48,14 @@ export default class extends GridComponentEditor() {
   set html(value) {
     const propertyEditor = this.layout.toolbar.propertyEditor;
 
-    if (propertyEditor && propertyEditor.component === this)
+    if (propertyEditor && propertyEditor.component === this) {
+      console.log("updating html through toolbar");
       propertyEditor.inputs.html.value = value;
-    else
-      this.content.innerHTML = value;
+    }
+    else {
+      console.log("updating html through action");
+      (new ComponentPropertyAction(this, "html", value, this.html).run());
+    }
   }
 
   createContentEditor() {
