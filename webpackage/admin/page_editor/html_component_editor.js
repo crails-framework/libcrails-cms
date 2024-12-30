@@ -21,7 +21,6 @@ function createActionButton(name, callback) {
 
 export default class extends GridComponentEditor() {
   initializeProperties() {
-    this.properties.html = { type: "text", target: this.content, attribute: "innerHTML" };
     super.initializeProperties();
   }
 
@@ -46,16 +45,8 @@ export default class extends GridComponentEditor() {
   }
 
   set html(value) {
-    const propertyEditor = this.layout.toolbar.propertyEditor;
-
-    if (propertyEditor && propertyEditor.component === this) {
-      console.log("updating html through toolbar");
-      propertyEditor.inputs.html.value = value;
-    }
-    else {
-      console.log("updating html through action");
-      (new ComponentPropertyAction(this, "html", value, this.html).run());
-    }
+    (new ComponentPropertyAction(this, "html", value, this.html).run());
+    this.content.innerHTML = value;
   }
 
   createContentEditor() {
