@@ -13,6 +13,10 @@ using namespace Crails::Cms;
 // END LINKING
 <div class="controls">
   <%= link(route.make("new"), i18n::t("admin.new-page"), {{"class",style->button_classes()}}) %>
+
+  <div class="separator"></div>
+
+  <%= partial("admin/index_search_control", {{"action", route()}}) %>
 </div>
 
 <table class="<%= style->table_classes() %>">

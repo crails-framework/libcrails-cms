@@ -31,6 +31,15 @@ namespace Crails::Cms
     }
 
   protected:
+    virtual odb::query<Model> make_index_query() const override
+    {
+      auto search = Super::params["search"].template defaults_to<std::string>("");
+
+      if (search.length())
+        return Super::make_index_query() && odb::query<Model>::title.like("%" + search + "%");
+      return Super::make_index_query();
+    }
+
     void render_editor(typename TRAITS::Model& model) override
     {
       if (Super::params["with_cms_layout"].exists())
