@@ -40,6 +40,18 @@ namespace Crails::Cms
       return Super::make_index_query();
     }
 
+    virtual bool edit_resource(typename TRAITS::Model& model, Data data) override
+    {
+      if (Super::edit_resource(model, data))
+      {
+        Crails::Cms::ValidationError slug_uniqueness;
+
+        slug_uniqueness = Super::validate_uniqueness(model, "slug", odb::query<Model>::slug == model.get_slug());
+        return true;
+      }
+      return false;
+    }
+
     void render_editor(typename TRAITS::Model& model) override
     {
       if (Super::params["with_cms_layout"].exists())
