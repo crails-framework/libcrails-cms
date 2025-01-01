@@ -44,10 +44,15 @@ namespace Crails::Cms
     {
       if (Super::edit_resource(model, data))
       {
-        Crails::Cms::ValidationError slug_uniqueness;
+        ValidationErrors validations(std::vector<ValidationError>{
+          Super::validate_uniqueness(model, "slug", odb::query<Model>::slug == model.get_slug()),
+          ValidationError("not-empty", "title", model.get_title().to_string().length() > 0)
+        });
 
-        slug_uniqueness = Super::validate_uniqueness(model, "slug", odb::query<Model>::slug == model.get_slug());
-        return true;
+        if (validations)
+          return true;
+        else
+          Super::received_flash["warning"] = validations.to_html_list();
       }
       return false;
     }
