@@ -1,5 +1,5 @@
 import GridComponentEditor from "./grid_component_editor.js";
-import {ComponentPropertyAction} from "./actions.js";
+import {HistoryAction} from "./actions.js";
 import indent from "indent.js";
 import HtmlTextArea from "../html_textarea.js";
 import FilePicker from "../file_picker.js";
@@ -17,6 +17,30 @@ function createActionButton(name, callback) {
     callback();
   });
   return button;
+}
+
+class UpdateHtmlAction extends HistoryAction {
+  constructor(component, value, oldValue) {
+    super("html-component-update"); 
+    this.component = component;
+    this.content = component.content;
+    this.newValue = value;
+    this.oldValue = oldValue;
+  }
+
+  isSame(action) {
+    return action && this.content == action.content && this.newValue == action.newValue;
+  }
+
+  apply() {
+    this.content.innerHTML = this.component._html = this.newValue;
+    return super.apply();
+  }
+
+  unapply() {
+    this.content.innerHTML = this.component._html = this.oldValue;
+    return super.unapply();
+  }
 }
 
 export default class extends GridComponentEditor() {
@@ -39,14 +63,19 @@ export default class extends GridComponentEditor() {
   }
 
   get html() {
-    return indent.indent.html(this.content.innerHTML, {
-      tabString: ' '.repeat(indentSize)
-    });
+    if (!this._html) {
+      const htmlWithLineReturns = this.content.innerHTML
+        .replace(/<[^>]+>/g, "$&\n");
+      this._html = indent.indent.html(htmlWithLineReturns, {
+        tabString: ' '.repeat(indentSize),
+        indentHtmlTags: true
+      });
+    }
+    return this._html;
   }
 
   set html(value) {
-    (new ComponentPropertyAction(this, "html", value, this.html).run());
-    this.content.innerHTML = value;
+    (new UpdateHtmlAction(this, value, this.html)).run();
   }
 
   createContentEditor() {
@@ -132,11 +161,15 @@ export default class extends GridComponentEditor() {
   endEditing(save, event) {
     if (event) event.preventDefault();
     if (this.state === "edit") {
-      if (this.fullscreenEnabled) this.disableFullscreen();
-      if (save) this.html = this.htmlEditor.querySelector("textarea").value;
-      setTimeout(() => { this.state = "show"; }, 1);
-      this.root.removeChild(this.htmlEditor);
-      this.root.appendChild(this.content);
+      try {
+        if (this.fullscreenEnabled) this.disableFullscreen();
+        this.root.removeChild(this.htmlEditor);
+        this.root.appendChild(this.content);
+        if (save) this.html = this.htmlEditor.querySelector("textarea").value;
+        setTimeout(() => { this.state = "show"; }, 1);
+      } catch (err) {
+        console.error("HtmlComponent: endEditing failed:", err);
+      }
     }
   }
 
