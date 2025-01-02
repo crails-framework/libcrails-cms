@@ -95,6 +95,9 @@ export default class {
 
     // call highlight.js to render the syntax highligtning
     this.highlightJS();
+
+    if (this.textarea.value.match(/\n$/) != null)
+      this.codeElement.appendChild(this.codeElement.ownerDocument.createElement("br"));
   }
 
   highlightJS() {
