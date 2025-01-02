@@ -2,6 +2,17 @@ import i18n from "../../../i18n.js";
 import Style from "../../../style.js";
 import CmsDialog from "../../dialog.js";
 
+function cssRgbToHex(value) {
+  const matches = value && value.match(/rgb\(([0-9]+),\s*([0-9]+),\s*([0-9]+)\)/);
+  if (matches) {
+    const r = parseInt(matches[1]).toString(16).padStart(2, '0');
+    const g = parseInt(matches[2]).toString(16).padStart(2, '0');
+    const b = parseInt(matches[3]).toString(16).padStart(2, '0');
+    return `#${r}${g}${b}`;
+  }
+  return '';
+}
+
 function makeFormGroup(name, input) {
   const wrapper = document.createElement("div");
   const label = document.createElement("label");
@@ -16,6 +27,7 @@ function makeFormGroup(name, input) {
 function makeFontFamilyInput(dialog) {
   const input = document.createElement("select");
   const emptyOption = document.createElement("option");
+  let selectedOption;
 
   dialog.fontInput = input;
   input.appendChild(emptyOption);
@@ -24,11 +36,13 @@ function makeFontFamilyInput(dialog) {
 
     option.value = font;
     option.textContent = font;
-    if (dialog.element.style.fontFamily == font)
+    if (dialog.element.style.fontFamily.match(`^"?${font}"?$`, "i")) {
       option.checked = true;
+      selectedOption = option;
+    }
     input.appendChild(option);
   });
-  input.value = dialog.element.style.fontFamily;
+  input.value = selectedOption?.value;
   input.addEventListener("change", dialog.updatePreview.bind(dialog));
   return makeFormGroup("font", input);
 }
@@ -48,7 +62,7 @@ function makeFontColorInput(dialog) {
 
   dialog.colorInput = input;
   input.type = "color";
-  input.value = dialog.element.style.color;
+  input.value = cssRgbToHex(dialog.element.style.color);
   input.addEventListener("change", dialog.updatePreview.bind(dialog));
   Style.apply("button", input);
   return makeFormGroup("color", input);
@@ -110,7 +124,7 @@ class FontDialog extends CmsDialog {
   applyStyleOnElement(target) {
     target.style.fontSize   = `${this.sizeInput.value}px`;
     target.style.color      = this.colorInput.value;
-    target.style.fontFamily = this.fontInput.querySelector(":scope > :checked").value
+    target.style.fontFamily = this.fontInput.querySelector(":scope > :checked")?.value
   }
 }
 
@@ -131,14 +145,18 @@ export default function(iframe) {
 
     isApplied(element, selection) {
       if (element)
-        return element._domElement.style.fontFamily.length > 0;
+        return element.domElement().attributes?.style?.value?.length > 0;
       return false;
     }
 
     apply(element, selection, callback) {
-      const dialog = new FontDialog(element._domElement);
+      const dialog = new FontDialog(element.domElement());
 
-      dialog.onAccepted = function() { callback(true); };
+      window.lacrosse = element;
+      dialog.onAccepted = function() {
+        element.attr("style", element.domElement().attributes.style.value);
+        callback(true);
+      };
       dialog.onAborted = function() { callback(false); };
       dialog.open();
     }
