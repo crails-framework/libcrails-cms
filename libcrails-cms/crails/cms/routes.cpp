@@ -14,6 +14,10 @@ namespace Crails::Cms
 
   void Routes::register_sitemap_routes(Crails::Router& router, const std::string& prefix)
   {
+    router.match("GET", "robots.txt", std::bind(
+      &SiteMap::Controller::handle_robots_request,
+      std::placeholders::_1, prefix, std::placeholders::_2
+    ));
     router.scope(prefix, [this, &router]()
     {
       set_path_for<SiteMap::Controller>(router);

@@ -17,7 +17,9 @@ namespace Crails::Cms::SiteMap
 
     static void as_json_request(Crails::Context&, std::function<void()>);
     static void handle_request(Crails::Context&, std::function<void()>);
+    static void handle_robots_request(Crails::Context&, const std::string prefix, std::function<void()>);
   private:
+    void handle_robots(Crails::Context&, const std::string&) const;
     void handle_urlset_request(Crails::Context&, const std::string&) const;
     void handle_sitemapindex_request(Crails::Context&) const;
   };

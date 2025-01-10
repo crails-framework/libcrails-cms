@@ -53,6 +53,25 @@ void Cms::SiteMap::Controller::handle_request(Context& context, function<void()>
   callback();
 }
 
+void Cms::SiteMap::Controller::handle_robots_request(Crails::Context& context, const std::string prefix, std::function<void()> callback)
+{
+  Controller* controller = singleton::get();
+
+  controller->handle_robots(context, prefix);
+  context.response.send();
+  callback();
+}
+
+void Cms::SiteMap::Controller::handle_robots(Crails::Context& context, const string& prefix) const
+{
+  auto settings = find_settings();
+  string robots_txt;
+
+  robots_txt = "Sitemap: https://" + settings->get_public_url() + '/' + prefix;
+  context.response.set_status_code(HttpStatus::ok);
+  context.response.set_body(robots_txt.c_str(), robots_txt.length());
+}
+
 void Cms::SiteMap::Controller::handle_urlset_request(Context& context, const string& index_name) const
 {
   auto it = indexes.find(index_name);
