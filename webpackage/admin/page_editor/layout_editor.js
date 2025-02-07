@@ -123,13 +123,21 @@ export default class extends NestedComponentEditor {
       this.contentEditor.start();
       this.contentEditor.toolbox().unmount();
       this.ctWatcher.watch();
-      this.ctToolbox.mount();
-      this.ctToolbox.show();
+      this.toggleToolbox(true);
     } else {
-      this.ctToolbox.unmount();
+      this.toggleToolbox(false);
       this.toolbar.setActiveComponent(null);
       this.anchors.disable();
       this.contentEditor.stop(true);
+    }
+  }
+
+  toggleToolbox(value) {
+    if (this.ctToolbox.isMounted()) {
+      if (!value) { this.ctToolbox.unmount(); }
+    } else if (value) {
+      this.ctToolbox.mount();
+      this.ctToolbox.show();
     }
   }
 
