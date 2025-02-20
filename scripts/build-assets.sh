@@ -3,6 +3,7 @@
 export SASS=node_modules/.bin/sass
 export STYLE_ROOT=webpackage/stylesheets
 export OUTPUT=webpackage/build
+export CRAILS_AUTOGEN_DIR=libcrails-cms/crails/cms/autogen
 
 mkdir -p "$OUTPUT"
 
@@ -17,11 +18,11 @@ $SASS -s compressed $STYLE_ROOT/proudcms.scss > $OUTPUT/proudcms.css
 
 node_modules/.bin/webpack --progress
 
-mkdir -p "libcrails-cms/crails/cms/lib"
+mkdir -p "$CRAILS_AUTOGEN_DIR"
 
 crails-builtin-assets \
   --inputs      "$OUTPUT" \
-  --output      "libcrails-cms/crails/cms/lib/assets" \
+  --output      "$CRAILS_AUTOGEN_DIR/assets" \
   --classname   "CrailsCmsAssets" \
   --compression "gzip" \
   --uri-root    "/cms/assets/"

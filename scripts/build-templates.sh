@@ -2,6 +2,8 @@
 
 cd libcrails-cms/crails/cms
 
+export CRAILS_AUTOGEN_DIR=autogen
+
 crails templates build \
   -r html \
   -i views \

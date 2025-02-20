@@ -1,5 +1,5 @@
 #include "style.hpp"
-#include "../lib/assets.hpp"
+#include "../autogen/assets.hpp"
 #include <crails/icons.hpp>
 #include <crails/i18n.hpp>
 #include <crails/html_template.hpp>
