@@ -1,4 +1,4 @@
-@import "html_textarea";
+@use "html_textarea";
 
 [data-component][data-cms-active='1'] {
   outline-style: dashed;

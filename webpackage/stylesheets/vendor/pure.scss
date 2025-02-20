@@ -1,15 +1,15 @@
-@import "pure-css/base";
-@import "pure-css/buttons";
-@import "pure-css/forms";
-@import "pure-css/grids";
-@import "pure-css/grids-responsive";
-@import "pure-css/menus";
-@import "pure-css/menus-dropdown";
-@import "pure-css/menus-horizontal";
-@import "pure-css/menus-scrollable";
-@import "pure-css/menus-skin";
-@import "pure-css/tables";
-@import "pure-pageeditor-grid";
+@use "pure-css/base";
+@use "pure-css/buttons";
+@use "pure-css/forms";
+@use "pure-css/grids";
+@use "pure-css/grids-responsive";
+@use "pure-css/menus";
+@use "pure-css/menus-dropdown";
+@use "pure-css/menus-horizontal";
+@use "pure-css/menus-scrollable";
+@use "pure-css/menus-skin";
+@use "pure-css/tables";
+@use "pure-pageeditor-grid";
 
 .pure-menu-list .pure-menu-item { height: auto; }
 

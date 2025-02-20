@@ -1,17 +1,17 @@
-@import "vendor/admin";
-@import "admin/menu_editor";
-@import "admin/plugins";
-@import "admin/dialog";
-@import "admin/file_picker";
-@import "admin/attachment_index";
-@import "admin/attachment_form";
-@import "admin/page_editor";
-@import "admin/blog";
-@import "admin/opengraph_popup";
-@import "admin/sortable_table";
-@import "admin/drag_handle";
-@import "admin/ckeditor_button"; 
-@import "admin/html_textarea";
+@use "vendor/admin";
+@use "admin/menu_editor";
+@use "admin/plugins";
+@use "admin/dialog";
+@use "admin/file_picker";
+@use "admin/attachment_index";
+@use "admin/attachment_form";
+@use "admin/page_editor";
+@use "admin/blog";
+@use "admin/opengraph_popup";
+@use "admin/sortable_table";
+@use "admin/drag_handle";
+@use "admin/ckeditor_button"; 
+@use "admin/html_textarea";
 
 // BEGIN ckeditor custom style
 .ck-content .image.image-style-left-side {

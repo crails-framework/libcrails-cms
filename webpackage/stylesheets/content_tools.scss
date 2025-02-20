@@ -1,5 +1,5 @@
-$image-path-prefix: "/cms/assets/content-tools-";
-@import "../../node_modules/ContentTools/src/styles/content-tools.scss";
+@use "sass:meta";
+@use "../../node_modules/ContentTools/src/styles/content-tools.scss" with ($image-path-prefix: "/cms/assets/content-tools-");
 
 .ct-tool--font-size:before {
   content: "\ea61";
@@ -9,4 +9,4 @@ $image-path-prefix: "/cms/assets/content-tools-";
   content: "\2630";
 }
 
-@import "admin/page_editor_iframe";
+@include meta.load-css("admin/page_editor_iframe");
