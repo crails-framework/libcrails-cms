@@ -46,7 +46,7 @@ namespace Crails::Cms
 
         params.from_map(map<string,string>{
           {"page", "1"},
-          {"count", Crails::defaults_to<string>(vars, "count", "3")}
+          {"count", Crails::cast_or<string>(vars, "count", "3")}
         });
         run(params);
       }
