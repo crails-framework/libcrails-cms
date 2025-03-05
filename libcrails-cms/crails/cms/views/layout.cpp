@@ -6,6 +6,8 @@
 #include <crails/logger.hpp>
 #include <crails/renderer.hpp>
 #include <iostream>
+
+using namespace Crails;
 using namespace Crails::Cms;
 using namespace std;
 
@@ -48,15 +50,22 @@ Layouts::Layouts()
 {
   for (const filesystem::path& path : find_layout_libraries())
   {
-    auto* plugin = new dylib(path);
-
-    if (load_layout_plugin(plugin, layouts))
+    try
     {
-      logger << Logger::Info << "CMS Layout plugin loaded (" << path << ')' << Logger::endl;
-      plugins.push_back(plugin);
+      auto* plugin = new dylib(path);
+
+      if (load_layout_plugin(plugin, layouts))
+      {
+        logger << Logger::Info << "CMS Layout plugin loaded (" << path << ')' << Logger::endl;
+        plugins.push_back(plugin);
+      }
+      else
+        delete plugin;
     }
-    else
-      delete plugin;
+    catch (const dylib::load_error& error)
+    {
+      logger << Logger::Error << "Could not load layout at " << path << ": " << error.what() << Logger::endl;
+    }
   }
 }
 

@@ -6,6 +6,7 @@
 #include <crails/utils/base64.hpp>
 #include <crails/i18n.hpp>
 #include <crails/datatree.hpp>
+#include <crails/logger.hpp>
 
 using namespace Crails::Cms;
 using namespace std;
@@ -88,7 +89,15 @@ void Plugin::load()
 {
   if (!library)
   {
-    library = new dylib(filepath);
+    try
+    {
+      library = new dylib(filepath);
+    }
+    catch (const dylib::load_error& error)
+    {
+      using namespace Crails;
+      logger << Logger::Error << "Could not load plugin at " << filepath << ": " << error.what() << Logger::endl;
+    }
     if (!library)
       throw invalid_plugin();
   }
