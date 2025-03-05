@@ -23,6 +23,7 @@ namespace Crails::Cms::SiteMap
 
   struct Index
   {
+    virtual ~Index() {}
     virtual UrlSet url_set() const = 0;
     void render(const std::string& host_url, RenderTarget&) const;
     void merge(Data) const;

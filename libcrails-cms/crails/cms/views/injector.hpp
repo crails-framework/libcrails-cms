@@ -16,6 +16,7 @@ namespace Crails
     public:
       Injector() {}
       Injector(const std::vector<InjectableTraits>& injectables) : injectables(injectables) {}
+      virtual ~Injector() {}
 
       std::string inject(const std::string_view content, Crails::SharedVars) const;
       std::vector<std::string_view> params_for(const std::string_view) const;
