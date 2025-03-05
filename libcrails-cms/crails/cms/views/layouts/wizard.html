@@ -12,7 +12,7 @@ const char* @yield;
     <%= tag("link", {{"rel", "stylesheet"},{"href", CrailsCmsAssets::admin_css}}) %>
     <%= Crails::fonticon_cdn_header() %>
   </head>
-  <body>
+  <body class="cms-wizard">
     <h1><%= i18n::t("admin.wizard-title") %></h1>
     <% if (yield != nullptr) do %>
       <%= yield %>
