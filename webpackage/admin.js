@@ -18,6 +18,7 @@ import UrlPickerDialog from "./admin/url_picker.js";
 import MultiplePictureInput from "./admin/page_editor/multiple_picture_input.js";
 import MenuEditor from "javascript-menu-editor";
 import indentjs from "indent.js";
+import initializeTranslatableInputs from "./admin/i18n_cms_input.js";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -141,7 +142,10 @@ function initialize(event) {
   // initialize tomSelect
   createSelectField("#tagPicker");
   createSelectField("#userGroupPicker");
+  // initialize sortable tables
   SortableRelationshipTable.loadFromElements("table.sortable-relationship");
+  // initialize i18n_cms_input
+  window.translatableInputs = initializeTranslatableInputs();
 }
 
 document.addEventListener("DOMContentLoaded", initialize);

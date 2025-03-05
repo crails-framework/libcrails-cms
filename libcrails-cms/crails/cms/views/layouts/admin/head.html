@@ -4,10 +4,13 @@
 #include "../../../plugins.hpp"
 #include <crails/icons.hpp>
 #include <crails/i18n.hpp>
+#include <crails/utils/join.hpp>
 
 const Crails::Cms::Settings& @settings;
 const Crails::Cms::Style* @style = Crails::Cms::Style::singleton::get();
 const Crails::Cms::Plugins* plugins = Crails::Cms::Plugins::singleton::get();
+const i18n::Settings& i18n_settings = i18n::Settings::singleton::require();
+const std::string current_locale = i18n_settings.current_locale;
 
 const std::string_view ckeditor_version = "35.4.0";
 
@@ -16,9 +19,11 @@ const std::string_view ckeditor_version = "35.4.0";
   function crailscms_on_content_loaded(document) {<%= style->javascript_on_content_loaded() %>}
   function crailscms_on_content_unload(document) {<%= style->javascript_on_content_unload() %>}
   document.addEventListener("DOMContentLoaded", function() { crailscms_on_content_loaded(document); });
+  window.tr_current_locale = "<%= current_locale %>";
+  window.tr_locales = ["<%= Crails::join(i18n_settings.locales, "\",\"") %>"];
 </script>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/<%= ckeditor_version %>/classic/translations/<%= i18n::locale_name() %>.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/<%= ckeditor_version %>/classic/translations/<%= current_locale %>.js"></script>
 
 <% if (settings.get_favicon().length()) do -%>
   <%= tag("link", {{"rel", "icon"},{"href", settings.get_favicon()}}) %>
