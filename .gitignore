@@ -33,7 +33,7 @@ node_modules/
 # Build assets
 package-lock.json
 webpackage/build
-libcrails-cms/crails/cms/lib
+libcrails-cms/crails/cms/autogen
 
 # Temporary files
 .*.swp
