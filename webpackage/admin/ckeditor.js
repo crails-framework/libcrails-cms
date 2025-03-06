@@ -30,6 +30,8 @@ import CmsAudioEmbed from "./ckeditor_audio.js";
 import CmsOpenGraph from "./ckeditor_opengraph.js";
 import CmsEmbedIcon from "./icons/library.svg";
 
+import I18nCKEditorController from "./i18n_ckeditor.js";
+
 const cmsEmbedToolbarGroup = {
   label: "Inclure...",
   icon: CmsEmbedIcon,
@@ -171,6 +173,9 @@ export function adminCKEditor(elementOrName, options = {}) {
       if (window.ckeditors === undefined)
         window.ckeditors = [];
       window.ckeditors.push(editor);
+      editor.sourceElement.$ckeditor = editor;
+      if (editor.sourceElement.$localeController)
+        editor.i18nController = new I18nCKEditorController(editor);
       return editor;
     })
     .catch(error => {

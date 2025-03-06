@@ -23,7 +23,7 @@ function createLocalePicker(input) {
   const group = document.createElement("div");
   const label = document.createElement("label");
 
-  Style.apply("formGroup", group);
+  Style.ready.then(function() { Style.apply("formGroup", group); });
   i18n.ready.then(function() { label.textContent = i18n.t("translation-picker"); });
   group.appendChild(label);
   group.appendChild(input);

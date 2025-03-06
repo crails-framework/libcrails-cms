@@ -1,3 +1,5 @@
+import I18nCKEditorController from "./i18n_ckeditor.js";
+
 function updateData(data, input) {
   data[input.locale] = input.value;
   return data;
@@ -59,7 +61,7 @@ class LocalizedInputController {
   }
 
   setCurrentLocale(locale) {
-    if (this.currentInput?.locale != locale) {
+    if (!this.currentInput || this.currentInput.locale != locale) {
       const input = new LocalizedInput(this, locale);
 
       input.addChangeListener(() => {
@@ -102,8 +104,10 @@ class LocalizedInputManager {
 
   initializeNewInputs() {
     this.unhandledInputs.forEach(input => {
-      input.$localeController = new LocalizedInputController(this, input);
       this.inputs.push(input);
+      input.$localeController = new LocalizedInputController(this, input);
+      if (input.$ckeditor)
+        input.$ckeditor.i18nController = new I18nCKEditorController(input.$ckeditor);
     });
     this.onInputsChanged();
   }
