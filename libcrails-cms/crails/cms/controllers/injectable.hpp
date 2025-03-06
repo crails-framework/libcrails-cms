@@ -18,6 +18,7 @@ namespace Crails::Cms
     std::string                   formats = "text/html";
   public:
     Injectable(const Crails::SharedVars& vars, Crails::RenderTarget& sink);
+    virtual ~Injectable() {}
 
     virtual void run() = 0;
     void render(const std::string_view view, Crails::SharedVars local_vars = {});
