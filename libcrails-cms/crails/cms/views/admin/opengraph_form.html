@@ -18,7 +18,7 @@ Crails::FormBuilder<Crails::Cms::Editable> form(
 
 <%= style.form_group() yields %>
   <%= form.label_for("description", i18n::t("form.label.description")) %>
-  <%= form.text_area("description", &Crails::Cms::Editable::get_description, {{"maxlength",std::to_string(Crails::Cms::Editable::description_length)}}) %>
+  <%= form.i18n_text_area("description", &Crails::Cms::Editable::get_description, {{"maxlength",std::to_string(Crails::Cms::Editable::description_length)}}) %>
 <% yields-end %>
 <%= style.form_group(Crails::Cms::ClassList("thumbnail-form-group")) yields %>
   <%= form.label_for("thumbnail", i18n::t("form.label.thumbnail")) %>
