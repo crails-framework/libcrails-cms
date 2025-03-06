@@ -17,11 +17,11 @@ class LocalizedInput {
     this.el = controller.input.ownerDocument.createElement(controller.input.tagName);
     if (this.el.tagName == "INPUT") this.el.type = "text";
     this.el.className = controller.input.className;
-    this.el.value = controller.data[locale];
+    this.el.value = controller.data[locale] ? controller.data[locale] : '';
     copyDataset(controller.input, this.el);
   }
 
-  addUpdateListener(callback) {
+  addChangeListener(callback) {
     ["keyup", "change"].forEach(event => this.el.addEventListener(event, callback));
   }
 
@@ -34,11 +34,14 @@ class LocalizedInput {
   }
 }
 
-class LocalizedInputContoller {
+class LocalizedInputController {
   constructor(manager, input) {
     this.manager = manager;
     this.input = input;
-    input.style.display = "none";
+    if (input.tagName == "INPUT")
+      input.type = "hidden";
+    else
+      input.style.display = "none";
   }
 
   get container() {
@@ -67,9 +70,12 @@ class LocalizedInputContoller {
   }
 
   emplaceInput(input) {
+    crailscms_on_content_unload(this.container);
     if (this.currentInput)
       this.container.removeChild(this.currentInput.el);
+    this.currentInput = input;
     this.container.insertBefore(input.el, this.input.nextElementSibling);
+    crailscms_on_content_loaded(this.container);
   }
 }
 
@@ -102,7 +108,7 @@ class LocalizedInputManager {
   }
 
   setCurrentLocale(locale) {
-    this.inputs.forEach(input => input.setCurrentLocale(locale));
+    this.inputs.forEach(input => input.$localeController.setCurrentLocale(locale));
   }
 }
 
