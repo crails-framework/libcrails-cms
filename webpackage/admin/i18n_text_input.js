@@ -105,10 +105,14 @@ class LocalizedInputManager {
       input.$localeController = new LocalizedInputController(this, input);
       this.inputs.push(input);
     });
+    this.onInputsChanged();
   }
 
   setCurrentLocale(locale) {
     this.inputs.forEach(input => input.$localeController.setCurrentLocale(locale));
+  }
+
+  onInputsChanged() {
   }
 }
 
