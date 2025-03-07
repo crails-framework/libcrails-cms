@@ -32,7 +32,10 @@ class LocalizedInput {
   }
 
   set value(v) {
+    const event = new Event("change");
+
     this.el.value = v;
+    this.el.dispatchEvent(event);
   }
 }
 
@@ -51,7 +54,12 @@ class LocalizedInputController {
   }
 
   get data() {
-    return JSON.parse(this.input.value);
+    try {
+      return JSON.parse(this.input.value);
+    } catch (err) {
+      console.error("LocalizedInput could not parse data:", err);
+      return {};
+    }
   }
 
   set data(value) {

@@ -9,6 +9,8 @@ function listenToLocaleChangeFromInputController(controller, callback) {
 
 export default class CKEditorController {
   constructor(editor) {
+    editor.realSourceElement = editor.sourceElement;
+    editor.sourceElement = document.createElement("textarea");
     this.editor = editor;
     editor.model.document.on('change:data', this.onChanged.bind(this));
     listenToLocaleChangeFromInputController(this.localeController, this.onLocaleChanged.bind(this));
@@ -16,7 +18,7 @@ export default class CKEditorController {
   }
 
   get localeController() {
-    return this.editor.sourceElement.$localeController;
+    return this.editor.realSourceElement.$localeController;
   }
 
   get input() {
@@ -24,10 +26,7 @@ export default class CKEditorController {
   }
 
   onChanged() {
-    const event = new Event("change");
-
     this.input.value = this.editor.getData();
-    this.input.dispatchEvent(event);
   }
 
   onLocaleChanged() {
