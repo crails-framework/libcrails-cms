@@ -1,6 +1,7 @@
 #pragma once
 #include <crails/utils/singleton.hpp>
 #include <crails/request_handlers/builtin_assets.hpp>
+#include <crails/utils/backtrace.hpp>
 #include <map>
 #include "../models/layout.hpp"
 
@@ -41,8 +42,8 @@ namespace Crails::Cms
       return std::string();
     }
 
-    virtual void use_admin_style() const { throw std::runtime_error("no admin style for layout " + name); }
-    virtual const Style& get_style() const { throw std::runtime_error("no style defined for layout " + name); }
+    virtual void use_admin_style() const { throw boost_ext::runtime_error("no admin style for layout " + name); }
+    virtual const Style& get_style() const;
 
     static const Layout& get(const std::string& name);
 

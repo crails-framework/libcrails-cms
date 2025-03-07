@@ -1,4 +1,5 @@
 #include "layout.hpp"
+#include "style.hpp"
 #include "../plugins.hpp"
 #include "../dylib.hpp"
 #include <filesystem>
@@ -175,4 +176,10 @@ const Layout& Layout::get(const std::string& layout_name)
   if (layout)
     return *layout;
   return layouts.default_layout();
+}
+
+const Style& Layout::get_style() const
+{
+  logger << Logger::Error << "no style defined for layout " << name << Logger::endl;
+  return Style::singleton::require();
 }
