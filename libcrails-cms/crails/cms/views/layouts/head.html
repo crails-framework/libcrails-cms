@@ -46,6 +46,10 @@ const Crails::Cms::SiteMap::Controller* sitemap = Crails::Cms::SiteMap::Controll
   <%= render_css_variables(variables, settings.get_theme_settings()) %>
 <% end -%>
 
+<% if (settings.get_webmention_url().length()) do -%>
+  <%= tag("link", {{"rel","webmention"},{"href",settings.get_webmention_url()}}) %>
+<% end -%>
+
 <% if (settings.get_matomo_url().length()) do -%>
   <%= partial("layouts/matomo", {
     {"matomo_hostname", std::string_view(settings.get_matomo_url())},

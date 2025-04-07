@@ -55,6 +55,9 @@ namespace Crails::Cms
     unsigned long get_matomo_id() const { return matomo_id; }
     void set_matomo_id(unsigned long value) { matomo_id = value; }
 
+    const std::string& get_webmention_url() const { return webmention_url; }
+    void set_webmention_url(const std::string& value) { webmention_url = value; }
+
     std::vector<std::string> get_plugins() const;
     void set_plugins(const std::vector<std::string>&);
     bool has_plugin(const std::string&) const;
@@ -71,6 +74,8 @@ namespace Crails::Cms
     #pragma db value_type("VARCHAR(64)")
     std::string matomo_url;
     unsigned long matomo_id;
+    #pragma db value_type("VARCHAR(128)")
+    std::string webmention_url;
     #pragma db type("TEXT")
     DataTree theme_settings;
     std::string footer;
