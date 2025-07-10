@@ -68,7 +68,7 @@ namespace Crails::Cms
 
       model->edit(Super::params["setting"]);
       Super::database.save(*model);
-      Super::flash["info"] = i18n::t("admin.resource-updated");
+      Super::flash["info"] = i18n::t("admin.flash.resource-updated");
       Super::redirect_to("/admin/settings");
       if (model->should_reload_server())
         trigger_server_restart();
