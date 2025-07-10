@@ -148,17 +148,21 @@ export default class {
     const property = this.properties[name];
 
     if (property !== undefined) {
-      if (property.getter !== undefined)
-        return property.getter();
-      else if (property.attribute !== undefined)
-        return property.target[property.attribute];
-      else if (property.style == "backgroundImage")
-        return imageFromStyle(property.target.style[property.style]);
-      else if (property.style !== undefined) {
-        const value = property.target.style[property.style];
-        if (value.match(/^rgba?\(/) !== null)
-          return eval(value);
-        return value;
+      try {
+        if (property.getter !== undefined)
+          return property.getter();
+        else if (property.attribute !== undefined)
+          return property.target[property.attribute];
+        else if (property.style == "backgroundImage")
+          return imageFromStyle(property.target.style[property.style]);
+        else if (property.style !== undefined) {
+          const value = property.target.style[property.style];
+          if (value.match(/^rgba?\(/) !== null)
+            return eval(value);
+          return value;
+        }
+      } catch (error) {
+        console.error(`Failed to read property value ${this.componentType}.${name}`, error, this);
       }
     }
     return null;
