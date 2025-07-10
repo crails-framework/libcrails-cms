@@ -43,6 +43,7 @@ class LocalizedInputController {
   constructor(manager, input) {
     this.manager = manager;
     this.input = input;
+    this.listeners = [];
     if (input.tagName == "INPUT")
       input.type = "hidden";
     else
@@ -76,6 +77,7 @@ class LocalizedInputController {
         this.data = updateData(this.data, input);
       });
       this.emplaceInput(input);
+      this.listeners.forEach(callback => callback());
     }
   }
 
@@ -86,6 +88,15 @@ class LocalizedInputController {
     this.currentInput = input;
     this.container.insertBefore(input.el, this.input.nextElementSibling);
     crailscms_on_content_loaded(this.container);
+  }
+
+  onLocaleChanged(callback) {
+    this.listeners.push(callback);
+  }
+
+  offLocaleChanged(callback) {
+    const index = this.listeners.indexOf(callback);
+    this.listeners.splice(index, 1);
   }
 }
 
