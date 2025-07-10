@@ -5,6 +5,22 @@ import createToolbar from "./page_editor/toolbar.js";
 import overloadCtHistoryTools from "./page_editor/content_tools/undo.js";
 import overloadCtToolbox from "./page_editor/content_tools/toolbar.js";
 
+function setIframeHTML(iframe, textarea) {
+  const html = textarea.dataset.localized == '1'
+    ? textarea.$localeController.currentInput.value
+    : textarea.value;
+  iframe.contentDocument.body.innerHTML = html;
+}
+
+function initializeTextArea(textarea, pageEditor) {
+  textarea.style.display = 'none';
+  if (textarea.dataset.localized == '1') {
+    textarea = textarea.$localeController.currentInput;
+    textarea.el.display = 'none';
+  }
+  pageEditor.targetInput = textarea;
+}
+
 export default function(layout, form, fieldName, mode, resources) {
   return Promise.all([i18n.ready, Style.ready]).then(function() {
     //const element = form.querySelector(".cms-page-editor");
@@ -14,19 +30,22 @@ export default function(layout, form, fieldName, mode, resources) {
     const themeVariables = document.querySelector("#layout-variables");
 
     return iframe.ready.then(function() {
-      iframe.contentDocument.body.innerHTML = textarea.value;
+      setIframeHTML(iframe, textarea);
+      if (textarea.dataset.localized == '1')
+        textarea.$localeController.onLocaleChanged(() => { setIframeHTML(iframe, textarea) });
       if (themeVariables)
         iframe.contentDocument.head.appendChild(themeVariables);
       Cms.initializers.ContentTools(iframe);
     }).then(function() {
       const pageEditor = new layout(iframe, mode);
+      const textAreaInitializer = function() { initializeTextArea(textarea, pageEditor); };
 
-      textarea.style.display = 'none';
+      textarea?.$localeController?.onLocaleChanged(textAreaInitializer);
+      textAreaInitializer();
       pageEditor.toolbar = createToolbar(pageEditor);
       pageEditor.ctToolbox = overloadCtToolbox(pageEditor.window.Cms.ContentTools);
       pageEditor.bindElements();
       pageEditor.updateEditableComponents();
-      pageEditor.targetInput = textarea;
       overloadCtHistoryTools(pageEditor);
       form.addEventListener("submit", function(event) {
         try {
