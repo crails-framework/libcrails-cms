@@ -1,12 +1,26 @@
 import {ComponentPropertyAction} from "./actions.js";
 import i18n from "../../i18n.js";
 import FilePicker from "../file_picker.js";
+import UrlPicker from "../url_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
 import Style from "../../style.js";
 
 const filePicker = new FilePicker({
   mimetype: "image/*"
 });
+
+function makeUrlPickerInput(input) {
+  const button = document.createElement("button");
+
+  Style.apply("button", button);
+  button.textContent = i18n.t("admin.search");
+  button.addEventListener("click", function(event) {
+    event.preventDefault();
+    const dialog = new UrlPicker(function(url) { input.value = url; });
+    dialog.open();
+  });
+  return button;
+}
 
 function makeFilePickerInput(input) {
   const button = document.createElement("button");
@@ -130,6 +144,10 @@ export default class {
       inputGroup.classList.add("input-group");
       inputGroup.appendChild(input);
       switch (component.properties[property].type) {
+      case "href":
+      case "link":
+        inputGroup.appendChild(makeUrlPickerInput(input));
+        break ;
       case "image":
       case "picture":
         inputGroup.appendChild(makeFilePickerInput(input));
