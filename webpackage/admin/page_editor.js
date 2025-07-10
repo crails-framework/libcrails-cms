@@ -15,7 +15,8 @@ export default function(layout, form, fieldName, mode, resources) {
 
     return iframe.ready.then(function() {
       iframe.contentDocument.body.innerHTML = textarea.value;
-      iframe.contentDocument.head.appendChild(themeVariables);
+      if (themeVariables)
+        iframe.contentDocument.head.appendChild(themeVariables);
       Cms.initializers.ContentTools(iframe);
     }).then(function() {
       const pageEditor = new layout(iframe, mode);
