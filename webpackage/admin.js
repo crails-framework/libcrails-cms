@@ -83,6 +83,8 @@ window.initializeContentTools = function(iframe) {
   ContentTools.DEFAULT_TOOLS[0].push("align-justify");
   new fontToolClass();
   iframe.contentWindow.Cms.initializers.Hljs();
+  if (window.Cms.PageEditor.stylePalette)
+    ContentTools.StylePalette.add(window.Cms.PageEditor.stylePalette);
 };
 
 window.ProudCmsDialog = ProudCmsDialog;
