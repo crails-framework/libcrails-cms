@@ -5,10 +5,6 @@ import UrlPicker from "../url_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
 import Style from "../../style.js";
 
-const filePicker = new FilePicker({
-  mimetype: "image/*"
-});
-
 function makeUrlPickerInput(input) {
   const button = document.createElement("button");
 
@@ -22,18 +18,19 @@ function makeUrlPickerInput(input) {
   return button;
 }
 
-function makeFilePickerInput(input) {
+function makeFilePickerInput(input, title, options) {
   const button = document.createElement("button");
 
   Style.apply("button", button);
-  button.textContent = i18n.t("admin.image-library");
+  button.textContent = title;
   button.addEventListener("click", function(event) {
     event.preventDefault();
-    filePicker.title = i18n.t("admin.image-library");
-    filePicker.plugin.filePicked = function(file) {
+    const dialog = new FilePicker(options);
+    dialog.title = title;
+    dialog.plugin.filePicked = function(file) {
       input.value = file.url;
     };
-    filePicker.open();
+    dialog.open();
   });
   return button;
 }
@@ -150,7 +147,13 @@ export default class {
         break ;
       case "image":
       case "picture":
-        inputGroup.appendChild(makeFilePickerInput(input));
+        inputGroup.appendChild(
+          makeFilePickerInput(
+            input,
+            i18n.t("admin.image-library"),
+            { mimetype: "image/*" }
+          )
+        );
         break ;
       case "gallery":
       case "images":
