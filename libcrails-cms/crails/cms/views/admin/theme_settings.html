@@ -34,7 +34,13 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
 }) yields %>
 
   <% for (const Crails::Cms::LayoutVariable& variable : variables) do -%>
-    <%= style.form_group() yields %>
+    <%
+      Crails::Cms::ClassList group_classes;
+      if (variable.type == "image") { group_classes = group_classes + "thumbnail-form-group"; }
+      else if (variable.type == "attachment") { group_classes = group_classes + "file-form-group"; }
+    %>
+
+    <%= style.form_group(group_classes) yields %>
       <% std::string name = form.scoped_name(field_relative_name(variable)) %>
       <% std::string value = field_value(variable) %>
       <label for="<%= form.scoped_name(field_relative_name(variable)) %>" data-type="<%= variable.type %>">
@@ -42,6 +48,7 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
       </label>
       <% if (variable.type == "html") do -%>
         <textarea name="<%= name %>"><%= html_escape(value) %></textarea>
+
       <% end else if (variable.type == "select") do -%>
         <select name="<%= name %>">
           <% for (auto it = variable.options.begin() ; it != variable.options.end() ; ++it) do -%>
@@ -52,6 +59,7 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
             </option>
           <% end -%>
         </select>
+
       <% end else do -%>
         <input name="<%= name %>"
                type="<%= variable.type %>"
@@ -60,6 +68,19 @@ std::function<std::string(const Crails::Cms::LayoutVariable&)> field_value = [&]
                class="<%= style.button_classes() %>"
         <% end -%>
                />
+
+        <% if (variable.type == "attachment") do -%>
+          <%= tag("button", {{"class", style.button_classes()}}) yields %>
+            <%= Crails::fonticon_tag(Crails::FontIcon::Download) %>
+            <%= i18n::t("admin.menu.files") %>
+          <% yields-end %>
+        <% end else if (variable.type == "image") do -%>
+          <%= tag("button", {{"class", style.button_classes()}}) yields %>
+            <%= Crails::fonticon_tag(Crails::FontIcon::FilePicture) %>
+            <%= i18n::t("admin.image-library") %>
+          <% yields-end %>
+        <% end -%>
+
       <% end -%>
     <% yields-end -%>
   <% end -%>
