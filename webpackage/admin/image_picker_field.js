@@ -1,4 +1,4 @@
-import FilePicker from "./file_picker.js";
+import filePickerField from "./file_picker_field.js";
 
 function updatePreview(preview, input) {
   try {
@@ -13,7 +13,6 @@ function updatePreview(preview, input) {
 
 export default function(formGroup, fileAttribute = "url") {
   const input = formGroup.querySelector("input");
-  const libraryButton = formGroup.querySelector("button");
   const preview = formGroup.querySelector("img");
 
   if (preview) {
@@ -31,16 +30,12 @@ export default function(formGroup, fileAttribute = "url") {
   } else {
     console.warn("image picker field lacks the <img> attribute required to display a preview", formGroup);
   }
-  libraryButton.addEventListener("click", function(event) {
-    event.preventDefault();
-    new FilePicker({
-      title: i18n.t("admin.image-library"),
-      mimetype: "image/*",
-      filePicked: function(file) {
-        console.log("File picked", file);
-        input.value = file[fileAttribute];
-        updatePreview(preview, input);
-      }
-    }).open();
+  return filePickerField(formGroup, {
+    title: i18n.t("admin.image-library"),
+    mimetype: "image/*",
+    fileAttribute: fileAttribute,
+    upddate: function() {
+      updatePreview(preview, input)
+    }
   });
 }

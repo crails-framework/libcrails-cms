@@ -1,4 +1,4 @@
-import FilePicker from "./file_picker.js";
+import filePickerField from "./file_picker_field.js";
 
 function updatePreview(preview, input) {
   try {
@@ -15,20 +15,13 @@ function updatePreview(preview, input) {
 
 export default function(formGroup) {
   const input = formGroup.querySelector("input");
-  const libraryButton = formGroup.querySelector("button");
   const preview = formGroup.querySelector("audio");
 
-  updatePreview(preview, input);
-  libraryButton.addEventListener("click", function(event) {
-    event.preventDefault();
-    new FilePicker({
-      title: i18n.t("admin.audio-library"),
-      mimetype: "audio/*",
-      filePicked: function(file) {
-        console.log("File picked", file);
-        input.value = file.url;
-        updatePreview(preview, input);
-      }
-    }).open();
+  return filePickerField(formGroup, {
+    title: i18n.t("admin.audio-library"),
+    mimetype: "audio/*",
+    update: function() {
+      updatePreview(preview, input);
+    }
   });
 }

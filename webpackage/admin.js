@@ -7,6 +7,7 @@ import previewPost from "./admin/preview.js";
 import pageEditor from "./admin/page_editor.js";
 import ProudCmsDialog from "./admin/dialog.js";
 import ProudCmsPicker from "./admin/file_picker.js";
+import filePickerField from "./admin/file_picker_field.js";
 import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
@@ -132,6 +133,10 @@ function initialize(event) {
 
   if (mainForm) {
     window.mainFormWatcher = new DirtyForm(mainForm);
+  }
+  // initialize generic file pickers
+  for (let formGroup of document.querySelectorAll(".file-form-group")) {
+    filePickerField(formGroup);
   }
   // initialize thumbnail pickers
   for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
