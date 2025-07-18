@@ -145,6 +145,24 @@ export default class {
       case "link":
         inputGroup.appendChild(makeUrlPickerInput(input));
         break ;
+      case "video":
+        inputGroup.appendChild(
+          makeFilePickerInput(
+            input,
+            i18n.t("admin.video-library"),
+            { mimetype: "video/*" }
+          )
+        );
+        break ;
+      case "audio":
+        inputGroup.appendChlid(
+          makeFilePickerInput(
+            input,
+            i18n.t("admin.audio-library"),
+            { mimetype: "audio/*" }
+          )
+        );
+        break ;
       case "image":
       case "picture":
         inputGroup.appendChild(
