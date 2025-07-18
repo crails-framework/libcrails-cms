@@ -205,6 +205,26 @@ body:not(.custom-admin-style) {
   }
 }
 
+.page-editor-component-picker {
+  ul {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    > li {
+      position: relative;
+      margin: 1em 0.5em 1em 0;
+      padding: 0.2em;
+      cursor: pointer;
+      transition: scale 100ms ease-in;
+      z-index: 1;
+      &:hover {
+        scale: 1.1;
+        z-index: 2;
+      }
+    }
+  }
+}
+
 .ct-ignition {
   display: none;
   //left: 160px !important;

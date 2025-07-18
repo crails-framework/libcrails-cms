@@ -35,6 +35,7 @@ DataTree Cms::Style::as_data() const
 {
   DataTree tree;
 
+  tree["card"] = string(card_classes());
   tree["form"] = string(form_classes());
   tree["searchForm"] = string(search_form_classes());
   tree["formGroup"] = string(form_group_classes());
