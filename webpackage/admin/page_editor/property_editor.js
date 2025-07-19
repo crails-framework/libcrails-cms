@@ -3,6 +3,7 @@ import i18n from "../../i18n.js";
 import FilePicker from "../file_picker.js";
 import UrlPicker from "../url_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
+import VideoInput from "./video_input.js";
 import Style from "../../style.js";
 
 function makeUrlPickerInput(input) {
@@ -172,6 +173,9 @@ export default class {
             { mimetype: "image/*" }
           )
         );
+        break ;
+      case "videos":
+        new VideoInput(input);
         break ;
       case "gallery":
       case "images":

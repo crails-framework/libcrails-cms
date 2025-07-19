@@ -1,4 +1,5 @@
 import ComponentEditor from "./component_editor.js";
+import i18n from "../../i18n.js";
 
 function isGridContainer(component, gridModel) {
   if (component) {
@@ -171,6 +172,17 @@ GridComponentEditor.Model = class {
       else
         i++;
     }
+  }
+  createDisplaySelect() {
+    const select = document.createElement("select");
+    select.dataset.type = 'grid-display-select';
+    for (let key in GridComponentEditor.sizes) {
+      const option = document.createElement("option");
+      option.textContent = i18n.t(`admin.page-editor.action.display-sizes.${key}`);
+      option.value = GridComponentEditor.sizes[key];
+      select.appendChild(option);
+    }
+    return select;
   }
 };
 

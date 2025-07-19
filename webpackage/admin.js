@@ -42,6 +42,7 @@ import GridComponentEditor from "./admin/page_editor/grid_component_editor.js";
 import SliderComponentEditor from "./admin/page_editor/slider_component_editor.js";
 import BackgroundComponentEditor from "./admin/page_editor/background_component_editor.js";
 import ImageComponentEditor from "./admin/page_editor/image_component_editor.js";
+import VideoComponentEditor from "./admin/page_editor/video_component_editor.js";
 import ListComponentEditor from "./admin/page_editor/list_component_editor.js";
 import InjectedComponentEditor from "./admin/page_editor/injected_component_editor.js";
 import SocialComponentEditor from "./admin/page_editor/social_footer_component_editor.js";
@@ -59,6 +60,7 @@ window.PageEditor = {
   "SliderComponentEditor": SliderComponentEditor,
   "BackgroundComponentEditor": BackgroundComponentEditor,
   "ImageComponentEditor": ImageComponentEditor,
+  "VideoComponentEditor": VideoComponentEditor,
   "ListComponentEditor": ListComponentEditor,
   "InjectedComponentEditor": InjectedComponentEditor,
   "SocialComponentEditor": SocialComponentEditor,

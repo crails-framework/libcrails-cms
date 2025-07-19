@@ -1,7 +1,7 @@
 import Style from "../../style.js";
 import FilePicker from "../file_picker.js";
 import SortableTable from "../sortable_table.js";
-import {setActionInnerHTML} from "./controls.js";
+import GridComponentEditor from "./grid_component_editor.js";
 
 function makeRowControls(handle, file, row, column) {
   const upButton = document.createElement("button");
@@ -20,43 +20,42 @@ function makeRowControls(handle, file, row, column) {
 }
 
 function makeRow(handle, file) {
+  const gridModel = GridComponentEditor.model;
   const row = document.createElement("tr");
   const dragColumn = document.createElement("td");
   const nameColumn = document.createElement("td");
-  const previewColumn = document.createElement("td");
+  const displayColumn = document.createElement("td");
+  const mimeColumn = document.createElement("td");
   const controlsColumn = document.createElement("td");
-  const preview = document.createElement("img");
 
-  preview.src = file.miniature_url;
   nameColumn.textContent = file.name;
+  mimeColumn.textContent = file.mimetype;
   dragColumn.innerHTML = '<span class="drag-handle"></span>';
   makeRowControls(handle, file, row, controlsColumn);
-  previewColumn.appendChild(preview);
+  displayColumn.appendChild(gridModel.createDisplaySelect());
   row.appendChild(dragColumn);
-  row.appendChild(previewColumn);
+  row.appendChild(displayColumn);
+  row.appendChild(mimeColumn);
   row.appendChild(nameColumn);
   row.appendChild(controlsColumn);
   row.dataset.type = "file";
-  row.$file = file;
+  row.$url = file.url;
   return row;
-}
-
-function makeAppendButton(handle) {
-  const button = document.createElement("button");
-
-  Style.apply("button", button);
-  setActionInnerHTML(button, "add");
-  button.addEventListener("click", handle.pick.bind(handle));
-  return button;
 }
 
 function updateValue(handle) {
   const input = handle.input;
-  const rows = handle.tbody.querySelectorAll("tr[data-type='file']");
+  const rows = handle.tbody.querySelectorall("tr[data-type='file']");
   const array = [];
 
-  for (let row of rows)
-    array.push(row.$file);
+  for (let row of rows) {
+    const displaySelect = row.querySelector("[data-type='grid-display.select']");
+    array.push({
+      url: row.$url,
+      mimetype: row.querySelector("td[data-type='mimetype']").textContent,
+      display: displaySelect.options[displaySelect.selectedIndex].value
+    });
+  }
   input.value = JSON.stringify(array);
 }
 
@@ -68,7 +67,7 @@ function loadValue(handle) {
       value.forEach(handle.addFile.bind(handle));
     }
   } catch (err) {
-    console.log("Failed to load multiple-picture-input value:", err);
+    console.log("Failed to load video-input value:", err);
     console.log(handle.input.value);
   }
 }
@@ -81,13 +80,13 @@ export default class {
     this.table = document.createElement("table");
     this.tbody = document.createElement("tbody");
     this.table.appendChild(this.tbody);
-    this.table.classList.add("multiple-picture-input");
+    this.table.classList.add("video-input");
     this.table.dataset.dragHandle = "drag-handle";
     this.sortableTable = new SortableTable(this.table);
     this.sortableTable.onSwappedRows = this.onSwappedRows.bind(this);
     this.filePicker = filePicker || (new FilePicker({
-      title: i18n.t("admin.image-library"),
-      mimetype: "image/*"
+      title: i18n.t("admin.video-library"),
+      mimetype: "video/*"
     }));
     input.type = "hidden";
     input.parentElement.insertBefore(addButton, input);
