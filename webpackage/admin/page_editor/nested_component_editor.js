@@ -135,19 +135,28 @@ export default class NestedComponentEditor extends ComponentEditor {
     let anchors = [];
 
     this.components.forEach(child => {
+      if (typeof child.componentTypes == "object") {
+        anchors.push({
+          parent: this,
+          container: this.container,
+          component: child,
+          newContext: child
+        });
+      }
       anchors.push({
-        parent:      this,
-        container:   this.container,
-        component:   child,
-        nextSibling: child.root
+        parent:          this,
+        container:       this.container,
+        component:       child,
+        previousSibling: child.root.previousElementSibling,
+        nextSibling:     child.root
       });
-      anchors = anchors.concat(child.componentAnchors());
     });
     anchors.push({
-      parent: this,
-      container: this.container,
-      component: this,
-      nextSibling: this.lastAnchor
+      parent:          this,
+      container:       this.container,
+      component:       this,
+      previousSibling: this.lastComponentElement,
+      nextSibling:     this.lastAnchor
     });
     return anchors;
   }

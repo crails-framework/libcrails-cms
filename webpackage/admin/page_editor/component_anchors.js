@@ -1,9 +1,10 @@
 import AddAction from "./add_action.js";
 import InsertAction from "./insert_action.js";
+import OpenAction from "./open_anchor_action.js";
 import Funnel from "../funnel.js";
 
 function areSameAnchors(a, b) {
-  return a.container === b.container && a.nextSibling === b.nextSibling;
+  return a.container === b.container && a.nextSibling === b.nextSibling && a.newContext == b.newContext;
 }
 
 function removeDuplicateAnchors(result) {
@@ -24,7 +25,10 @@ function anchorPosition(anchor, iframe) {
   const sibling = anchor.nextSibling;
   let rect;
 
-  if (sibling) {
+  if (anchor.newContext) {
+    rect = anchor.newContext.container.getBoundingClientRect();
+    return { y: rect.y + rect.height / 2, x: rect.x + rect.width / 2 };
+  } else if (sibling) {
     rect = sibling.getBoundingClientRect();
     return { x: rect.x, y: rect.y };
   }
@@ -57,14 +61,14 @@ export default class {
     this.container.addEventListener("mousewheel", this.containerScrolled.bind(this));
     this.component = component;
     this.iframe.contentWindow.addEventListener("scroll", this.scheduleAnchorsUpdate.bind(this));
-    //this.iframe.contentWindow.addEventListener("resize", this.scheduleAnchorsUpdate.bind(this));
+    this.iframe.contentWindow.addEventListener("resize", this.scheduleAnchorsUpdate.bind(this));
     this.iframe.parentElement.appendChild(this.container);
     this.disable();
   }
 
   get anchors() {
     return removeDuplicateAnchors(
-      this.component.componentAnchors()
+      (this.context || this.component).componentAnchors()
     );
   }
 
@@ -79,6 +83,7 @@ export default class {
   enable(mode = 'add') {
     this.container.style.display = "block";
     this.actionType = mode == 'add' ? AddAction : InsertAction;
+    this.context = mode == 'add' ? this.component : this.target.parent;
     this.scheduleAnchorsUpdate();
   }
 
@@ -99,14 +104,26 @@ export default class {
     this.anchorFunnel.trigger(this.updateAnchors.bind(this));
   }
 
+  changeContext(context) {
+    this.context = context;
+    this.scheduleAnchorsUpdate();
+  }
+
+  actionForAnchor(anchor) {
+    if (anchor.newContext)
+      return OpenAction(anchor, this.target);
+    return this.actionType(anchor, this.target);
+  }
+
   updateAnchors() {
+    this.$actions = [];
     if (this.enabled) {
       const layout = this.component.layout;
       this.container.classList.remove("loading");
       this.clear();
       this.anchors.forEach(anchor => {
         if (!this.target || isValidAnchorFor(this.target, anchor)) {
-          const action = this.actionType(anchor, this.target);
+          const action = this.actionForAnchor(anchor);
           const position = anchorPosition(anchor, this.iframe);
 
           Style.apply("button", action.label);
@@ -114,9 +131,12 @@ export default class {
           action.root.style.left = `${position.x}px`;
           if (position.x == 0)
             action.root.style.left = "50%";
-          if (anchor.container === layout.container && !layout.singleLevelLayout)
+          if (anchor.newContext)
+            action.root.classList.add("context-anchor");
+          else if (anchor.container === layout.container && !layout.singleLevelLayout)
             action.root.classList.add("layout-anchor");
           this.container.appendChild(action.root);
+          this.$actions.push({ action: action, anchor: anchor });
         }
       });
       if (typeof crailscms_on_content_loaded == "function")

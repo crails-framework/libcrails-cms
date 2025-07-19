@@ -24,6 +24,8 @@ export class Action {
     this.label = document.createElement("a");
     Style.apply("menuLink", this.label);
     this.label.addEventListener("click", this.onClicked.bind(this));
+    this.label.addEventListener("mouseenter", this.onHovered.bind(this, true));
+    this.label.addEventListener("mouseleave", this.onHovered.bind(this, false));
     this.root.appendChild(this.label);
     this.callback = callback;
     setActionInnerHTML(this.label, name);
@@ -36,11 +38,21 @@ export class Action {
     return false;
   }
 
+  onHovered(state) {
+    if (typeof this.hoverCallback == "function")
+      this.hoverCallback(state, this);
+  }
+
   withText(text) {
     if (this.label.dataset.tooltip)
       this.label.dataset.tooltip = text;
     else
       this.label.textContent = text;
+    return this;
+  }
+
+  withHoverCallback(callback) {
+    this.hoverCallback = callback;
     return this;
   }
 }
