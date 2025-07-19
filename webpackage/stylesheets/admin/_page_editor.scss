@@ -218,9 +218,17 @@ body:not(.custom-admin-style) {
       cursor: pointer;
       transition: scale 100ms ease-in;
       z-index: 1;
+      &.active {
+        background-color: #4CAF50;
+        color: #FFF;
+      }
       &:hover {
         scale: 1.1;
         z-index: 2;
+      }
+      > .title {
+        font-size: 1.2em;
+        font-weight: bold;
       }
     }
   }
