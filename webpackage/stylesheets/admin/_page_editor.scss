@@ -42,6 +42,7 @@ nav.cms-sticky-controls {
 }
 
 $cms-page-editor-toolbar-width: 300px;
+$cms-page-editor-toolbar-height: 100px;
 
 body.cms-page-editor-active {
   position: absolute;
@@ -82,13 +83,13 @@ body.cms-page-editor-active {
   &.cms-page-editor-horizontal {
     .cms-page-editor {
       left: 0;
-      top: $cms-page-editor-toolbar-width;
-      height: calc(100% - #{$cms-page-editor-toolbar-width}) !important;
+      top: $cms-page-editor-toolbar-height;
+      height: calc(100% - #{$cms-page-editor-toolbar-height}) !important;
     }
     .cms-page-editor-toolbar {
       right: 0;
       transition: height 250ms ease-in-out;
-      height: $cms-page-editor-toolbar-width;
+      height: $cms-page-editor-toolbar-height;
       nav:nth-of-type(2), .component-menu {
         display: inline-block !important;
         width: 50%;
@@ -96,7 +97,7 @@ body.cms-page-editor-active {
       }
       .toolbar-controls {
         transition: height 250ms ease-in-out;
-        height: 228px;
+        height: calc(#{$cms-page-editor-toolbar-height - 72px});
       }
       &:hover {
         height: 441px;

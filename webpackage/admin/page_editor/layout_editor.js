@@ -99,11 +99,20 @@ export default class extends NestedComponentEditor {
     return this.iframe.contentWindow;
   }
 
+  get defaultPageEditorLayout() {
+    return localStorage.getItem("cms-page-editor-layout") || "vertical";
+  }
+
+  set defaultPageEditorLayout(value) {
+    localStorage.setItem("cms-page-editor-layout", value);
+  }
+
   updatePageEditorLayout(value) {
     const classList = document.body.classList;
     classList.remove(`cms-page-editor-${this.pageEditorLayout}`);
     classList.add(`cms-page-editor-${value}`);
     this.pageEditorLayout = value;
+    this.defaultPageEditorLayout = value;
   }
 
   isActive() {
@@ -119,7 +128,7 @@ export default class extends NestedComponentEditor {
       return ;
     classList[method](className);
     if (value) {
-      this.updatePageEditorLayout("vertical");
+      this.updatePageEditorLayout(this.defaultPageEditorLayout);
       this.contentEditor.start();
       this.contentEditor.toolbox().unmount();
       this.ctWatcher.watch();
