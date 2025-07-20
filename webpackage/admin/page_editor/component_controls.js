@@ -1,13 +1,12 @@
 import {ControlMenu, Action} from "./controls.js";
-import PropertyEditor from "./property_editor.js";
 import i18n from "../../i18n.js";
 import {ComponentRemovalAction, ComponentSwapAction} from "./actions.js";
 
 export default class extends ControlMenu {
-  constructor(componentEditor) {
+  constructor(component) {
     super();
-    this.componentEditor = componentEditor;
-    this.name = componentEditor.componentName;
+    this.componentEditor = component;
+    this.name = component.componentName;
   }
 
   get hasProperties() {

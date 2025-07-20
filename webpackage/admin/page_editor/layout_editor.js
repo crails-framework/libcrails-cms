@@ -33,9 +33,11 @@ function keyUpManager(pageEditor, event) {
           pageEditor.startComponentAdder();
           return ;
         case 77: // M
-          pageEditor.anchors.target = pageEditor.toolbar.currentComponent;
-          pageEditor.anchors.enable('insert');
-          event.preventDefault();
+          if (pageEditor.toolbar.currentComponent.root) {
+            pageEditor.anchors.target = pageEditor.toolbar.currentComponent;
+            pageEditor.anchors.enable('insert');
+            event.preventDefault();
+          }
           return ;
       }
     } else if (event.ctrlKey) {

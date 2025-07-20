@@ -210,10 +210,6 @@ export default class {
       content.appendChild(formGroup);
       this.inputs[property] = input;
     }
-    component.layout.toolbar.setControls(content);
-    if (typeof crailscms_on_content_loaded == "function")
-      crailscms_on_content_loaded(content);
-    this.scheduleAutoUpdate();
   }
 
   scheduleAutoUpdate() {

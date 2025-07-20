@@ -39,6 +39,13 @@ function swapEditorLayoutAction(pageEditor) {
   return action;
 }
 
+function layoutSettingsMenu(pageEditor) {
+  const action = new Action("settings", function() {
+    pageEditor.toolbar.setActiveComponent(pageEditor.settingsComponent);
+  });
+  return action;
+}
+
 function createMainMenu(pageEditor) {
   const menu = new ControlMenu();
   menu.name = "layout";
@@ -47,6 +54,8 @@ function createMainMenu(pageEditor) {
   }));
   menu.addAction(displaySizeAction(pageEditor));
   menu.addAction(swapEditorLayoutAction(pageEditor));
+  if (pageEditor.settingsComponent)
+    menu.addAction(layoutSettingsMenu(pageEditor));
   menu.addAction(new Action("exit", () => {
     pageEditor.setEditorActive(false);
   }));
@@ -121,7 +130,10 @@ class Toolbar {
     if (this.currentComponent == component)
       return ;
     if (this.currentComponent) {
-      delete this.currentComponent.root.dataset.cmsActive;
+      if (this.currentComponent.root)
+        delete this.currentComponent.root.dataset.cmsActive;
+      if (this.currentComponent.customEditor)
+        this.componentMenuWrapper.removeChild(this.currentComponent.customEditor);
       if (typeof crailscms_on_content_unload == "function") {
         crailscms_on_content_unload(this.crumbs);
         crailscms_on_content_unload(this.componentMenuWrapper);
@@ -130,13 +142,22 @@ class Toolbar {
       this.componentMenuWrapper.innerHTML = "";
     }
     if (component) {
-      component.root.dataset.cmsActive = 1;
       this.currentComponent = component;
       this.propertyEditor = new PropertyEditor(component);
-      this.crumbs.appendChild(makeComponentCrumbs(this, component));
-      menu = new ComponentControls(component);
-      this.componentMenuWrapper.appendChild(menu.root);
-      menu.initializeActions();
+      this.setControls(this.propertyEditor.content);
+      this.propertyEditor.scheduleAutoUpdate();
+      if (typeof crailscms_on_content_loaded == "function")
+        crailscms_on_content_loaded(this.propertyEditor.content);
+      if (component.root) {
+        component.root.dataset.cmsActive = 1;
+        this.crumbs.appendChild(makeComponentCrumbs(this, component));
+        menu = new ComponentControls(component);
+        this.componentMenuWrapper.appendChild(menu.root);
+      }
+      if (component.customEditor)
+        this.componentMenuWrapper.appendChild(component.customEditor);
+      if (menu)
+        menu.initializeActions();
     }
   }
 
