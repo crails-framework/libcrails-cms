@@ -136,18 +136,20 @@ function initialize(event) {
   if (mainForm) {
     window.mainFormWatcher = new DirtyForm(mainForm);
   }
-  // initialize generic file pickers
-  for (let formGroup of document.querySelectorAll(".file-form-group")) {
-    filePickerField(formGroup);
-  }
-  // initialize thumbnail pickers
-  for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
-    imagePickerField(formGroup, "miniature_url");
-  }
-  // initialize audio pickers
-  for (let formGroup of document.querySelectorAll(".audio-form-group")) {
-    audioPickerField(formGroup);
-  }
+  Promise.all([Style.ready, i18n.ready]).then(function() {
+    // initialize generic file pickers
+    for (let formGroup of document.querySelectorAll(".file-form-group")) {
+      filePickerField(formGroup);
+    }
+    // initialize thumbnail pickers
+    for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
+      imagePickerField(formGroup, "miniature_url");
+    }
+    // initialize audio pickers
+    for (let formGroup of document.querySelectorAll(".audio-form-group")) {
+      audioPickerField(formGroup);
+    }
+  });
   // initialize tomSelect
   createSelectField("#tagPicker");
   createSelectField("#userGroupPicker");

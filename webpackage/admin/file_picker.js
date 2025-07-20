@@ -38,14 +38,21 @@ export default class extends CmsDialog {
     this.plugin = plugin;
     this.root.id = "cms-file-picker";
     this.popup.classList.add("pure-g");
-    Promise.all([i18n.ready, Style.ready]).then(() => {
+    this.readyToRender.then(() => {
       this.fetch();
     });
   }
 
+  get readyToRender() {
+    return Promise.all([i18n.ready, Style.ready]);
+  }
+
   set title(value) {
     const element = this.popup.querySelector(".popup-title");
-    element.textContent = this.plugin.title = value;
+
+    this.plugin.title = value;
+    if (element)
+      element.textContent = value;
   }
 
   fetch(params = {}) {
@@ -84,6 +91,7 @@ export default class extends CmsDialog {
 
     this.popup.innerHTML = "";
     Style.apply("modalTitle", title);
+    title.classList.add("popup-title");
     title.classList.add("pure-u-3-5");
     title.textContent = this.plugin.title;
     this.popup.appendChild(title);
