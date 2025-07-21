@@ -35,6 +35,7 @@ import i18n from "./i18n.js";
 window.i18n = i18n;
 
 import LayoutEditor from "./admin/page_editor/layout_editor.js";
+import SettingsComponent from "./admin/page_editor/settings_component.js";
 import ComponentEditor from "./admin/page_editor/component_editor.js";
 import NestedComponentEditor from "./admin/page_editor/nested_component_editor.js";
 import FooterComponentEditor from "./admin/page_editor/footer_component_editor.js";
@@ -53,6 +54,7 @@ import DefaultControlMenu from "./admin/page_editor/component_controls.js";
 window.PageEditor = {
   "create": CreatePageEditor,
   "LayoutEditor": LayoutEditor,
+  "SettingsComponent": SettingsComponent,
   "ComponentEditor": ComponentEditor,
   "NestedComponentEditor": NestedComponentEditor,
   "FooterComponentEditor": FooterComponentEditor,
