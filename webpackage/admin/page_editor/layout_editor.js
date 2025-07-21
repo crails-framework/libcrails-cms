@@ -64,6 +64,14 @@ function keyUpManager(pageEditor, event) {
   }
 }
 
+function clearContentToolsFocus(root) {
+  const className = "ce-element--focused";
+  Array.from(root.querySelectorAll('.' + className)).forEach(element => {
+    element.classList.remove(className);
+    element.removeAttribute("contenteditable");
+  });
+}
+
 import {ContentToolsWatcher} from "./content_tools/history.js";
 
 export default class extends NestedComponentEditor {
@@ -140,6 +148,7 @@ export default class extends NestedComponentEditor {
       this.toolbar.setActiveComponent(null);
       this.anchors.disable();
       this.contentEditor.stop(true);
+      clearContentToolsFocus(this.document.body);
     }
   }
 
