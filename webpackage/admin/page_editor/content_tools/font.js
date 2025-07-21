@@ -25,11 +25,13 @@ function makeFormGroup(name, input) {
 }
 
 function makeFontFamilyInput(dialog) {
+  if (!PageEditor.fonts?.length) return document.createElement("span");
   const input = document.createElement("select");
   const emptyOption = document.createElement("option");
   let selectedOption;
 
   dialog.fontInput = input;
+  emptyOption.textContent = i18n.t("admin.page-editor.font-default");
   input.appendChild(emptyOption);
   (PageEditor.fonts || []).forEach(font => {
     const option = document.createElement("option");
@@ -59,13 +61,20 @@ function makeFontSizeInput(dialog) {
 
 function makeFontColorInput(dialog) {
   const input = document.createElement("input");
+  const checkbox = document.createElement("input");
+  let wrapper;
 
   dialog.colorInput = input;
+  dialog.colorCheckbox = checkbox;
   input.type = "color";
   input.value = cssRgbToHex(dialog.element.style.color);
   input.addEventListener("change", dialog.updatePreview.bind(dialog));
   Style.apply("button", input);
-  return makeFormGroup("color", input);
+  checkbox.type = "checkbox";
+  checkbox.checked = dialog.element.style.color;
+  wrapper = makeFormGroup("color", input);
+  wrapper.insertBefore(checkbox, input);
+  return wrapper;
 }
 
 class FontDialog extends CmsDialog {
@@ -85,6 +94,7 @@ class FontDialog extends CmsDialog {
     super();
     window.labite = this;
     this.element = element;
+    this.initialStyle = getComputedStyle(this.element);
     this.previewElement = preview;
     this.popup.appendChild(content);
     this.popup.appendChild(controls);
@@ -119,12 +129,29 @@ class FontDialog extends CmsDialog {
 
   updatePreview() {
     this.applyStyleOnElement(this.previewElement);
+    if (!this.selectedFont)
+      this.previewElement.style.fontFamily = this.initialStyle.fontFamily;
   }
 
   applyStyleOnElement(target) {
-    target.style.fontSize   = `${this.sizeInput.value}px`;
-    target.style.color      = this.colorInput.value;
-    target.style.fontFamily = this.fontInput.querySelector(":scope > :checked")?.value
+    const size = parseInt(this.sizeInput.value);
+    const font = this.selectedFont;
+    const hasColor = this.colorCheckbox.checked;
+
+    this.setStyle(target, "fontSize", !isNaN(size) ? size : null);
+    this.setStyle(target, "fontFamily", font ? font : null);
+    this.setStyle(target, "color", hasColor ? this.colorInput.value : null);
+  }
+
+  setStyle(target, property, value) {
+    if (value !== null)
+      target.style[property] = value;
+    else
+      delete target.style[property];
+  }
+
+  get selectedFont() {
+    return this.fontInput ? this.fontInput.querySelector(":scope > :checked")?.value : '';
   }
 }
 
