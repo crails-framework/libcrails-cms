@@ -2,6 +2,36 @@ import Style from "../../style.js";
 import FilePicker from "../file_picker.js";
 import SortableTable from "../sortable_table.js";
 import GridComponentEditor from "./grid_component_editor.js";
+import {setActionInnerHTML} from "./controls.js";
+
+function updateValue(handle) {
+  const input = handle.input;
+  const rows = handle.tbody.querySelectorAll("tr[data-type='file']");
+  const array = [];
+
+  for (let row of rows) {
+    const displaySelect = row.querySelector("[data-type='grid-display-select']");
+    array.push({
+      url: row.$url,
+      mimetype: row.querySelector("td[data-type='mimetype']").textContent,
+      display: displaySelect.options[displaySelect.selectedIndex].value
+    });
+  }
+  input.value = JSON.stringify(array);
+}
+
+function loadValue(handle) {
+  try {
+    if (handle.input.value) {
+      const value = JSON.parse(handle.input.value);
+
+      value.forEach(handle.addFile.bind(handle));
+    }
+  } catch (err) {
+    console.log("Failed to load video-input value:", err);
+    console.log(handle.input.value);
+  }
+}
 
 function makeRowControls(handle, file, row, column) {
   const upButton = document.createElement("button");
@@ -27,12 +57,15 @@ function makeRow(handle, file) {
   const displayColumn = document.createElement("td");
   const mimeColumn = document.createElement("td");
   const controlsColumn = document.createElement("td");
+  const displaySelect = gridModel.createDisplaySelect();
 
   nameColumn.textContent = file.name;
   mimeColumn.textContent = file.mimetype;
+  mimeColumn.dataset.type = "mimetype";
   dragColumn.innerHTML = '<span class="drag-handle"></span>';
   makeRowControls(handle, file, row, controlsColumn);
-  displayColumn.appendChild(gridModel.createDisplaySelect());
+  displayColumn.style.minWidth = "100px";
+  displayColumn.appendChild(displaySelect);
   row.appendChild(dragColumn);
   row.appendChild(displayColumn);
   row.appendChild(mimeColumn);
@@ -40,36 +73,26 @@ function makeRow(handle, file) {
   row.appendChild(controlsColumn);
   row.dataset.type = "file";
   row.$url = file.url;
+  displaySelect.addEventListener("change", function() {
+    console.log("UPDATED video display settings");
+    updateValue(handle);
+  });
   return row;
 }
 
-function updateValue(handle) {
-  const input = handle.input;
-  const rows = handle.tbody.querySelectorall("tr[data-type='file']");
-  const array = [];
+function makeAppendButton(handle) {
+  const button = document.createElement("button");
 
-  for (let row of rows) {
-    const displaySelect = row.querySelector("[data-type='grid-display.select']");
-    array.push({
-      url: row.$url,
-      mimetype: row.querySelector("td[data-type='mimetype']").textContent,
-      display: displaySelect.options[displaySelect.selectedIndex].value
-    });
-  }
-  input.value = JSON.stringify(array);
+  Style.apply("button", button);
+  setActionInnerHTML(button, "add");
+  button.addEventListener("click", handle.pick.bind(handle));
+  return button;
 }
 
-function loadValue(handle) {
-  try {
-    if (handle.input.value) {
-      const value = JSON.parse(handle.input.value);
-
-      value.forEach(handle.addFile.bind(handle));
-    }
-  } catch (err) {
-    console.log("Failed to load video-input value:", err);
-    console.log(handle.input.value);
-  }
+function isAttachedToDom(element) {
+  while (element && element != document.body)
+    element = element.parentElement;
+  return element == document.body;
 }
 
 export default class {
@@ -100,6 +123,7 @@ export default class {
 
   pick() {
     this.filePicker.plugin = { filePicked: this.addFile.bind(this) };
+    this.filePicker.renderLibrary(this.filePicker.json.files);
     this.filePicker.open();
   }
 
@@ -107,6 +131,8 @@ export default class {
     const row = makeRow(this, file);
     this.tbody.appendChild(row);
     updateValue(this);
+    if (isAttachedToDom(row) && typeof crailscms_on_content_loaded == "function")
+      crailscms_on_content_loaded(row);
   }
 
   moveUp(row) {

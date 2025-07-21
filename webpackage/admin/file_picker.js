@@ -71,6 +71,7 @@ export default class extends CmsDialog {
       this.params = params;
       this.currentPage = params ? (params.page || 1) : 1;
       this.itemsPerPage = 10;
+      this.json = json;
       this.renderLibrary(json.files);
     });
   }
