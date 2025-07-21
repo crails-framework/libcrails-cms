@@ -25,6 +25,10 @@ std::string @mode = "default";
 
 <%= tag("link", {{"rel","stylesheet"},{"href",CrailsCmsAssets::content_tools_css}}) %>
 
+<% for (const auto& stylesheet : cms_layout.get_editor_stylesheets()) do %>
+  <%= tag("link", {{"rel","stylesheet"},{"href",stylesheet}}) %>
+<% end %>
+
 <% for (const auto& javascript : cms_layout.get_editor_javascripts()) do %>
   <%= tag("script", {{"src",javascript}}) %>
 <% end %>
