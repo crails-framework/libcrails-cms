@@ -6,7 +6,7 @@ export default function(anchor, target) {
   const action = new Action("open", function() {
     controller.changeContext(anchor.newContext);
   });
-  const highlightPanel = makeHighlightPanel(anchor.newContext.root);
+  const highlightPanel = makeHighlightPanel(anchor.newContext.container);
 
   action.withHoverCallback(function(hovered) {
     if (hovered)
