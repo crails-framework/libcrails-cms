@@ -62,7 +62,8 @@ function makeFontSizeInput(dialog) {
 function makeFontColorInput(dialog) {
   const input = document.createElement("input");
   const checkbox = document.createElement("input");
-  let wrapper;
+  const wrapper = document.createElement("div");
+  let colorGroup, checkboxGroup;
 
   dialog.colorInput = input;
   dialog.colorCheckbox = checkbox;
@@ -72,8 +73,14 @@ function makeFontColorInput(dialog) {
   Style.apply("button", input);
   checkbox.type = "checkbox";
   checkbox.checked = dialog.element.style.color;
-  wrapper = makeFormGroup("color", input);
-  wrapper.insertBefore(checkbox, input);
+  checkbox.addEventListener("change", function() {
+    input.value = '';
+    dialog.updatePreview();
+  });
+  colorGroup = makeFormGroup("color", input);
+  checkboxGroup = makeFormGroup("withColor", checkbox);
+  wrapper.appendChild(checkboxGroup);
+  wrapper.appendChild(colorGroup);
   return wrapper;
 }
 
@@ -138,7 +145,7 @@ class FontDialog extends CmsDialog {
     const font = this.selectedFont;
     const hasColor = this.colorCheckbox.checked;
 
-    this.setStyle(target, "fontSize", !isNaN(size) ? size : null);
+    this.setStyle(target, "fontSize", !isNaN(size) ? `${size}px` : null);
     this.setStyle(target, "fontFamily", font ? font : null);
     this.setStyle(target, "color", hasColor ? this.colorInput.value : null);
   }
@@ -147,7 +154,7 @@ class FontDialog extends CmsDialog {
     if (value !== null)
       target.style[property] = value;
     else
-      delete target.style[property];
+      target.style[property] = '';
   }
 
   get selectedFont() {
