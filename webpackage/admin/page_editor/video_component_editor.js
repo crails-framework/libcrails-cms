@@ -1,11 +1,14 @@
 import GridComponentEditor from "./grid_component_editor.js";
 
 function setDisplayOnVideoSource(element, data) {
-  const minWidth = this.gridModel.widthFromSize(data.display - 1);
+  const gridModel = GridComponentEditor.model;
+  const maxSize = Object.keys(gridModel.sizes).length - 1;
+  const display = parseInt(data.display);
+  const minWidth = data.display < maxSize ? gridModel.widthFromSize(display) : undefined;
 
   element.media = minWidth === undefined
     ? 'all'
-    : `all and (min-width: ${minWidth})`;
+    : `all and (min-width: ${minWidth}px)`;
   element.dataset.display = data.display;
 }
 
@@ -14,8 +17,9 @@ function createVideoSource(document, data) {
 
   element.src = data.url;
   element.type = data.mimetype;
-  if (source.display)
+  if (data.display !== undefined)
     setDisplayOnVideoSource(element, data);
+  return element;
 }
 
 export default class extends GridComponentEditor() {
@@ -26,14 +30,14 @@ export default class extends GridComponentEditor() {
   }
 
   initializeProperties() {
-    this.properties.sources  = { type: "videos", target: this, attribute: "sources" };
-    this.properties.poster   = { type: "image", target: this.videoElement, attribute: "poster" };
-    this.properties.controls = { type: "bool", targets: this.videoElement, attribute: "controls" };
-    this.properties.autoplay = { type: "bool", targets: this.videoElement, attribute: "autoplay" };
-    this.properties.loop     = { type: "bool", targets: this.videoElement, attribute: "loop" };
-    this.properties.muted    = { type: "bool", targets: this.videoElement, attribute: "muted" };
-    this.properties.inline   = { type: "bool", targets: this.videoElement, attribute: "playsInline" };
-    this.properties.noPnP    = { type: "bool", targets: this.videoElement, attribute: "disablePictureInPicture" };
+    this.properties.sources  = { type: "videos", target: this,       attribute: "sources" };
+    this.properties.poster   = { type: "image",  target: this.video, attribute: "poster" };
+    this.properties.controls = { type: "bool",   target: this.video, attribute: "controls" };
+    this.properties.autoplay = { type: "bool",   target: this.video, attribute: "autoplay" };
+    this.properties.loop     = { type: "bool",   target: this.video, attribute: "loop" };
+    this.properties.muted    = { type: "bool",   target: this,       attribute: "muted" };
+    this.properties.inline   = { type: "bool",   target: this.video, attribute: "playsInline" };
+    this.properties.noPnP    = { type: "bool",   target: this.video, attribute: "disablePictureInPicture" };
     super.initializeProperties();
   }
 
@@ -43,25 +47,38 @@ export default class extends GridComponentEditor() {
   }
 
   set sources(value) {
-    this.root.innerHTML = "";
+    this.video.innerHTML = "";
+    value = JSON.parse(value);
     value.forEach(data => {
-      this.root.appendChild(
+      this.video.appendChild(
         createVideoSource(this.document, data)
       );
     });
   }
 
   get sources() {
-    const elements = this.root.querySelectorAll("source");
+    const elements = this.video.querySelectorAll("source");
     const result = [];
 
     for (let element of elements) {
       const data = {
         url: element.src,
         mimetype: element.type,
-        display: parseInt(element.dataset.display)
+        display: element.dataset.display
       };
+      result.push(data);
     }
-    return result;
+    return JSON.stringify(result);
+  }
+
+  get muted() {
+    return this.video.hasAttribute("muted");
+  }
+
+  set muted(value) {
+    if (value)
+      this.video.setAttribute("muted", "");
+    else
+      this.video.removeAttribute("muted");
   }
 }
