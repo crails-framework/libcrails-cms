@@ -14,4 +14,8 @@ export default class extends ComponentEditor {
   get document() {
     return this.layout.document;
   }
+
+  get componentType() {
+    return "settings";
+  }
 }

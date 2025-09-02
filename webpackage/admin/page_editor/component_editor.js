@@ -59,6 +59,10 @@ export default class {
     return this.window.eval("Cms").ContentTools.EditorApp.get();
   }
 
+  get translationGroup() {
+    return this.componentType;
+  }
+
   get componentType() {
     return this.root.dataset.component;
   }

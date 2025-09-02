@@ -135,7 +135,7 @@ export default class {
       formGroup.classList.add(`property-${property}`);
       label.dataset.type = component.properties[property].type;
       label.textContent = i18n.tt(
-        `admin.page-editor.properties.${component.component_type}.${property}`,
+        `admin.page-editor.properties.${component.translationGroup}.${property}`,
         `admin.page-editor.properties.${property}`
       );
       input.value = value;

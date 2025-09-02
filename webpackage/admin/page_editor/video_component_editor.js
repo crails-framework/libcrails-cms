@@ -29,6 +29,10 @@ export default class extends GridComponentEditor() {
     super(parent, element, components);
   }
 
+  get translationGroup() {
+    return "video";
+  }
+
   initializeProperties() {
     this.properties.sources  = { type: "videos", target: this,       attribute: "sources" };
     this.properties.poster   = { type: "image",  target: this.video, attribute: "poster" };
