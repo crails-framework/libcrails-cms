@@ -168,8 +168,11 @@ export default class NestedComponentEditor extends ComponentEditor {
 
     owned.forEach(element => list.push(element));
     this.components.forEach(component => {
-      for (let element of component.collectEditableElements())
-        list.push(element);
+      for (let element of component.collectEditableElements()) {
+        if (list.indexOf(element) <= 0) {
+          list.push(element);
+        }
+      }
     });
    return list;
   }
