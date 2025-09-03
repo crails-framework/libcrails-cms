@@ -173,13 +173,15 @@ GridComponentEditor.Model = class {
         i++;
     }
   }
-  createDisplaySelect() {
+  createDisplaySelect(value) {
     const select = document.createElement("select");
     select.dataset.type = 'grid-display-select';
     for (let key in GridComponentEditor.sizes) {
       const option = document.createElement("option");
       option.textContent = i18n.t(`admin.page-editor.action.display-sizes.${key}`);
       option.value = GridComponentEditor.sizes[key];
+      if (option.value == value)
+        option.selected = true;
       select.appendChild(option);
     }
     return select;

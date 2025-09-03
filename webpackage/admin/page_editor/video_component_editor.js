@@ -15,6 +15,7 @@ function setDisplayOnVideoSource(element, data) {
 function createVideoSource(document, data) {
   const element = document.createElement("source");
 
+  element.dataset.name = data.name;
   element.src = data.url;
   element.type = data.mimetype;
   if (data.display !== undefined)
@@ -66,6 +67,7 @@ export default class extends GridComponentEditor() {
 
     for (let element of elements) {
       const data = {
+        name: element.dataset.name,
         url: element.src,
         mimetype: element.type,
         display: element.dataset.display

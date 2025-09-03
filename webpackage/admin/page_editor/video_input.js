@@ -3,20 +3,134 @@ import FilePicker from "../file_picker.js";
 import SortableTable from "../sortable_table.js";
 import GridComponentEditor from "./grid_component_editor.js";
 import {setActionInnerHTML} from "./controls.js";
+import Dialog from "../dialog.js";
+
+class SourceDialog extends Dialog {
+  constructor(handle, file, row) {
+    super();
+    this.handle = handle;
+    this.file = file;
+    this.row = row;
+  }
+
+  open() {
+    super.open();
+    if (!this.rendered) {
+      this.render();
+      if (typeof crailscms_on_content_loaded == "function")
+        crailscms_on_content_loaded(this.popup);
+    }
+  }
+
+  renderPreview() {
+    const video = document.createElement("video");
+    const source = document.createElement("source");
+
+    video.style.margin = "0 auto";
+    video.style.maxWidth = "100%";
+    video.style.maxHeight = "300px";
+    video.controls = true;
+    source.type = this.file.mimetype;
+    source.src = this.file.url;
+    video.appendChild(source);
+    return video;
+  }
+
+  render() {
+    const gridModel = GridComponentEditor.model;
+    const displaySelect = gridModel.createDisplaySelect();
+    const form = document.createElement("div");
+    const title = document.createElement("div");
+    const confirmButton = document.createElement("button");
+    const displayInput = gridModel.createDisplaySelect(this.file.display);
+    const mimetypeInput = document.createElement("input");
+    const nameInput = document.createElement("input");
+    const controls = document.createElement("div");
+    const preview = this.renderPreview();
+
+    title.textContent = i18n.t("admin.page-editor.video-source");
+    confirmButton.textContent = i18n.t("admin.confirm");
+    Style.apply("modalTitle", title);
+    Style.apply("modalControls", controls);
+    Style.apply("form", form);
+    Style.apply("confirmButton", confirmButton);
+
+    {
+      const formGroup = document.createElement("div");
+      const label = document.createElement("label");
+      const input = nameInput;
+      label.textContent = i18n.t("form.label.name");
+      input.value = this.file.name;
+      if (this.file.name)
+        input.classList.add("active");
+      Style.apply("formGroup", formGroup);
+      formGroup.appendChild(label);
+      formGroup.appendChild(input);
+      form.appendChild(formGroup);
+    }
+
+    {
+      const formGroup = document.createElement("div");
+      const label = document.createElement("label");
+      const input = displayInput;
+      label.textContent = i18n.t("admin.page-editor.action.display-size");
+      Style.apply("formGroup", formGroup);
+      formGroup.appendChild(label);
+      formGroup.appendChild(input);
+      form.appendChild(formGroup);
+    }
+
+    {
+      const formGroup = document.createElement("div");
+      const label = document.createElement("label");
+      const input = mimetypeInput;
+      label.textContent = i18n.t("admin.mimetype");
+      input.value = this.file.mimetype;
+      if (this.file.mimetype)
+        input.classList.add("active");
+      Style.apply("formGroup", formGroup);
+      formGroup.appendChild(label);
+      formGroup.appendChild(input);
+      form.appendChild(formGroup);
+    }
+
+    confirmButton.addEventListener("click", event => {
+      event.preventDefault();
+      this.file.name = nameInput.value;
+      this.file.mimetype = mimetypeInput.value;
+      this.file.display = displayInput.value;
+      this.onUpdated();
+      this.close();
+      this.row.querySelector("td.filename").textContent = this.file.name;
+      this.updatePreview();
+    });
+
+    controls.appendChild(confirmButton);
+    this.popup.appendChild(title);
+    this.popup.appendChild(form);
+    this.popup.appendChild(preview);
+    this.popup.appendChild(controls);
+    this.preview = preview;
+    this.rendered = true;
+  }
+
+  updatePreview() {
+    const newPreview = this.renderPreview();
+    this.popup.insertBefore(newPreview, this.preview);
+    this.popup.removeChild(this.preview);
+    this.preview = newPreview;
+  }
+
+  onUpdated() {}
+}
 
 function updateValue(handle) {
   const input = handle.input;
   const rows = handle.tbody.querySelectorAll("tr[data-type='file']");
   const array = [];
 
-  for (let row of rows) {
-    const displaySelect = row.querySelector("[data-type='grid-display-select']");
-    array.push({
-      url: row.$url,
-      mimetype: row.querySelector("td[data-type='mimetype']").textContent,
-      display: displaySelect.options[displaySelect.selectedIndex].value
-    });
-  }
+  for (let row of rows)
+    array.push(row.$file);
   input.value = JSON.stringify(array);
 }
 
@@ -34,12 +148,24 @@ function loadValue(handle) {
 }
 
 function makeRowControls(handle, file, row, column) {
-  const upButton = document.createElement("button");
-  const downButton = document.createElement("button");
+  const editDialog = new SourceDialog(handle, file, row);
+  const editButton = document.createElement("button");
   const removeButton = document.createElement("button");
 
   Style.ready.then(function() {
+    Style.apply("button", editButton);
     Style.apply("dangerButton", removeButton);
+    Style.apply("smallButton", editButton, removeButton);
+    Style.apply("buttonGroup", column);
+  });
+  editDialog.onUpdated = function() {
+    updateValue(handle);
+  };
+  setActionInnerHTML(editButton, "edit");
+  column.appendChild(editButton);
+  editButton.addEventListener("click", event => {
+    event.preventDefault();
+    editDialog.open();
   });
   setActionInnerHTML(removeButton, "remove");
   column.appendChild(removeButton);
@@ -54,29 +180,18 @@ function makeRow(handle, file) {
   const row = document.createElement("tr");
   const dragColumn = document.createElement("td");
   const nameColumn = document.createElement("td");
-  const displayColumn = document.createElement("td");
-  const mimeColumn = document.createElement("td");
   const controlsColumn = document.createElement("td");
-  const displaySelect = gridModel.createDisplaySelect();
 
-  nameColumn.textContent = file.name;
-  mimeColumn.textContent = file.mimetype;
-  mimeColumn.dataset.type = "mimetype";
+  nameColumn.classList.add("filename");
+  nameColumn.dataset.tooltip = file.name || file.url;
+  nameColumn.textContent = file.name || file.url;
   dragColumn.innerHTML = '<span class="drag-handle"></span>';
   makeRowControls(handle, file, row, controlsColumn);
-  displayColumn.style.minWidth = "100px";
-  displayColumn.appendChild(displaySelect);
   row.appendChild(dragColumn);
-  row.appendChild(displayColumn);
-  row.appendChild(mimeColumn);
   row.appendChild(nameColumn);
   row.appendChild(controlsColumn);
   row.dataset.type = "file";
-  row.$url = file.url;
-  displaySelect.addEventListener("change", function() {
-    console.log("UPDATED video display settings");
-    updateValue(handle);
-  });
+  row.$file = file;
   return row;
 }
 
