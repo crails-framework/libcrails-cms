@@ -158,7 +158,8 @@ function initialize(event) {
   // initialize sortable tables
   SortableRelationshipTable.loadFromElements("table.sortable-relationship");
   // initialize i18n_cms_input
-  window.translatableInputs = initializeTranslatableInputs();
+  if (window.tr_locales != undefined)
+    window.translatableInputs = initializeTranslatableInputs();
 }
 
 document.addEventListener("DOMContentLoaded", initialize);
