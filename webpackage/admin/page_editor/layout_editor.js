@@ -168,10 +168,12 @@ export default class extends NestedComponentEditor {
 
   startComponentAdder() {
     this.anchors.enable();
+    this.toggleToolbox(false);
   }
 
   closeComponentAdder() {
     this.anchors.disable();
+    this.toggleToolbox(true);
   }
 
   save(element) {
