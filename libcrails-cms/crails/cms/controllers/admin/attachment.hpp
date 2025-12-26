@@ -108,11 +108,23 @@ namespace Crails::Cms
       Super::database.save(model);
     }
 
+    virtual std::vector<std::string_view> get_acceptable_audio_formats() const
+    {
+      return std::vector<std::string_view>{"audio/mp3"};
+    }
+
+    virtual std::vector<std::string_view> get_acceptable_video_formats() const
+    {
+      return std::vector<std::string_view>{"video/mpeg", "video/mp4", "video/webm"};
+    }
+
     virtual bool enforce_acceptable_format(Model& model)
     {
-      if (model.get_mimetype().find("audio/") == 0 && model.get_mimetype() != "audio/mp3")
+      auto find = [](const std::vector<std::string_view>& a, const std::string& b) -> bool { return std::find(a.begin(), a.end(), b) != a.end(); };
+
+      if (model.get_mimetype().find("audio/") == 0 && !find(get_acceptable_audio_formats(), model.get_mimetype()))
         start_convert_task<Crails::AudioFile>(Crails::AudioFile::Mp3Format, model);
-      else if (model.get_mimetype().find("video/") == 0 && model.get_mimetype() != "video/mpeg" && model.get_mimetype() != "video/mp4")
+      else if (model.get_mimetype().find("video/") == 0 && !find(get_acceptable_video_formats(), model.get_mimetype()))
         start_convert_task<Crails::VideoFile>(Crails::VideoFile::Mp4Format, model);
       else
         return false;
@@ -122,12 +134,10 @@ namespace Crails::Cms
     template<typename MEDIA_TYPE>
     void start_convert_task(typename MEDIA_TYPE::Format format, const Model& model)
     {
-      logger << Logger::Info << "About to start a new thread. File exists ? " << std::filesystem::exists(MEDIA_TYPE(model.get_resource()).get_filepath()) << Logger::endl;
       Super::start_thread([model, format]()
       {
         logger << Logger::Info << "AdminAttachmentController: converting attachment "
                                << model.get_id() << Logger::endl;
-        logger << Logger::Info << "Start a new thread. File exists ? " << std::filesystem::exists(MEDIA_TYPE(model.get_resource()).get_filepath()) << Logger::endl;
         Model model2(model);
         MEDIA_TYPE source(model.get_resource());
         MEDIA_TYPE target = source.as_format(format);
