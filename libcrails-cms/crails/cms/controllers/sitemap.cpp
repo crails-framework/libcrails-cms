@@ -67,7 +67,7 @@ void Cms::SiteMap::Controller::handle_robots(Crails::Context& context, const str
   auto settings = find_settings();
   string robots_txt;
 
-  robots_txt = "Sitemap: https://" + settings->get_public_url() + '/' + prefix;
+  robots_txt = "Sitemap: https://" + settings->get_public_url() + prefix;
   context.response.set_status_code(HttpStatus::ok);
   context.response.set_body(robots_txt.c_str(), robots_txt.length());
 }
