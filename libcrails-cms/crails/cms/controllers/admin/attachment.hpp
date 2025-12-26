@@ -32,25 +32,35 @@ namespace Crails::Cms
 
     void create()
     {
+      const auto& files = Super::params.get_files();
       DataTree output;
 
       logger << Logger::Debug << "AdminAttachmentController: create has been called" << Logger::endl;
-      for (const auto& file : Super::params.get_files())
+      if (files.size() > 0)
       {
-        Model model;
-        Data file_data = output["files"][std::to_string(model.get_id())];
-
-        if (Super::params["tags"].exists())
+        for (const auto& file : files)
         {
-          TagList tag_list(Super::params["tags"].template as<std::string>());
-          model.set_tags(tag_list.to_vector());
+          Model model;
+          auto file_id = std::to_string(model.get_id());
+          Data file_data = output["files"][file_id];
+
+          if (Super::params["tags"].exists())
+          {
+            TagList tag_list(Super::params["tags"].template as<std::string>());
+            model.set_tags(tag_list.to_vector());
+          }
+          model.edit(file_data);
+          upload_to(model, file);
+          model.merge_data(file_data);
         }
-        model.edit(file_data);
-        upload_to(model, file);
-        model.merge_data(file_data);
+        output["csrf-token"] = Super::session["csrf-token"].template as<std::string>();
+        Super::render(Super::JSON, output);
       }
-      output["csrf-token"] = Super::session["csrf-token"].template as<std::string>();
-      Super::render(Super::JSON, output);
+      else
+      {
+        logger << Logger::Debug << "AdminAttachmentController: no files were sent" << Logger::endl;
+        Super::respond_with(Crails::HttpStatus::bad_request);
+      }
     }
 
     void update()
