@@ -57,7 +57,6 @@ export default function createIFrame(textarea, resources = {}) {
   wrapper.classList.add("cms-page-editor");
   wrapper.appendChild(iframe);
   textarea.parentElement.insertBefore(wrapper, textarea);
-  iframe.contentDocument.body.classList.add("page-editor-frame");
   iframe.wrapper = wrapper;
   iframe.importers = {
     scripts: importScript.bind(this, iframe, resources.javascripts || []),
@@ -67,6 +66,9 @@ export default function createIFrame(textarea, resources = {}) {
   };
   iframe.ready = new Promise(resolve => {
     waitForIframeJavaScript(iframe, resolve);
+  });
+  iframe.ready.then(function() {
+    iframe.contentDocument.body.classList.add("page-editor-frame");
   });
   ["attachments-admin-path", "page-list-path"].forEach(importMetaTag.bind(this, iframe));
   iframe.importers.scripts();
