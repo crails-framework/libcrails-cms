@@ -112,8 +112,9 @@ export default class NestedComponentEditor extends ComponentEditor {
       else if (type == undefined)
         console.warn("unknown component type", typename, "in", this);
       else {
+        let component;
         try {
-          const component = new type(this, element);
+          component = new type(this, element);
           element.$component = component;
           component.componentType = typename;
           component.bindElements();
