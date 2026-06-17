@@ -21,7 +21,7 @@ namespace Crails::Cms
       shared_ptr<Model> model;
       auto query = odb::query<Model>::slug == Super::params["slug"].template as<string>();
 
-      Super::database.find_one(model, query);
+      Super::database.find_one(model, query + "LIMIT 1");
       if (model)
         render_model(*model);
       else
