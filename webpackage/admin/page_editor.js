@@ -23,9 +23,8 @@ function initializeTextArea(textarea, pageEditor) {
 
 export default function(layout, form, fieldName, mode, resources) {
   return Promise.all([i18n.ready, Style.ready]).then(function() {
-    //const element = form.querySelector(".cms-page-editor");
     const textarea = form.querySelector(`textarea[name='${fieldName}']`);
-    const hasFooter = form.querySelector("input[name='page[has_footer]'");
+    const hasFooter = form.querySelector("input[name='page[has_footer]']");
     const iframe = createIFrame(textarea, resources);
     const themeVariables = document.querySelector("#layout-variables");
 

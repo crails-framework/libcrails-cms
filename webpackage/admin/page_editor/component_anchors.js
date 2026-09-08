@@ -2,6 +2,7 @@ import AddAction from "./add_action.js";
 import InsertAction from "./insert_action.js";
 import OpenAction from "./open_anchor_action.js";
 import Funnel from "../funnel.js";
+import Style from "../../style.js";
 
 function areSameAnchors(a, b) {
   return a.container === b.container && a.nextSibling === b.nextSibling && a.newContext == b.newContext;

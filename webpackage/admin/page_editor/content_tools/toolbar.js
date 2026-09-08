@@ -9,7 +9,6 @@ export default function(ContentTools) {
     }
   };
 
-  const callback = ContentTools.ToolboxUI.prototype.mount;
   const ctApp = new MockCtEditor();
   const ctToolbox = new ContentTools.ToolboxUI(ContentTools.DEFAULT_TOOLS);
 

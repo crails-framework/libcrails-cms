@@ -61,7 +61,7 @@ export function getOwnedEditableContent(componentEditor) {
         list.push(candidate);
     }
   }
-  return candidates;
+  return list;
 }
 
 export class ControlMenu extends DefaultControlMenu {

@@ -1,11 +1,11 @@
 import HtmlTextArea from "../html_textarea.js";
 import indent from "indent.js";
 
-let indentSize = 2;
+const indentSize = 2;
 
 function formatHtml(source) {
-  source = source.replace(/<br\s*\/?>i/i, "<br/>\n");
-  source = source.replace(/(<\/[^>]+>)/, "$1\n");
+  source = source.replace(/<br\s*\/?>/gi, "<br/>\n");
+  source = source.replace(/(<\/[^>]+>)/g, "$1\n");
   return indent.indent.html(source, {
     tabString: ' '.repeat(indentSize)
   });

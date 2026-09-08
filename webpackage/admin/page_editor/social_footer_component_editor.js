@@ -11,10 +11,8 @@ export default class extends ComponentEditor {
   }
 
   initializeProperties() {
-    console.log("Initialize social properties", this.socials);
     for (let key in this.socials) {
       const social = this.socials[key];
-      console.log("Initialize social property", key, social);
       this.properties[social.property] = {
         type: "url",
         target: this,

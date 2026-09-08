@@ -2,7 +2,7 @@ import {Action} from "./controls.js";
 import {makeInsertAnchorHighlightPanels} from "./insert_anchor_highlight_panel.js";
 import ComponentTypePicker from "./component_type_picker.js";
 
-function createAddComponentAction(list, anchor, componentEditor, callback) {
+function createAddComponentAction(anchor, componentEditor, callback) {
   const highlightPanel = makeInsertAnchorHighlightPanels(anchor);
   const types = Object.keys(componentEditor.componentTypes);
 
@@ -25,10 +25,10 @@ function createAddComponentAction(list, anchor, componentEditor, callback) {
 }
 
 export default function(anchor) {
-  return createAddComponentAction(this, anchor, anchor.parent, function(componentType) {
+  return createAddComponentAction(anchor, anchor.parent, function(componentType) {
     anchor.parent.addComponent(componentType, anchor.nextSibling).then(component => {
       Cms.PageEditor.Toolbar.setActiveComponent(component);
     });
-    pageEditor.closeComponentAdder();
+    window.pageEditor.closeComponentAdder();
   });
 }

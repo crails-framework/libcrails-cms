@@ -4,6 +4,7 @@ import SortableTable from "../sortable_table.js";
 import GridComponentEditor from "./grid_component_editor.js";
 import {setActionInnerHTML} from "./controls.js";
 import Dialog from "../dialog.js";
+import i18n from "../../i18n.js";
 
 class SourceDialog extends Dialog {
   constructor(handle, file, row) {

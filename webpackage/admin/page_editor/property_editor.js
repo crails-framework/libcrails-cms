@@ -156,7 +156,7 @@ export default class {
         );
         break ;
       case "audio":
-        inputGroup.appendChlid(
+        inputGroup.appendChild(
           makeFilePickerInput(
             input,
             i18n.t("admin.audio-library"),

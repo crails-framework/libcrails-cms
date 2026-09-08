@@ -43,7 +43,7 @@ function keyUpManager(pageEditor, event) {
     } else if (event.ctrlKey) {
       switch (event.keyCode) {
         case 90: // Z
-          if (!this.shiftKey) {
+          if (!event.shiftKey) {
             event.preventDefault();
             pageEditor.history.undo();
             return ;
@@ -85,10 +85,6 @@ export default class extends NestedComponentEditor {
     [document, this.document].forEach(el => {
       el.addEventListener("keyup", keyUpManager.bind(this, this));
       el.addEventListener("keydown", keyDownManager.bind(this, this));
-    });
-    [document, this.document].forEach(el => {
-      el.addEventListener("keydown", (event) => {
-      });
     });
     this.mutationObserver = new MutationObserver(onRootComponentMutation);
     this.anchors = new ComponentAnchors(this);
@@ -147,6 +143,7 @@ export default class extends NestedComponentEditor {
       this.toggleToolbox(false);
       this.toolbar.setActiveComponent(null);
       this.anchors.disable();
+      this.ctWatcher.unwatch();
       this.contentEditor.stop(true);
       clearContentToolsFocus(this.document.body);
     }

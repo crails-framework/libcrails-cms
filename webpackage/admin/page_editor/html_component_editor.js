@@ -6,7 +6,7 @@ import FilePicker from "../file_picker.js";
 import Style from "../../style.js";
 import i18n from "../../i18n.js";
 
-let indentSize = 2;
+const indentSize = 2;
 
 function createActionButton(name, callback) {
   const button = document.createElement("button");
@@ -119,7 +119,7 @@ export default class extends GridComponentEditor() {
 
   insertPicture() {
     new FilePicker({
-      title: Cms.i18n.t("admin.image-library"),
+      title: i18n.t("admin.image-library"),
       mimetype: "image/*",
       filePicked: file => {
         this.htmlEditor.$editor.insert(`<img src="${file.url}" />`);

@@ -15,8 +15,6 @@ export function makeHighlightPanel(root, relativePosition) {
 
 export function makeInsertAnchorHighlightPanels(anchor) {
   const container = document.createElement("div");
-  const afterComponent = anchor.component;
-  const beforeComponent = anchor.component.previousComponent;
 
   if (anchor.previousSibling)
     container.appendChild(makeHighlightPanel(anchor.previousSibling, "after"));

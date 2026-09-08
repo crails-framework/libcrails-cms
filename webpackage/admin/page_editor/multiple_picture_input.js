@@ -1,3 +1,4 @@
+import i18n from "../../i18n.js";
 import Style from "../../style.js";
 import FilePicker from "../file_picker.js";
 import SortableTable from "../sortable_table.js";

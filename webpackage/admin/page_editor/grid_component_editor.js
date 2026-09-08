@@ -116,7 +116,7 @@ GridComponentEditor.Model = class {
       if (sizeData !== null) {
         const key = this.sizeFromMediaName(sizeData.media);
         const value = sizeData.span * this.maxColumns;
-        if (key) { list[key] = value; }
+        if (key !== undefined) { list[key] = value; }
       }
     });
     return list;

@@ -70,7 +70,7 @@ export default class extends Dialog {
 
   onPicked(type) {
     const currentLi = this.popup.querySelector(`li[data-type].active`);
-    const li = this.popup.querySelector(`li[data-type=${type}]`);
+    const li = this.popup.querySelector(`li[data-type="${type}"]`);
     const activeClass = "active";
 
     if (currentLi)

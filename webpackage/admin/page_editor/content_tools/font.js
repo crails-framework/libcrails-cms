@@ -38,8 +38,8 @@ function makeFontFamilyInput(dialog) {
 
     option.value = font;
     option.textContent = font;
-    if (dialog.element.style.fontFamily.match(`^"?${font}"?$`, "i")) {
-      option.checked = true;
+    if (dialog.element.style.fontFamily.match(`^"?${font}"?$/i`)) {
+      option.selected = true;
       selectedOption = option;
     }
     input.appendChild(option);
@@ -72,7 +72,7 @@ function makeFontColorInput(dialog) {
   input.addEventListener("change", dialog.updatePreview.bind(dialog));
   Style.apply("button", input);
   checkbox.type = "checkbox";
-  checkbox.checked = dialog.element.style.color;
+  checkbox.checked = !!dialog.element.style.color;
   checkbox.addEventListener("change", function() {
     input.value = '';
     dialog.updatePreview();
@@ -99,7 +99,6 @@ class FontDialog extends CmsDialog {
     content.appendChild(title);
     controls.appendChild(confirmButton);
     super();
-    window.labite = this;
     this.element = element;
     this.initialStyle = getComputedStyle(this.element);
     this.previewElement = preview;
@@ -186,7 +185,6 @@ export default function(iframe) {
     apply(element, selection, callback) {
       const dialog = new FontDialog(element.domElement());
 
-      window.lacrosse = element;
       dialog.onAccepted = function() {
         element.attr("style", element.domElement().attributes.style.value);
         callback(true);

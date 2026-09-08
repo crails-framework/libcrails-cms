@@ -10,7 +10,7 @@ function updateBackgroundTint(component, overlaySelector) {
       style.innerHTML = "";
     }
   } else {
-    console.err("Did not find the background style element for", component.id);
+    console.error("Did not find the background style element for", component.id);
   }
 }
 

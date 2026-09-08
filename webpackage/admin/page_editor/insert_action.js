@@ -12,7 +12,6 @@ export default function(anchor, target) {
     );
 
     action.run();
-    //controller.disable();
     controller.scheduleAnchorsUpdate();
   }).withHoverCallback(function(hovered, action) {
     if (hovered)

@@ -39,6 +39,15 @@ export class ContentToolsWatcher {
     }
   }
 
+  unwatch() {
+    this.layout.components.forEach(function(component) {
+      getOwnedEditableContent(component).forEach(function(editable) {
+        delete editable.$snapshot;
+        delete editable.$snapshotPending;
+      });
+    });
+  }
+
   watchComponent(component) {
     const editables = getOwnedEditableContent(component);
 

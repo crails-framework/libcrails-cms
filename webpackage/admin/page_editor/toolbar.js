@@ -1,4 +1,5 @@
 import i18n from "../../i18n.js";
+import Style from "../../style.js";
 import {Action, MetaAction, ControlMenu} from "./controls.js";
 import PropertyEditor from "./property_editor.js";
 import GridComponentEditor from "./grid_component_editor.js";
@@ -141,8 +142,8 @@ class Toolbar {
       this.crumbs.innerHTML = "";
       this.componentMenuWrapper.innerHTML = "";
     }
+    this.currentComponent = component;
     if (component) {
-      this.currentComponent = component;
       this.propertyEditor = new PropertyEditor(component);
       this.setControls(this.propertyEditor.content);
       this.propertyEditor.scheduleAutoUpdate();
