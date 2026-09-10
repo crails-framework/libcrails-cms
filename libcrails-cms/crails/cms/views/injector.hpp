@@ -4,6 +4,7 @@
 #include <functional>
 #include <crails/shared_vars.hpp>
 #include <crails/utils/singleton.hpp>
+#include <crails/render_target.hpp>
 #include "../controllers/injectable.hpp"
 
 namespace Crails
@@ -18,10 +19,12 @@ namespace Crails
       Injector(const std::vector<InjectableTraits>& injectables) : injectables(injectables) {}
       virtual ~Injector() {}
 
+      void render(const std::string_view name, const Crails::SharedVars&, Crails::RenderTarget&) const;
       std::string inject(const std::string_view content, Crails::SharedVars) const;
       std::vector<std::string_view> params_for(const std::string_view) const;
       void add_injectable(InjectableTraits);
 
+      static void render_injectable(const std::string_view name, const Crails::SharedVars&, Crails::RenderTarget&);
       static std::string run(const std::string_view content, const Crails::SharedVars&);
       static std::vector<std::string_view> available_injectors();
       static std::vector<std::string_view> find_params_for(const std::string_view);
