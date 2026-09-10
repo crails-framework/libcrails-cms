@@ -10,15 +10,21 @@ static string extract_attribute(const string_view content)
   string result;
 
   result.reserve(32);
-  for (; content[index] != '"' && index < content.length() ; ++index)
+  for (; index < content.length() && content[index] != '"' ; ++index)
     result += content[index];
   return result;
 }
 
 static int find_injection_end(const string_view content)
 {
-  int index = content.find("</inject>");
-  return index < 0 ? content.find("/>") + 3 : index + 9; 
+  size_t index = content.find("</inject>");
+
+  if (index == string::npos)
+  {
+    index = content.find("/>");
+    return index != string::npos ? index + 3 : 0;
+  }
+  return index != string::npos ? index + 9 : 0;
 }
 
 static Crails::SharedVars import_injection_variables(string_view element, Crails::SharedVars vars)
@@ -76,15 +82,25 @@ string Injector::inject(const string_view content, Crails::SharedVars vars) cons
     unique_ptr<Injectable> injectable;
     int         end = last_index + find_injection_end(content.substr(last_index));
     string_view element = content.substr(index, end - index);
-    int         name_attribute_index = element.find("name=\"") + index + 6;
-    string      name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
+    int         name_index = element.find("name=\"");
+    int         name_attribute_index = name_index != string::npos ? name_index + index + 6 : string::npos;
+    string      name;
+    auto        injector_vars(vars);
 
-    vars = import_injection_variables(element, vars);
-    injectable = generate_injectable(name, vars, render_target);
-    output << content.substr(last_index, index - last_index);
-    if (!injectable)
+    if (name_attribute_index != string::npos)
     {
-      output << "<!-- injectable " << name << " not found !-->";
+      name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
+      injector_vars = import_injection_variables(element, injector_vars);
+      injectable = generate_injectable(name, injector_vars, render_target);
+    }
+    output << content.substr(last_index, index - last_index);
+    if (name.length() == 0)
+    {
+      output << "<!-- malformed injector !-->";
+    }
+    else if (!injectable)
+    {
+      output << "<!-- injectable '" << name << "' not found !-->";
     }
     else if (!lock.already_locked)
     {
