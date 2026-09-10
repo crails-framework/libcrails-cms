@@ -5,6 +5,7 @@ import {ControlMenu} from "./nested_component_editor.js";
 import {Action} from "./controls.js";
 import actions from "./actions.js";
 import Sticky from "sticky-js";
+import {stripInjectionPreviews} from "./injected_component_editor.js";
 
 function onRootComponentMutation() {
   if (window.mainFormWatcher) {
@@ -176,7 +177,9 @@ export default class extends NestedComponentEditor {
   save(element) {
     if (this.editMode)
       this.contentEditor.stop(true);
-    element.value = this.root.innerHTML;
+    element.value = 
+      stripInjectionPreviews(this.root.cloneNode(true))
+      .innerHTML;
   }
 
   updateEditableComponents() {

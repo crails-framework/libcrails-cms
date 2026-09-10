@@ -31,6 +31,7 @@ namespace Crails::Cms
 
     std::map<std::size_t, std::string> pathes;
     std::string attachment_admin_path;
+    std::string injectable_preview_path;
   public:
     template<typename CONTROLLER>
     void set_path_for(Crails::Router& router)
@@ -68,6 +69,11 @@ namespace Crails::Cms
     std::string get_attachments_admin_path() const
     {
       return attachment_admin_path;
+    }
+
+    std::string get_injectable_preview_path() const
+    {
+      return injectable_preview_path;
     }
 
     void register_sitemap_routes(Crails::Router& router, const std::string& prefix = "/sitemap.xml");
@@ -192,6 +198,14 @@ namespace Crails::Cms
     {
       set_path_for<CONTROLLER>(router);
       router.match_action("GET", "/opengraph", CONTROLLER, fetch);
+    }
+
+    template<typename CONTROLLER>
+    void register_injectable_routes(Crails::Router& router)
+    {
+      injectable_preview_path = router.get_current_scope();
+      set_path_for<CONTROLLER>(router);
+      router.match_action("GET", "/", CONTROLLER, show);
     }
 
     template<typename CONTROLLER>

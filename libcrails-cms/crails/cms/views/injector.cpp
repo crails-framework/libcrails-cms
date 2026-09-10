@@ -143,6 +143,27 @@ string Injector::run(const string_view content, const Crails::SharedVars& vars)
   return string(content);
 }
 
+void Injector::render_injectable(const string_view name, const Crails::SharedVars& vars, Crails::RenderTarget& target)
+{
+  const Injector* injector = Injector::singleton::get();
+
+  if (injector)
+    return injector->render(name, vars, target);
+}
+
+void Injector::render(const string_view name, const Crails::SharedVars& vars, Crails::RenderTarget& target) const
+{
+  auto injectable = generate_injectable(name, vars, target);
+
+  if (injectable)
+  {
+    target.set_header("Content-Type", "text/html");
+    injectable->run();
+  }
+  else
+    target.set_body(string_view("<!-- injectable not found !-->"));
+}
+
 void Injector::register_injectable(InjectableTraits injectable)
 {
   Injector* injector = Injector::singleton::get();
