@@ -30,7 +30,7 @@ namespace Crails::Cms
   private:
     #pragma db type("TEXT")
     i18n::String title;
-    #pragma db value_type("VARCHAR(64)") unique
+    #pragma db value_type("VARCHAR(64)")
     std::string slug;
   };
 }
