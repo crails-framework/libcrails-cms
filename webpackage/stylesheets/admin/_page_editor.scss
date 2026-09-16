@@ -330,6 +330,22 @@ body:not(.custom-admin-style) {
         input { flex-grow: 1; }
       }
     }
+
+    .property-section {
+      margin-top: 1.5em;
+      padding-top: 1em;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+      &:first-child {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+
+      .property-section-title {
+        margin-bottom: 0.5em;
+      }
+    }
   }
 }
 

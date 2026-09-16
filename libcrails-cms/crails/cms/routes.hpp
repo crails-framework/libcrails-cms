@@ -66,14 +66,19 @@ namespace Crails::Cms
       return get_path_for<CONTROLLER>() + std::to_string(id);
     }
 
-    std::string get_attachments_admin_path() const
+    const std::string& get_attachments_admin_path() const
     {
       return attachment_admin_path;
     }
 
-    std::string get_injectable_preview_path() const
+    const std::string& get_injectable_preview_path() const
     {
       return injectable_preview_path;
+    }
+
+    std::string get_injectable_options_path() const
+    {
+      return injectable_preview_path + "/params";
     }
 
     void register_sitemap_routes(Crails::Router& router, const std::string& prefix = "/sitemap.xml");
@@ -200,14 +205,14 @@ namespace Crails::Cms
       router.match_action("GET", "/opengraph", CONTROLLER, fetch);
     }
 
-    template<typename CONTROLLER>
+    template<typename PREVIEW_CONTROLLER, typename PARAMS_CONTROLLER>
     void register_injectable_routes(Crails::Router& router)
     {
       router.scope("/injector/preview", [&]()
       {
         injectable_preview_path = router.get_current_scope();
-        set_path_for<CONTROLLER>(router);
-        router.match_action("GET", "/", CONTROLLER, show);
+        router.match_action("GET", "/params", PARAMS_CONTROLLER,  index);
+        router.match_action("GET", "/",       PREVIEW_CONTROLLER, show);
       });
     }
 

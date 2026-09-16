@@ -125,10 +125,10 @@ class Toolbar {
     Style.apply("horizontalMenuWrapper", this.crumbs);
   }
 
-  setActiveComponent(component) {
+  setActiveComponent(component, force = false) {
     let menu;
 
-    if (this.currentComponent == component)
+    if (this.currentComponent == component && !force)
       return ;
     if (this.currentComponent) {
       if (this.currentComponent.root)
@@ -160,6 +160,17 @@ class Toolbar {
       if (menu)
         menu.initializeActions();
     }
+  }
+
+  // setActiveComponent() is a no-op when called with the component that's
+  // already active, since normally nothing about that component's
+  // properties would have changed just by re-selecting it. Some components
+  // (e.g. an injected component whose injector type just changed) do need a
+  // full rebuild of the PropertyEditor though, since which properties even
+  // exist depends on state internal to the component. This forces exactly
+  // that, without disturbing anything else (crumbs, component controls...).
+  reloadActiveComponent() {
+    this.setActiveComponent(this.currentComponent, true);
   }
 
   setControls(content) {

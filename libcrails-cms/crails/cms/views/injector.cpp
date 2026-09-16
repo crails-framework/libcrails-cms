@@ -1,5 +1,5 @@
 #include "injector.hpp"
-#include <iostream>
+#include <sstream>
 
 using namespace std;
 using namespace Crails::Cms;
@@ -191,7 +191,7 @@ vector<string_view> Injector::available_injectors()
   return result;
 }
 
-vector<string_view> Injector::find_params_for(const string_view name)
+vector<InjectableParamTraits> Injector::find_params_for(const string_view name)
 {
   const Injector* injector = Injector::singleton::get();
 
@@ -200,11 +200,53 @@ vector<string_view> Injector::find_params_for(const string_view name)
   return {};
 }
 
-vector<string_view> Injector::params_for(const string_view name) const
+vector<InjectableParamTraits> Injector::params_for(const string_view name) const
 {
   auto it = find(injectables.begin(), injectables.end(), name);
 
   if (it != injectables.end())
-    return it->param_names;
+    return it->params;
   return {};
+}
+
+vector<InjectableParamOption> Injector::find_options_for(const string_view name, const string_view param, const Crails::SharedVars& vars, const string_view search)
+{
+  const Injector* injector = Injector::singleton::get();
+
+  if (injector)
+    return injector->options_for(name, param, vars, search);
+  return {};
+}
+
+vector<InjectableParamOption> Injector::options_for(const string_view name, const string_view param, const Crails::SharedVars& vars, const string_view search) const
+{
+  auto injectable_it = find(injectables.begin(), injectables.end(), name);
+
+  if (injectable_it != injectables.end())
+  {
+    auto param_it = find(injectable_it->params.begin(), injectable_it->params.end(), param);
+
+    if (param_it != injectable_it->params.end() && param_it->list_options)
+      return param_it->list_options(vars, search);
+  }
+  return {};
+}
+
+string Injector::params_as_json(const string_view name) const
+{
+  return params_to_json(params_for(name));
+}
+
+string Injector::find_params_as_json(const string_view name)
+{
+  const Injector* injector = Injector::singleton::get();
+
+  if (injector)
+    return injector->params_as_json(name);
+  return "[]";
+}
+
+string Injector::find_options_as_json(const string_view name, const string_view param, const Crails::SharedVars& vars, const string_view search)
+{
+  return options_to_json(find_options_for(name, param, vars, search));
 }

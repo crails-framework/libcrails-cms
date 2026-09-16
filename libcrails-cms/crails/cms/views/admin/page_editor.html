@@ -15,7 +15,7 @@ std::string @mode = "default";
 
 <div data-role="injector-list">
   <% for (const std::string_view name : Crails::Cms::Injector::available_injectors()) do -%>
-    <div data-name="<%= name %>"></div>
+    <div data-name="<%= name %>" data-params='<%= Crails::Cms::Injector::find_params_as_json(name) %>'></div>
   <% end -%>
 </div>
 
