@@ -195,13 +195,21 @@ export default class NestedComponentEditor extends ComponentEditor {
     return false;
   }
 
+  detachComponent(component) {
+    this.components = this.components.filter(item => item != component);
+  }
+
   insertComponent(component, insertAnchor) {
+    const previousParent = component.parent;
     let startPosition = { top: window.innerHeight, left: 0 };
 
-    if (component.parent && component.parent !== this) {
+    if (previousParent && previousParent !== this) {
       startPosition = component.root.getBoundingClientRect();
-      component.parent.removeComponent(component);
+      previousParent.removeComponent(component);
+    } else {
+      this.detachComponent(component);
     }
+    component.parent = this;
     this.components.push(component);
     this.container.insertBefore(component.root, insertAnchor);
     component.enableEditMode();
@@ -247,10 +255,9 @@ export default class NestedComponentEditor extends ComponentEditor {
     return animate(component.root, "left", 500, () => {
       component.root.style.left = window.outerWidth - component.root.offsetLeft + 100;
     }).then(() => {
-      this.container.removeChild(component.root);
-      this.components = this.components.filter(item => {
-        return item != component;
-      });
+      if (component.root.parentElement === this.container)
+        this.container.removeChild(component.root);
+      this.detachComponent(component);
       this.componentsChanged();
     });
   }

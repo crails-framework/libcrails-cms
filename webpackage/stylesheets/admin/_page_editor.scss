@@ -17,28 +17,129 @@ nav.cms-sticky-controls {
     box-shadow: gray 0 0 10px;
   }
   .anchors-container {
-    background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.15);
     transform: translateY(-100%);
-    list-style: none;
-    &.loading > li {
-      opacity: 0;
+
+    &.loading {
+      > .anchor-bar, > .anchor-zone {
+        opacity: 0;
+      }
     }
-    > li {
+
+    // A thin bar drawn at the boundary between two components (or at
+    // the edge of a container), showing where a component will land.
+    // It's rendered as a bigger, invisible hit-box (.anchor-bar) with
+    // a thin visible line inside it (.anchor-bar-line), so it stays
+    // easy to click/tap without looking bulky.
+    .anchor-bar {
       position: absolute;
       z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
       transition: opacity 100ms ease-in;
-      transform: translate(-50%, -50%);
-      &.layout-anchor {
-        left: auto !important;
-        right: 0;
+
+      .anchor-bar-line {
+        background-color: #2196F3;
+        opacity: 0.65;
+        border-radius: 2px;
+        transition: opacity 120ms ease-in, background-color 120ms ease-in,
+                    width 120ms ease-in, height 120ms ease-in;
       }
-      &.layout-anchor:last-of-type {
-        transform: translate(-50%, -100%);
+
+      .anchor-bar-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        padding: 0.1em 0.5em;
+        border-radius: 3px;
+        background-color: rgba(0,0,0,0.65);
+        color: #fff;
+        font-size: 0.85em;
+        line-height: 1.4;
+        opacity: 0.85;
+        transition: opacity 120ms ease-in, background-color 120ms ease-in;
       }
-      &.layout-anchor:first-of-type {
+
+      &:hover, &.hovered {
+        .anchor-bar-label {
+          opacity: 1;
+          background-color: #1565C0;
+        }
+      }
+
+      &.horizontal {
+        height: 20px;
+        transform: translateY(-50%);
+        .anchor-bar-line {
+          width: 100%;
+          height: 3px;
+        }
+        &:hover, &.hovered {
+          .anchor-bar-line { height: 5px; }
+        }
+      }
+
+      &.vertical {
+        width: 20px;
         transform: translateX(-50%);
+        .anchor-bar-line {
+          height: 100%;
+          width: 3px;
+        }
+        &:hover, &.hovered {
+          .anchor-bar-line { width: 5px; }
+        }
+      }
+
+      &:hover, &.hovered {
+        .anchor-bar-line {
+          opacity: 1;
+          background-color: #1565C0;
+        }
+      }
+
+      &.layout-anchor .anchor-bar-line {
+        background-color: #9C27B0;
       }
     }
+
+    // A translucent rectangle drawn directly over a nested component,
+    // labelled with its name, showing that picking it steps into it.
+    .anchor-zone {
+      position: absolute;
+      z-index: 1;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background-color: rgba(255,255,255,0.28);
+      border: 2px solid rgba(33,150,243,0.85);
+      transition: background-color 120ms ease-in, border-color 120ms ease-in;
+
+      .anchor-zone-label {
+        pointer-events: none;
+        max-width: 90%;
+        padding: 0.25em 0.75em;
+        border-radius: 3px;
+        background-color: rgba(0,0,0,0.65);
+        color: #fff;
+        font-size: 0.9em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:hover, &.hovered {
+        background-color: rgba(255,255,255,0.5);
+        border-color: #1565C0;
+      }
+    }
+
     .highlight-panel {
       position: absolute;
       z-index: 0;
@@ -252,9 +353,12 @@ body:not(.custom-admin-style) {
         scale: 1.1;
         z-index: 2;
       }
-      > .title {
+      > [data-role="title"] {
         font-size: 1.2em;
         font-weight: bold;
+      }
+      > [data-role="description"] {
+        text-align: justify;
       }
     }
   }

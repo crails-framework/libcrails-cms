@@ -1,19 +1,12 @@
-import {Action} from "./controls.js";
-import {makeHighlightPanel} from "./insert_anchor_highlight_panel.js";
-
 export default function(anchor, target) {
   const controller = anchor.component.layout.anchors;
-  const action = new Action("open", function() {
-    controller.changeContext(anchor.newContext);
-  });
-  const highlightPanel = makeHighlightPanel(anchor.newContext.container);
 
-  action.withHoverCallback(function(hovered) {
-    if (hovered)
-      action.root.parentElement.appendChild(highlightPanel);
-    else
-      highlightPanel.remove();
-    highlightPanel.classList.toggle("active", hovered);
-  });
-  return action;
+  return {
+    commit() {
+      controller.changeContext(anchor.newContext);
+    }
+    // No onHover needed: the anchor zone itself is the persistent
+    // highlight over the nested component, and it brightens on hover
+    // purely through CSS (see .anchor-zone:hover / .anchor-zone.hovered).
+  };
 }
