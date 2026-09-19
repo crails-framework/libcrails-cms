@@ -64,7 +64,7 @@ function propertyExtrasForParam(param, component) {
   switch (param.type) {
   case "choice":
     return {
-      options: (param.options || []).map(option => ({ value: option.value, text: option.label }))
+      options: (param.options || []).map(option => ({ value: option.value, text: i18n.t(option.label) }))
     };
   case "selection":
     return {
