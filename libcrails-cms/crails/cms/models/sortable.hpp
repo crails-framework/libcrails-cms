@@ -27,6 +27,6 @@ namespace Crails::Cms
     void set_order(unsigned int value) { order = value; }
 
   protected:
-    unsigned int order;
+    unsigned int order = 0;
   };
 }
