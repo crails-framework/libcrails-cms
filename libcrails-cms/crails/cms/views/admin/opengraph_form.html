@@ -4,17 +4,14 @@
 #include "../../../models/editable.hpp"
 #include "../../../views/style.hpp"
 
+typedef Crails::FormBuilder<Crails::Cms::Editable> ViewForm;
+
 const Crails::Cms::Style&    style = Crails::Cms::Style::singleton::require();
 const Crails::Cms::Editable& @model;
+Crails::FormBuilderBase*     form_base = Crails::cast<Crails::FormBuilderBase*>(vars, "form");
+ViewForm                     form(*form_base, model);
 
 // END LINKING
-
-<%
-Crails::FormBuilder<Crails::Cms::Editable> form(
-  *Crails::cast<Crails::FormBuilderBase*>(vars, "form"),
-  model
-)
-%>
 
 <%= style.form_group() yields %>
   <%= form.label_for("description", i18n::t("form.label.description")) %>
