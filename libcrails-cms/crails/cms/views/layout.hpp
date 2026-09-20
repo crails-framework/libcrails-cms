@@ -61,7 +61,7 @@ namespace Crails::Cms
     SINGLETON(Layouts)
   protected:
     Layouts();
-    ~Layouts();
+    virtual ~Layouts();
   public:
     void load_renderers(Crails::Renderer&) const;
     void load_assets(std::function<void(Crails::RequestHandler*)>) const;

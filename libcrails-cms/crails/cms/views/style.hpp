@@ -15,6 +15,8 @@ namespace Crails::Cms
   {
     SINGLETON(Style)
   public:
+    virtual ~Style() = default;
+
     virtual DataTree as_data() const;
 
     virtual ClassList menu_wrapper_classes(Menu::Direction direction) const

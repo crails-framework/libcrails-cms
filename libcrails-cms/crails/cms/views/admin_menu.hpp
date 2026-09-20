@@ -21,6 +21,7 @@ namespace Crails::Cms
     typedef std::vector<Entry> Entries;
 
     AdminMenu();
+    virtual ~AdminMenu() = default;
 
     void add_default_entries(const std::string& scope = "/admin");
     void add(const Entry& entry);

@@ -23,6 +23,8 @@ namespace Crails::Cms
   {
     friend class odb::access;
   public:
+    virtual ~Sortable() = default;
+
     unsigned int get_order() const { return order; }
     void set_order(unsigned int value) { order = value; }
 

@@ -11,6 +11,8 @@ namespace Crails::Cms
   {
     SINGLETON(MenuManager)
   public:
+    virtual ~MenuManager() = default;
+
     virtual std::shared_ptr<Menu> find_menu(const std::string& name) const { return nullptr; }
 
   protected:

@@ -33,6 +33,8 @@ namespace Crails::Cms
     std::string attachment_admin_path;
     std::string injectable_preview_path;
   public:
+    virtual ~Routes() = default;
+
     template<typename CONTROLLER>
     void set_path_for(Crails::Router& router)
     {

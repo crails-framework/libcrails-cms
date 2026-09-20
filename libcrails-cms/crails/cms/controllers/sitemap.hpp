@@ -10,6 +10,7 @@ namespace Crails::Cms::SiteMap
     SINGLETON(Controller)
     Map indexes;
   public:
+    virtual ~Controller() = default;
     virtual std::shared_ptr<Crails::Cms::Settings> find_settings() const = 0;
 
     void initialize_plugin_indexes();
