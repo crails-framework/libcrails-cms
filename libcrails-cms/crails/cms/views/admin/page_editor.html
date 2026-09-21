@@ -48,13 +48,13 @@ std::string @mode = "default";
 <% case Crails::Cms::ComponentLayoutType: -%>
 
   const stylesheets = [];
-  const javascripts = [<%= std::quoted(CrailsCmsAssets::admin_js) %>];
+  const javascripts = [<%= [](std::ostream& ss) { ss << std::quoted(CrailsCmsAssets::admin_js); } %>];
 
-  stylesheets.push(<%= std::quoted(CrailsCmsAssets::content_tools_css) %>);
+  stylesheets.push(<%= [](std::ostream& ss) { ss << std::quoted(CrailsCmsAssets::content_tools_css); } %>);
   // <%= cms_layout.get_stylesheets().size() %>
 
   <% for (const auto& stylesheet : cms_layout.get_stylesheets()) do -%>
-    stylesheets.push(<%= std::quoted(stylesheet) %>);
+    stylesheets.push(<%= [&stylesheet](std::ostream& ss) { ss << std::quoted(stylesheet); } %>);
   <% end -%>
 
   Cms.PageEditor.create(
