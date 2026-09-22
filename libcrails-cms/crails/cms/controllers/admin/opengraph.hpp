@@ -17,8 +17,8 @@ namespace Crails::Cms
     {
       Super::database.commit();
       Super::async_http_query(
-        Crails::Url::from_string(Super::params["url"]),
-	std::bind(&OpenGraphController::fetched, this, std::placeholders::_1, std::placeholders::_2)
+        Crails::Url::from_string(Super::params["url"].template as<std::string>()),
+        std::bind(&OpenGraphController::fetched, this, std::placeholders::_1, std::placeholders::_2)
       );
     }
 
