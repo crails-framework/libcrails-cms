@@ -25,7 +25,7 @@ namespace Crails::Cms
 
     void index()
     {
-      Super::vars["tag_options"] = Model().template collect_tags<Tag>(true);
+      Super::vars["tag_options"] = Model().template collect_tags<Tag>(database, true);
       Super::vars["tag"] = Super::params["tag"].template defaults_to<std::string>("");
       Super::index();
     }
@@ -170,7 +170,7 @@ namespace Crails::Cms
     void new_()
     {
       Super::vars["page_subtitle"] = i18n::t("admin.new-attachment");
-      Super::vars["tag_options"] = Model().template collect_tags<Tag>();
+      Super::vars["tag_options"] = Model().template collect_tags<Tag>(database);
       Super::render("admin/attachments/new");
     }
 
@@ -205,7 +205,7 @@ namespace Crails::Cms
 
     void render_editor(Model& model) override
     {
-      Super::vars["tag_options"] = model.template collect_tags<Tag>();
+      Super::vars["tag_options"] = model.template collect_tags<Tag>(database);
       Super::render_editor(model);
     }
   };

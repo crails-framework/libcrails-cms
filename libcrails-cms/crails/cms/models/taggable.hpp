@@ -15,13 +15,12 @@ namespace Crails::Cms
     void set_tags(const std::vector<std::string>& value);
     std::vector<std::string> get_tags() const { return TagList(tag_list).to_vector(); }
 
+#ifndef ODB_COMPILER
     template<typename TAGGABLE>
-    std::map<std::string,std::string> collect_tags(bool with_empty_option = false) const
+    std::map<std::string,std::string> collect_tags(Crails::Odb::Connection& database, bool with_empty_option = false) const
     {
       std::map<std::string,std::string> options;
-#ifndef ODB_COMPILER
       odb::result<TAGGABLE>             tags;
-      Crails::Odb::Connection           database;
 
       database.rollback_on_destruction = false;
       database.template find<TAGGABLE>(tags);
@@ -31,9 +30,9 @@ namespace Crails::Cms
         options.emplace(tag.value, tag.value);
       for (const auto& tag : get_tags())
         options.emplace(tag, tag);
-#endif
       return options;
     }
+#endif
 
   protected:
     std::vector<std::string> tags;

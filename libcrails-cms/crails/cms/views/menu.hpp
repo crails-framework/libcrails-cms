@@ -19,7 +19,7 @@ namespace Crails::Cms
     template<typename MENU>
     std::shared_ptr<MENU> find_menu_with_type(const std::string& name) const
     {
-      Crails::Odb::Connection database;
+      Crails::Odb::ConnectionHandle database;
       std::shared_ptr<MENU> menu;
 
       database.rollback_on_destruction = false;
