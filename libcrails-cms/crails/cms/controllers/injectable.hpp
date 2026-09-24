@@ -73,7 +73,7 @@ namespace Crails::Cms
     Crails::Odb::ConnectionHandle database;
     std::string                   formats = "text/html";
   public:
-    Injectable(const Crails::SharedVars& vars, Crails::RenderTarget& sink);
+    Injectable(Crails::Odb::Connection&, const Crails::SharedVars& vars, Crails::RenderTarget& sink);
     virtual ~Injectable() {}
 
     virtual void run() = 0;
@@ -85,7 +85,7 @@ namespace Crails::Cms
   struct InjectableTraits
   {
     typedef std::function<
-      std::unique_ptr<Injectable>(const Crails::SharedVars&, Crails::RenderTarget&)
+      std::unique_ptr<Injectable>(Crails::Odb::Connection&, const Crails::SharedVars&, Crails::RenderTarget&)
     > Instantiator;
 
     const std::string_view                   name;

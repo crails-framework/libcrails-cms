@@ -35,7 +35,7 @@ namespace Crails::Cms
     {
       typedef std::vector<std::unique_ptr<Crails::Cms::BlogPost>> PostList;
     public:
-      InjectableIndex(const Crails::SharedVars& a, Crails::RenderTarget& b) : Crails::Cms::Injectable(a, b)
+      InjectableIndex(Crails::Odb::Connection& d, const Crails::SharedVars& a, Crails::RenderTarget& b) : Crails::Cms::Injectable(d, a, b)
       {
       }
 

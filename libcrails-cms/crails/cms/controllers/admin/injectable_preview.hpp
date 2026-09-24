@@ -20,7 +20,7 @@ namespace Crails::Cms
 
       for (Data value : Super::params["vars"])
         vars[value.get_key()] = value.as<std::string>();
-      Injector::render_injectable(name, vars, Super::response);
+      Injector::render_injectable(name, database, vars, Super::response);
     }
   };
 }

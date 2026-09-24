@@ -1,12 +1,14 @@
 #include "../../../models/page.hpp"
 #include "../../../views/injector.hpp"
+#include <crails/odb/connection.hpp>
 
 const Crails::Cms::Page& @page;
 bool @preview = false;
+Crails::Odb::Connection& @database;
 
 // END LINKING
 
-<%= Crails::Cms::Injector::run(page.get_body().to_string(), vars) %>
+<%= Crails::Cms::Injector::run(page.get_body().to_string(), database, vars) %>
 <% if (preview) do %>
   <%= partial("preview_script") %>
 <% end %>

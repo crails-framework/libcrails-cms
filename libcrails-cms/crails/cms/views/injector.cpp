@@ -67,7 +67,7 @@ struct InjectionLock
 
 thread_local bool InjectionLock::injecting = false;
 
-string Injector::inject(const string_view content, Crails::SharedVars vars) const
+string Injector::inject(const string_view content, Crails::Odb::Connection& database, Crails::SharedVars vars) const
 {
   InjectionLock lock;
   int index = 0;
@@ -91,7 +91,7 @@ string Injector::inject(const string_view content, Crails::SharedVars vars) cons
     {
       name = extract_attribute(string_view(&content[name_attribute_index], end - name_attribute_index));
       injector_vars = import_injection_variables(element, injector_vars);
-      injectable = generate_injectable(name, injector_vars, render_target);
+      injectable = generate_injectable(name, database, injector_vars, render_target);
     }
     output << content.substr(last_index, index - last_index);
     if (name.length() == 0)
@@ -120,13 +120,13 @@ string Injector::inject(const string_view content, Crails::SharedVars vars) cons
   return output.str();
 }
 
-unique_ptr<Injectable> Injector::generate_injectable(const std::string_view name, const Crails::SharedVars& vars, Crails::RenderTarget& sink) const
+unique_ptr<Injectable> Injector::generate_injectable(const std::string_view name, Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& sink) const
 {
   auto it = find(injectables.begin(), injectables.end(), name);
 
   if (it != injectables.end())
   {
-    auto ptr = it->create(vars, sink);
+    auto ptr = it->create(database, vars, sink);
 
     ptr->injecting = true;
     return move(ptr);
@@ -134,26 +134,26 @@ unique_ptr<Injectable> Injector::generate_injectable(const std::string_view name
   return nullptr;
 }
 
-string Injector::run(const string_view content, const Crails::SharedVars& vars)
+string Injector::run(const string_view content, Crails::Odb::Connection& database, const Crails::SharedVars& vars)
 {
   const Injector* injector = Injector::singleton::get();
 
   if (injector)
-    return injector->inject(content, vars);
+    return injector->inject(content, database, vars);
   return string(content);
 }
 
-void Injector::render_injectable(const string_view name, const Crails::SharedVars& vars, Crails::RenderTarget& target)
+void Injector::render_injectable(const string_view name, Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& target)
 {
   const Injector* injector = Injector::singleton::get();
 
   if (injector)
-    return injector->render(name, vars, target);
+    return injector->render(name, database, vars, target);
 }
 
-void Injector::render(const string_view name, const Crails::SharedVars& vars, Crails::RenderTarget& target) const
+void Injector::render(const string_view name, Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& target) const
 {
-  auto injectable = generate_injectable(name, vars, target);
+  auto injectable = generate_injectable(name, database, vars, target);
 
   if (injectable)
   {

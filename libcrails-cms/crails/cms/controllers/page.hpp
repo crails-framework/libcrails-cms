@@ -20,13 +20,11 @@ namespace Crails::Cms
       typedef std::shared_ptr<typename Super::Model> ModelPtr;
       ModelPtr model;
     public:
-      InjectablePage(const Crails::SharedVars& vars, Crails::RenderTarget& sink)
-        : Injectable(vars, sink)
-      {}
-
-      InjectablePage(ModelPtr model, const Crails::SharedVars& vars, Crails::RenderTarget& sink)
-        : Injectable(vars, sink), model(model)
-      {}
+      InjectablePage(Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& sink)
+        : Injectable(database, vars, sink)
+      {
+        this->vars["database"] = &database;
+      }
 
       Crails::Odb::id_type page_id() const
       {
@@ -84,7 +82,7 @@ namespace Crails::Cms
       if (model.can_read(Super::get_current_user()))
       {
         InjectablePage injectable(
-          std::make_shared<typename Super::Model>(model),
+          Super::database,
           Super::vars,
           Super::response
         );

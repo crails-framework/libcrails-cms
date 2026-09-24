@@ -6,7 +6,7 @@ using namespace std;
 using namespace Crails;
 using namespace Crails::Cms;
     
-Injectable::Injectable(const Crails::SharedVars& vars, Crails::RenderTarget& sink) : vars(vars), sink(sink)
+Injectable::Injectable(Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& sink) : vars(vars), sink(sink), database(database)
 {
   this->vars.erase("layout");
 }
