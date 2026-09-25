@@ -26,7 +26,7 @@ namespace Crails
       std::vector<InjectableParamTraits> params_for(const std::string_view name) const;
       // Resolves the value/label options for a `Selection` parameter, against
       // the current SharedVars and a free-text search string.
-      std::vector<InjectableParamOption> options_for(const std::string_view name, const std::string_view param, const Crails::SharedVars&, const std::string_view search) const;
+      std::vector<InjectableParamOption> options_for(const std::string_view name, const std::string_view param, Crails::Odb::Connection&, const Crails::SharedVars&, const std::string_view search) const;
 
       std::string params_as_json(const std::string_view name) const;
       void add_injectable(InjectableTraits);
@@ -35,9 +35,9 @@ namespace Crails
       static std::string run(const std::string_view content, Crails::Odb::Connection&, const Crails::SharedVars&);
       static std::vector<std::string_view> available_injectors();
       static std::vector<InjectableParamTraits> find_params_for(const std::string_view name);
-      static std::vector<InjectableParamOption> find_options_for(const std::string_view name, const std::string_view param, const Crails::SharedVars&, const std::string_view search);
+      static std::vector<InjectableParamOption> find_options_for(const std::string_view name, const std::string_view param, Crails::Odb::Connection&, const Crails::SharedVars&, const std::string_view search);
       static std::string find_params_as_json(const std::string_view name);
-      static std::string find_options_as_json(const std::string_view name, const std::string_view param, const Crails::SharedVars&, const std::string_view search);
+      static std::string find_options_as_json(const std::string_view name, const std::string_view param, Crails::Odb::Connection&, const Crails::SharedVars&, const std::string_view search);
       static void register_injectable(InjectableTraits);
 
       template<typename INJECTABLE>

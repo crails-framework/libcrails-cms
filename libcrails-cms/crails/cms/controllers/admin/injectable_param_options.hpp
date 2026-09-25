@@ -15,16 +15,15 @@ namespace Crails::Cms
 
     void index()
     {
-      std::string        name   = Super::params["name"] .template defaults_to<std::string>("");
-      std::string        param  = Super::params["param"].template defaults_to<std::string>("");
-      std::string        search = Super::params["q"]    .template defaults_to<std::string>("");
-      Crails::SharedVars vars;
+      std::string name   = Super::params["name"] .template defaults_to<std::string>("");
+      std::string param  = Super::params["param"].template defaults_to<std::string>("");
+      std::string search = Super::params["q"]    .template defaults_to<std::string>("");
 
       if (name.length() > 0 && param.length() > 0)
       {
         for (Data value : Super::params["vars"])
-          vars[value.get_key()] = value.as<std::string>();
-        Super::render(Super::JSON, Injector::find_options_as_json(name, param, vars, search));
+          Super::vars[value.get_key()] = value.as<std::string>();
+        Super::render(Super::JSON, Injector::find_options_as_json(name, param, Super::database, Super::vars, search));
       }
       else
         Super::respond_with(Crails::HttpStatus::bad_request);

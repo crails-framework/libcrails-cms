@@ -209,16 +209,16 @@ vector<InjectableParamTraits> Injector::params_for(const string_view name) const
   return {};
 }
 
-vector<InjectableParamOption> Injector::find_options_for(const string_view name, const string_view param, const Crails::SharedVars& vars, const string_view search)
+vector<InjectableParamOption> Injector::find_options_for(const string_view name, const string_view param, Crails::Odb::Connection& database, const Crails::SharedVars& vars, const string_view search)
 {
   const Injector* injector = Injector::singleton::get();
 
   if (injector)
-    return injector->options_for(name, param, vars, search);
+    return injector->options_for(name, param, database, vars, search);
   return {};
 }
 
-vector<InjectableParamOption> Injector::options_for(const string_view name, const string_view param, const Crails::SharedVars& vars, const string_view search) const
+vector<InjectableParamOption> Injector::options_for(const string_view name, const string_view param, Crails::Odb::Connection& database, const Crails::SharedVars& vars, const string_view search) const
 {
   auto injectable_it = find(injectables.begin(), injectables.end(), name);
 
@@ -227,7 +227,7 @@ vector<InjectableParamOption> Injector::options_for(const string_view name, cons
     auto param_it = find(injectable_it->params.begin(), injectable_it->params.end(), param);
 
     if (param_it != injectable_it->params.end() && param_it->list_options)
-      return param_it->list_options(vars, search);
+      return param_it->list_options(database, vars, search);
   }
   return {};
 }
@@ -246,7 +246,7 @@ string Injector::find_params_as_json(const string_view name)
   return "[]";
 }
 
-string Injector::find_options_as_json(const string_view name, const string_view param, const Crails::SharedVars& vars, const string_view search)
+string Injector::find_options_as_json(const string_view name, const string_view param, Crails::Odb::Connection& database, const Crails::SharedVars& vars, const string_view search)
 {
-  return options_to_json(find_options_for(name, param, vars, search));
+  return options_to_json(find_options_for(name, param, database, vars, search));
 }

@@ -50,7 +50,7 @@ namespace Crails::Cms
     // sibling parameters already set on the injector) and a free-text search
     // string typed by the admin user. Only meaningful when type == Selection.
     typedef std::function<
-      std::vector<InjectableParamOption>(const Crails::SharedVars&, const std::string_view /* search */)
+      std::vector<InjectableParamOption>(Crails::Odb::Connection&, const Crails::SharedVars&, const std::string_view /* search */)
     > OptionLister;
 
     std::string_view                   name;
