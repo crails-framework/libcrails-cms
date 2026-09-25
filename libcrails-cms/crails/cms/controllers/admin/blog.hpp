@@ -24,7 +24,7 @@ namespace Crails::Cms
 
     void index()
     {
-      Super::vars["tag_options"] = Post().template collect_tags<Tag>(database, true);
+      Super::vars["tag_options"] = Post().template collect_tags<Tag>(Super::database, true);
       Super::vars["tag"] = Super::params["tag"].template defaults_to<std::string>("");
       Super::index();
     }
@@ -36,7 +36,7 @@ namespace Crails::Cms
       model.set_published(can_publish());
       Super::vars["page_subtitle"] = i18n::t("admin.blog-creation");
       Super::vars["can_publish"] = model.get_published();
-      Super::vars["tag_options"] = model.template collect_tags<Tag>(database);
+      Super::vars["tag_options"] = model.template collect_tags<Tag>(Super::database);
       Super::render_editor(model);
     }
 
@@ -92,7 +92,7 @@ namespace Crails::Cms
       Super::vars["page_title"] = std::string(model.get_title());
       Super::vars["page_subtitle"] = i18n::t("admin.blog-edition");
       Super::vars["can_publish"] = can_publish();
-      Super::vars["tag_options"] = model.template collect_tags<Tag>(database);
+      Super::vars["tag_options"] = model.template collect_tags<Tag>(Super::database);
       Super::render_editor(model);
     }
 
