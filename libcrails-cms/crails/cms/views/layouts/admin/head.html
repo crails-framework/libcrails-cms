@@ -40,6 +40,6 @@ const std::string_view ckeditor_version = "35.4.0";
 <%= tag("script", {{"src", CrailsCmsAssets::admin_js}}) %>
 
 <% if (plugins && plugins->has_plugins()) do -%>
-  <%= tag("link", {{"rel", "stylesheet"},{"src", Crails::Cms::Plugins::admin_css_uri}}) %>
+  <%= tag("link", {{"rel", "stylesheet"},{"href", Crails::Cms::Plugins::admin_css_uri}}) %>
   <%= tag("script", {{"src", Crails::Cms::Plugins::admin_js_uri}}) %>
 <% end -%>
