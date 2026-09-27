@@ -15,6 +15,7 @@ namespace Crails::Cms
   protected:
     Controller(Crails::Context& context) : Super(context)
     {
+      Super::vars["database"] = &this->database;
     }
 
     void initialize();

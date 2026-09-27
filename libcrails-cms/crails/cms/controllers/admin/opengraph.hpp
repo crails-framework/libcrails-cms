@@ -13,18 +13,12 @@ namespace Crails::Cms
     {
     }
 
-    void fetch()
+    boost::asio::awaitable<void> fetch()
     {
       Super::database.commit();
-      Super::async_http_query(
-        Crails::Url::from_string(Super::params["url"].template as<std::string>()),
-        std::bind(&OpenGraphController::fetched, this, std::placeholders::_1, std::placeholders::_2)
+      Crails::ClientInterface::Response response = co_await Super::co_http_query(
+        Crails::Url::from_string(Super::params["url"].template as<std::string>())
       );
-    }
-
-  private:
-    void fetched(const Crails::HttpResponse& response, boost::beast::error_code)
-    {
       Super::render(Super::HTML, response.body());
     }
   };
