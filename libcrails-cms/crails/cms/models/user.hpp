@@ -29,7 +29,7 @@ namespace Crails::Cms
     virtual void edit(Data);
     void merge_data(Data) const;
     std::string to_json() const;
-    virtual void after_destroy() override;
+    virtual void after_destroy(Crails::Odb::Connection&) override;
 
     bool is_admin() const { return role == AdminRole; }
     void set_email(const std::string& value) { this->email = value; }

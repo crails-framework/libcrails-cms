@@ -30,15 +30,15 @@ string UserGroup::to_json() const
   return out.to_json();
 }
 
-void UserGroup::before_save()
+void UserGroup::before_save(Crails::Odb::Connection& database)
 {
   if (!is_persistent())
-    flag = find_available_flag();
+    flag = find_available_flag(database);
 }
 
-void UserGroup::after_destroy()
+void UserGroup::after_destroy(Crails::Odb::Connection& database)
 {
-  purge_flag();
+  purge_flag(database);
 }
 
 void PermissionRule::purge_flag(unsigned long flag)

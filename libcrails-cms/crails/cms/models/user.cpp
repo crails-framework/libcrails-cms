@@ -8,7 +8,7 @@ const std::string User::scope = "user";
 const std::string User::plural_scope = "users";
 const std::string User::view = "";
 
-void User::after_destroy()
+void User::after_destroy(Crails::Odb::Connection&)
 {
   if (attached_avatar.length())
   {

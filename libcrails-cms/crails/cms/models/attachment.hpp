@@ -68,7 +68,7 @@ namespace Crails::Cms
     Crails::BasicImage get_miniature() const { return Crails::BasicImage(miniature); }
     void set_miniature(Crails::BasicImage value) { miniature = value; }
 
-    virtual void after_destroy() override;
+    virtual void after_destroy(Crails::Odb::Connection&) override;
 
   private:
     std::string name;

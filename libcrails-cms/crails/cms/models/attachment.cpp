@@ -8,7 +8,7 @@ const std::string Attachment::scope = "attachment";
 const std::string Attachment::plural_scope = "attachments";
 const std::string Attachment::view = "";
 
-void Attachment::after_destroy()
+void Attachment::after_destroy(Crails::Odb::Connection&)
 {
   as_attachment().cleanup_files();
   get_miniature().cleanup_files();

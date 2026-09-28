@@ -7,14 +7,10 @@ namespace Crails::Cms
 {
 #if !defined(ODB_COMPILER)
   template<typename MODEL>
-  void before_sortable_save(MODEL& model, odb::query<MODEL> criteria = odb::query<MODEL>(true))
+  void before_sortable_save(Crails::Odb::Connection& database, MODEL& model, odb::query<MODEL> criteria = odb::query<MODEL>(true))
   {
     if (!model.is_persistent())
-    {
-      Crails::Odb::ConnectionHandle database;
-
       model.set_order(database.template count<MODEL>(criteria));
-    }
   }
 #endif
 

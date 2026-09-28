@@ -23,16 +23,16 @@ namespace Crails::Cms
     virtual void edit(Data);
     void merge_data(Data) const;
     std::string to_json() const;
-    void before_save() override;
-    void after_destroy() override;
+    void before_save(Crails::Odb::Connection&) override;
+    void after_destroy(Crails::Odb::Connection&) override;
 
     const std::string& get_name() const { return name; }
     void set_name(const std::string& value) { name = value; }
     unsigned long get_flag() const { return flag; }
 
   protected:
-    virtual unsigned long find_available_flag() const = 0;
-    virtual void purge_flag() const = 0;
+    virtual unsigned long find_available_flag(Crails::Odb::Connection&) const = 0;
+    virtual void purge_flag(Crails::Odb::Connection&) const = 0;
   private:
     std::string   name;
     unsigned long flag;
