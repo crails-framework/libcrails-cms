@@ -1,13 +1,13 @@
 #pragma once
-#include "resource.hpp"
+#include "versioned.hpp"
 #include "../../models/page.hpp"
 
 namespace Crails::Cms
 {
   template<typename TRAITS, typename SUPER>
-  class AdminPageController : public AdminResourceController<TRAITS, Crails::Cms::Page, SUPER>
+  class AdminPageController : public AdminVersionedResourceController<TRAITS, Crails::Cms::Page, SUPER>
   {
-    typedef AdminResourceController<TRAITS, Crails::Cms::Page, SUPER> Super;
+    typedef AdminVersionedResourceController<TRAITS, Crails::Cms::Page, SUPER> Super;
     typedef typename TRAITS::Model Model;
 
     std::string get_view_scope() const override { return "pages"; }

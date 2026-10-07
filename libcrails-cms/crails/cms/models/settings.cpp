@@ -26,6 +26,8 @@ void Crails::Cms::Settings::edit(Data params)
     set_footer(params["footer"]);
   if (params["enable_user_subscribe"].exists())
     set_enable_user_subscribe(params["enable_user_subscribe"].as<bool>());
+  if (params["max_versions"].exists())
+    set_max_versions(params["max_versions"].as<unsigned int>());
   if (params["matomo_url"].exists())
     set_matomo_url(params["matomo_url"].as<std::string>());
   if (params["matomo_id"].exists())
@@ -45,6 +47,7 @@ void Crails::Cms::Settings::merge_data(Data out) const
   out["theme"] = this->theme;
   out["footer"] = this->footer;
   out["enable_user_subscribe"] = this->enable_user_subscribe;
+  out["max_versions"] = this->max_versions;
   out["matomo_url"] = this->matomo_url;
   out["matomo_id"] = this->matomo_id;
 }

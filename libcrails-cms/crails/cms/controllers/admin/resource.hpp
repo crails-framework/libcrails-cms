@@ -66,7 +66,9 @@ namespace Crails::Cms
 
       if (initialize_resource(model, attributes) && edit_resource(model, attributes))
       {
+        before_save_resource(model);
         Super::database.save(model);
+        after_save_resource(model);
         Super::flash["info"] = i18n::t("admin.flash.resource-created");
         Super::redirect_to(get_url_for(model));
       }
@@ -83,9 +85,12 @@ namespace Crails::Cms
 
       if (model)
       {
+        prepare_resource_update(*model);
         if (edit_resource(*model, Super::params[BASE_MODEL::scope]))
         {
+          before_save_resource(*model);
           Super::database.save(*model);
+          after_save_resource(*model);
           Super::flash["info"] = i18n::t("admin.flash.resource-updated");
           Super::redirect_to(get_url_for(*model));
         }
@@ -103,6 +108,7 @@ namespace Crails::Cms
 
       if (model)
       {
+        before_destroy_resource(*model);
         Super::database.destroy(*model);
         Super::flash["info"] = i18n::t("admin.flash.resource-removed");
         Super::redirect_to(get_url());
@@ -173,5 +179,14 @@ namespace Crails::Cms
       model.edit(data);
       return true;
     }
+
+    // Called by update(), before edit_resource()
+    virtual void prepare_resource_update(Model&) {}
+    // Called by create() and update(), once the resource is valid, right before it is saved
+    virtual void before_save_resource(Model&) {}
+    // Called by create() and update(), right after the resource was saved
+    virtual void after_save_resource(Model&) {}
+    // Called by destroy(), right before the resource is destroyed
+    virtual void before_destroy_resource(Model&) {}
   };
 }

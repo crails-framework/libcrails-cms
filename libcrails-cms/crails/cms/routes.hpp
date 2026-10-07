@@ -15,6 +15,8 @@
 # define libcrails_cms_admin_preview(controller) \
   match_action("PUT",  "/preview", controller, preview) \
  .match_action("POST", "/preview", controller, preview)
+# define libcrails_cms_admin_versions(controller) \
+  match_action("DELETE", "/:id/versions/:version", controller, destroy_version)
 # define ROUTES_METHOD(NAME, CONTROLLER) \
   std::string get_##NAME##_path() const { return NAME##_path; } \
   std::string get_##NAME##_path(const std::string& suffix) const { return NAME##_path + '/' + suffix; } \
@@ -151,6 +153,7 @@ namespace Crails::Cms
       set_path_for<ADMIN_CONTROLLER>(router);
       router.libcrails_cms_admin_preview(CONTROLLER);
       router.libcrails_cms_admin_crud("/", ADMIN_CONTROLLER);
+      router.libcrails_cms_admin_versions(ADMIN_CONTROLLER);
     }
 
     template<typename CONTROLLER>

@@ -13,6 +13,7 @@
 @use "admin/drag_handle";
 @use "admin/ckeditor_button"; 
 @use "admin/html_textarea";
+@use "admin/versions";
 
 // BEGIN ckeditor custom style
 .ck-content .image.image-style-left-side {

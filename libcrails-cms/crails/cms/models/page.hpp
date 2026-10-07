@@ -1,13 +1,15 @@
 #pragma once
 #include "editable.hpp"
+#include "versionable.hpp"
 
 namespace Crails::Cms
 {
   class Layout;
 
   #pragma db object abstract
-  class Page : public Editable
+  class Page : public Editable, public Versionable
   {
+    friend class odb::access;
   public:
     static const std::string scope;
     static const std::string plural_scope;

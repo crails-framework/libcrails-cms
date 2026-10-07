@@ -12,6 +12,7 @@ import imagePickerField from "./admin/image_picker_field.js";
 import audioPickerField from "./admin/audio_picker_field.js";
 import createSelectField from "./admin/selectField.js";
 import DirtyForm from "./admin/dirty_form.js";
+import VersionPicker from "./admin/version_picker.js";
 import SortableRelationshipTable from "./admin/sortable_relationship.js";
 import HtmlTextArea from "./admin/html_textarea.js";
 import {initializeHighlight} from "./admin/html_textarea.js";
@@ -115,6 +116,7 @@ window.Cms = {
   MenuEditor:      MenuEditor,
   TomSelect:       TomSelect,
   DirtyForm:       DirtyForm,
+  VersionPicker:   VersionPicker,
   Style:           Style,
   i18n:            i18n,
   indentjs:        indentjs,
@@ -152,6 +154,8 @@ function initialize(event) {
       audioPickerField(formGroup);
     }
   });
+  // initialize version pickers
+  VersionPicker.loadFromElements("[data-version-picker]");
   // initialize tomSelect
   createSelectField("#tagPicker");
   createSelectField("#userGroupPicker");

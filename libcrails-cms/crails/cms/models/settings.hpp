@@ -15,6 +15,7 @@ namespace Crails::Cms
     static const std::string scope;
     static const std::string plural_scope;
     static const std::string view;
+    static constexpr unsigned int default_max_versions = 10;
 
     virtual void edit(Data);
     virtual void merge_data(Data) const;
@@ -45,6 +46,10 @@ namespace Crails::Cms
 
     const std::string& get_footer() const { return footer; }
     void set_footer(const std::string& value) { footer = value; }
+
+    // Maximum number of versions kept per versioned resource, not counting the live one. 0 means unlimited.
+    unsigned int get_max_versions() const { return max_versions; }
+    void set_max_versions(unsigned int value) { max_versions = value; }
 
     bool get_enable_user_subscribe() const { return enable_user_subscribe; }
     void set_enable_user_subscribe(bool value) { enable_user_subscribe = value; }
@@ -82,6 +87,8 @@ namespace Crails::Cms
     std::string plugins;
     Crails::Odb::id_type homepage_id;
     bool enable_user_subscribe = false;
+    #pragma db default(10)
+    unsigned int max_versions = default_max_versions;
     #pragma db transient
     bool plugins_updated = false;
   };
