@@ -1,3 +1,5 @@
+import {onPageTeardown} from "./page_lifecycle.js";
+
 function getStyle(target, styleName) {
   let compStyle = getComputedStyle(target),
       style = compStyle[styleName];
@@ -44,9 +46,20 @@ export default class SortableTable {
     this.mouseX = 0;
     this.mouseY = 0;
     this.mouseDrag = false;
-    document.addEventListener('mousedown', this.onMouseDown.bind(this));
-    document.addEventListener('mousemove', this.onMouseMove.bind(this));
-    document.addEventListener('mouseup', this.onMouseUp.bind(this));
+    this.documentListeners = {
+      mousedown: this.onMouseDown.bind(this),
+      mousemove: this.onMouseMove.bind(this),
+      mouseup:   this.onMouseUp.bind(this)
+    };
+    for (let name in this.documentListeners)
+      document.addEventListener(name, this.documentListeners[name]);
+    onPageTeardown(() => this.destroy(), { once: true });
+  }
+
+  destroy() {
+    for (let name in this.documentListeners)
+      document.removeEventListener(name, this.documentListeners[name]);
+    this.documentListeners = {};
   }
 
   getTargetRow(target) {

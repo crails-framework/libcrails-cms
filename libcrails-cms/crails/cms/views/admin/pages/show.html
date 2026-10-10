@@ -6,6 +6,7 @@
 #include "../../../views/style.hpp"
 #include "../../../views/layout.hpp"
 #include "../../../views/version_picker.hpp"
+#include "../../../views/admin/script_initializer.hpp"
 
 const Crails::Cms::Settings& @settings;
 const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
@@ -69,12 +70,12 @@ using namespace Crails::Cms;
   <% end %>
 </div>
 
-<script>
+<%= Crails::Cms::inline_script_tag() yields %>
   const layoutSelector = document.querySelector("select[name='<%= form.scoped_name("layout") %>']");
   layoutSelector.addEventListener("change", function() {
     window.location.href = `${window.location.origin}${window.location.pathname}?with_cms_layout=${layoutSelector.value}`;
   });
-</script>
+<% yields-end %>
 
 <%= partial("admin/page_editor", {
   {"cms_layout", &cms_layout},

@@ -75,6 +75,7 @@ namespace Crails::Cms
       else
       {
         Super::received_flash["error"] = i18n::t("admin.flash.resource-not-created");
+        Super::response.set_status_code(Crails::HttpStatus::unprocessable_entity);
         render_editor(model);
       }
     }
@@ -97,6 +98,7 @@ namespace Crails::Cms
         else
         {
           Super::received_flash["error"] = i18n::t("admin.flash.resource-not-updated");
+          Super::response.set_status_code(Crails::HttpStatus::unprocessable_entity);
           render_editor(*model);
         }
       }

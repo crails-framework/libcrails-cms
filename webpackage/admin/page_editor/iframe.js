@@ -1,3 +1,6 @@
+import {onPageTeardown} from "../page_lifecycle.js";
+import waitFor from "../wait_for.js";
+
 function updateIFrameHeight(iframe) {
   const rect = iframe.wrapper.getBoundingClientRect();
   const controls = document.querySelector("form + div");
@@ -6,23 +9,6 @@ function updateIFrameHeight(iframe) {
   if (controls)
     height = controls.getBoundingClientRect().height;
   iframe.wrapper.style.height = `${Math.max(200, height - 130)}px`;
-}
-
-function waitForIframeJavaScript(iframe, resolve) {
-  try {
-    const value = iframe.contentWindow.eval("Cms");
-    if (value) {
-      resolve();
-      return ;
-    }
-  } catch (err) {
-    if (iframe.contentDocument.head.querySelector("script") == null) {
-      console.log("PageEditor iframe re-running the assets importers");
-      iframe.importers.scripts();
-      iframe.importers.styles();
-    }
-  }
-  setTimeout(waitForIframeJavaScript.bind(this, iframe, resolve), 250);
 }
 
 function importMetaTag(iframe, name) {
@@ -53,6 +39,7 @@ function importScript(iframe, javascripts) {
 export default function createIFrame(textarea, resources = {}) {
   const wrapper = document.createElement("div");
   const iframe = document.createElement("iframe");
+  const resizeIframe = updateIFrameHeight.bind(this, iframe);
 
   wrapper.classList.add("cms-page-editor");
   wrapper.appendChild(iframe);
@@ -64,17 +51,21 @@ export default function createIFrame(textarea, resources = {}) {
     customScripts: importScript.bind(this, iframe),
     customStyles: importStylesheets.bind(this, iframe)
   };
-  iframe.ready = new Promise(resolve => {
-    waitForIframeJavaScript(iframe, resolve);
-  });
+  iframe.ready = waitFor(function() { return iframe.contentWindow.eval("Cms") != undefined });
   iframe.ready.then(function() {
     iframe.contentDocument.body.classList.add("page-editor-frame");
+    if (iframe.contentWindow.Turbo)
+      iframe.contentWindow.Turbo.session.drive = false;
   });
   ["attachments-admin-path", "page-list-path"].forEach(importMetaTag.bind(this, iframe));
   iframe.importers.scripts();
   iframe.importers.styles();
-  updateIFrameHeight(iframe);
-  window.addEventListener("scroll", updateIFrameHeight.bind(this, iframe));
-  window.addEventListener("resize", updateIFrameHeight.bind(this, iframe));
+  resizeIframe();
+  window.addEventListener("scroll", resizeIframe);
+  window.addEventListener("resize", resizeIframe);
+  onPageTeardown(() => {
+    window.removeEventListener("scroll", resizeIframe);
+    window.removeEventListener("resize", resizeIframe);
+  }, { once: true });
   return iframe;
 }

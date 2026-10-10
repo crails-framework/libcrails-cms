@@ -25,7 +25,7 @@ export default function(formGroup, fileAttribute = "url") {
       preview.style.display = "none";
     });
     input.addEventListener("change", function() {
-       updatePreview(preview, input);
+      updatePreview(preview, input);
     });
   } else {
     console.warn("image picker field lacks the <img> attribute required to display a preview", formGroup);
@@ -35,7 +35,7 @@ export default function(formGroup, fileAttribute = "url") {
     mimetype: "image/*",
     fileAttribute: fileAttribute,
     upddate: function() {
-      updatePreview(preview, input)
+      input.dispatchEvent(new Event("change"));
     }
   });
 }

@@ -1,3 +1,5 @@
+import * as Turbo from "@hotwired/turbo";
+import {onPageLoad, onPageTeardown} from "./admin/page_lifecycle.js";
 import {createUppy, createUppyUpdater} from "./admin/uppy.js";
 import {adminCKEditor} from "./admin/ckeditor.js";
 import {adminCKEditorButton} from "./admin/ckeditor_dialog.js";
@@ -21,6 +23,7 @@ import MultiplePictureInput from "./admin/page_editor/multiple_picture_input.js"
 import MenuEditor from "javascript-menu-editor";
 import indentjs from "indent.js";
 import initializeTranslatableInputs from "./admin/i18n_cms_input.js";
+import waitFor from "./admin/wait_for.js";
 import "./admin/plugin_index.js";
 
 window.createUppy = createUppy;
@@ -120,6 +123,9 @@ window.Cms = {
   Style:           Style,
   i18n:            i18n,
   indentjs:        indentjs,
+  onPageLoad:      onPageLoad,
+  onPageTeardown:  onPageTeardown,
+  waitFor:         waitFor,
   inputs: {
     MultiplePictureInput: MultiplePictureInput,
   },
@@ -134,36 +140,77 @@ window.Cms = {
   }
 };
 
-function initialize(event) {
+function initialize() {
   const mainForm = document.getElementById("main-form");
 
+  Turbo.config.drive.progressBarDelay = 0;
+  Turbo.cache.exemptPageFromCache();
   if (mainForm) {
     window.mainFormWatcher = new DirtyForm(mainForm);
   }
   Promise.all([Style.ready, i18n.ready]).then(function() {
-    // initialize generic file pickers
     for (let formGroup of document.querySelectorAll(".file-form-group")) {
       filePickerField(formGroup);
     }
-    // initialize thumbnail pickers
     for (let formGroup of document.querySelectorAll(".thumbnail-form-group")) {
       imagePickerField(formGroup, "miniature_url");
     }
-    // initialize audio pickers
     for (let formGroup of document.querySelectorAll(".audio-form-group")) {
       audioPickerField(formGroup);
     }
   });
-  // initialize version pickers
   VersionPicker.loadFromElements("[data-version-picker]");
-  // initialize tomSelect
   createSelectField("#tagPicker");
   createSelectField("#userGroupPicker");
-  // initialize sortable tables
   SortableRelationshipTable.loadFromElements("table.sortable-relationship");
-  // initialize i18n_cms_input
   if (window.tr_locales != undefined)
     window.translatableInputs = initializeTranslatableInputs();
+  if (typeof crailscms_on_content_loaded != "undefined")
+    crailscms_on_content_loaded(document);
 }
 
-document.addEventListener("DOMContentLoaded", initialize);
+function destroyQuietly(target, ...methods) {
+  const method = methods.find(name => target && typeof target[name] == "function");
+
+  try {
+    const result = method ? target[method]() : null;
+    if (result && result.catch) result.catch(() => {});
+  } catch (error) {
+    console.warn("teardown:", error);
+  }
+}
+
+function teardownPage() {
+  try {
+    if (typeof crailscms_on_content_unload != "undefined")
+      crailscms_on_content_unload(document);
+  } catch (err) {
+    console.warn("teardown:", error);
+  }
+  if (window.mainFormWatcher) {
+    window.mainFormWatcher.disconnect();
+    delete window.mainFormWatcher;
+  }
+  if (window.ckeditors) {
+    window.ckeditors.forEach(editor => {
+      const textarea = editor.sourceElement;
+      if (textarea)
+        textarea.value = editor.getData();
+      editor.destroy().catch(error => console.error(error));
+    });
+    window.ckeditors = [];
+  }
+  if (window.uppy) {
+    destroyQuietly(window.uppy, "destroy", "close");
+    delete window.uppy;
+  }
+  SortableRelationshipTable.unloadAll();
+  delete window.pageEditor;
+  delete window.picker;
+  delete window.translatableInputs;
+  delete window.tr_locales;
+  delete window.tr_current_locale;
+}
+
+onPageLoad(initialize);
+onPageTeardown(teardownPage);

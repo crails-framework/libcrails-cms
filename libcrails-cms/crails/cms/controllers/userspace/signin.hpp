@@ -42,7 +42,10 @@ namespace Crails::Cms
       if (Super::params["redirect_to"].exists())
         Super::redirect_to(Super::params["redirect_to"].template as<std::string>());
       else
+      {
+        Super::response.set_status_code(Crails::HttpStatus::unprocessable_entity);
         new_();
+      }
     }
 
   private:

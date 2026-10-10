@@ -6,6 +6,10 @@ location: https://github.com/crails-framework/libcrails.git#master
 
 :
 role: prerequisite
+location: https://github.com/crails-framework/libcrails-any.git#master
+
+:
+role: prerequisite
 location: https://github.com/crails-framework/libcrails-action.git#master
 
 :

@@ -13,7 +13,7 @@ std::map<std::string, std::string> @tag_options;
 
 <br/>
 
-<%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"}}) yields %>
+<%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"},{"data-turbo","false"}}) yields %>
   <div id="upload-block">
   </div>
 <% yields-end %>
