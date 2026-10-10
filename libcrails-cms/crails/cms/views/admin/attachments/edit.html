@@ -7,7 +7,7 @@ const Crails::Cms::LocalRoute route = Crails::Cms::LocalRoute(vars);
 
 // END LINKING
 
-<%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"}}) yields %>
+<%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"},{"data-turbo","false"}}) yields %>
   <div id="upload-block">
   </div>
 <% yields-end %>

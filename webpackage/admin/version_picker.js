@@ -1,3 +1,4 @@
+import * as Turbo from "@hotwired/turbo";
 import i18n from "../i18n.js";
 
 // Drives the widget rendered by Crails::Cms::render_version_picker.
@@ -58,7 +59,7 @@ export default class VersionPicker {
       url.searchParams.delete("version");
     else
       url.searchParams.set("version", number);
-    window.location.assign(url.toString());
+    Turbo.visit(url.toString());
   }
 
   static loadFromElements(selector) {

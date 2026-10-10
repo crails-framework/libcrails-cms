@@ -34,6 +34,7 @@ std::string @mode = "default";
 <% end %>
 
 <script>
+function local_page_editor_initializer() {
 <% switch (cms_layout.get_type()) do -%>
 <% case Crails::Cms::DocumentLayoutType: -%>
 
@@ -68,7 +69,9 @@ std::string @mode = "default";
     if (typeof crailscms_on_content_loaded == "function")
       crailscms_on_content_loaded(pageEditor.root);
   });
-
 <% break -%>
 <% end -%>
+}
+
+Cms.onPageLoad(local_page_editor_initializer, { once: true });
 </script>

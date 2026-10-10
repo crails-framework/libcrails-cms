@@ -1,4 +1,5 @@
 import Style from "../style.js";
+import {onPageTeardown} from "./page_lifecycle.js";
 
 const transitionDuration = 215;
 const popupTransition = `transform ${transitionDuration}ms`;
@@ -18,10 +19,10 @@ export default class {
         this.abort();
     });
     this.root.appendChild(this.popup);
-    document.addEventListener("DOMContentLoaded", () => {
+    onPageTeardown(() => {
       if (document.body.contains(this.root))
         document.body.removeChild(this.root);
-    });
+    }, { once: true });
   }
 
   open() {

@@ -15,7 +15,7 @@ std::string column_class = "pure-u-1-1";
 
 <div class="pure-g">
   <div class="<%= column_class %>">
-    <%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"}}) yields %>
+    <%= form({{"id","upload-form"},{"action", route.make("upload")},{"method","post"},{"data-turbo","false"}}) yields %>
       <div id="upload-block">
       </div>
     <% yields-end %>

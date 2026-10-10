@@ -1,3 +1,5 @@
+import {onPageLoad} from "./page_lifecycle.js";
+
 const pluginCheckboxSelector = "input[data-plugin]";
 
 function pluginPage() {
@@ -24,7 +26,7 @@ function initializePluginBox(item) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+onPageLoad(function() {
   const page = pluginPage();
 
   if (page)

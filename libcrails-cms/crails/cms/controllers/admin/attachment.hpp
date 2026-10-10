@@ -71,7 +71,8 @@ namespace Crails::Cms
       {
         model->edit(Super::params[Crails::Cms::Attachment::scope]);
         Super::database.save(*model);
-        render_editor(*model);
+        Super::flash["info"] = i18n::t("admin.flash.resource-updated");
+        Super::redirect_to(Super::get_url_for(*model));
       }
     }
 

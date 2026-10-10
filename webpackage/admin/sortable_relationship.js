@@ -26,6 +26,11 @@ export default class SortableRelationship extends SortableTable {
   }
 }
 
+SortableRelationship.unloadAll = function() {
+  (window._sortableRelationships || []).forEach(table => table.destroy());
+  window._sortableRelationships = [];
+}
+
 SortableRelationship.loadFromElements = function(selector) {
   const list = [];
   document.querySelectorAll(selector).forEach(table => {

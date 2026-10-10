@@ -64,7 +64,10 @@ namespace Crails::Cms::Userspace
         Super::redirect_to_userspace_home();
       }
       else
+      {
+        Super::response.set_status_code(Crails::HttpStatus::unprocessable_entity);
         render_register_form(user);
+      }
     }
 
     void edit()
