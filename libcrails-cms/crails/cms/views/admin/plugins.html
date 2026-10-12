@@ -50,9 +50,9 @@ using namespace Crails;
 
   <% yields-end %>
 
-  <div class="<%= style.button_group_classes() %>">
+  <%= style.admin_form_actions() yields %>
     <%= style.admin_submit_button("main-form") %>
-  </div>
+  <% yields-end %>
 <% end else do -%>
   <h4><%= i18n::t("admin.plugins-are-disabled") %></h4>
 <% end -%>

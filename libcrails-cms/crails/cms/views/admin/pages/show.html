@@ -62,13 +62,13 @@ using namespace Crails::Cms;
   </div>
 <% yields-end %>
 
-<div class="<%= style.button_group_classes() %>">
+<%= style.admin_form_actions() yields %>
   <%= style.admin_submit_button("main-form") %>
   <%= style.admin_preview_button(route.make("preview")) %>
   <% if (model.is_persistent()) do %>
     <%= style.admin_remove_button(*this, url) %>
   <% end %>
-</div>
+<% yields-end %>
 
 <%= Crails::Cms::inline_script_tag() yields %>
   const layoutSelector = document.querySelector("select[name='<%= form.scoped_name("layout") %>']");

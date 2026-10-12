@@ -74,8 +74,8 @@ std::string @mode = "default";
           if (typeof crailscms_on_content_loaded == "function")
             crailscms_on_content_loaded(pageEditor.root);
           if (typeof crailscms_on_content_unload == "function")
-            Cms.onPageUnloaded(function() { crailscms_on_content_unload(pageEditor.root); }, { once: true });
-          Cms.onPageUnloaded(function() { window.pageEditor = root.pageEditor = null; }, { once: true });
+            Cms.onPageTeardown(function() { crailscms_on_content_unload(pageEditor.root); }, { once: true });
+          Cms.onPageTeardown(function() { window.pageEditor = root.pageEditor = null; }, { once: true });
         });
       } else if (root) {
         return console.log("Page: duplicate loads, form already has a PageEditor, cancelling", root.pageEditor);

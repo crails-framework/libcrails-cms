@@ -79,6 +79,12 @@ string Cms::Style::signin_button(const std::string& form_id) const
   return admin_submit_button(form_id);
 }
 
+string Cms::Style::admin_form_actions(function<string()> yield) const
+{
+  const map<string,string> attrs{{"class",button_group_classes()}};
+  return section(attrs, yield);
+}
+
 string Cms::Style::admin_remove_button(const HtmlTemplate& tpl, const string& url, string label) const
 {
   HtmlTemplate::Yieldable yield = [&label]()

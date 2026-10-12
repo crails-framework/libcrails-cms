@@ -96,6 +96,6 @@ using namespace Crails::Cms;
   <% yields-end %>
 <% yields-end %>
 
-<div class="<%= style.button_group_classes() %>">
+<%= style.admin_form_actions() yields %>
   <%= style.admin_submit_button("main-form") %>
-</div>
+<% yields-end %>

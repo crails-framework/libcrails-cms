@@ -36,12 +36,12 @@ using namespace Crails::Cms;
   <% yields-end %>
 <% yields-end %>
 
-<div class="<%= style.button_group_classes() %>">
+<%= style.admin_form_actions() yields %>
   <%= style.admin_submit_button("menuForm") %>
   <% if (model.is_persistent()) do %>
     <%= style.admin_remove_button(*this, "/admin/menus/" + std::to_string(model.get_id())) %>
   <% end %>
-</div>
+<% yields-end %>
 
 <script>
 var menuEditor = new Cms.MenuEditor('myEditor', { 

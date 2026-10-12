@@ -41,12 +41,12 @@ using namespace Crails::Cms;
   <%= form.text_area("body", &Crails::Cms::BlogPost::get_body) %>
 <% yields-end %>
 
-<div class="<%= style.button_group_classes() %>">
+<%= style.admin_form_actions() yields %>
   <%= style.admin_submit_button("main-form") %>
   <%= style.admin_preview_button(route.make("preview")) %>
   <% if (model.is_persistent()) do %>
     <%= style.admin_remove_button(*this, route.make("post", model.get_id())) %>
   <% end %>
-</div>
+<% yields-end %>
 
 <script>Cms.initializers.CKEditor("<%= form.scoped_name("body") %>");</script>

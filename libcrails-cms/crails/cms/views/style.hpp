@@ -58,6 +58,7 @@ namespace Crails::Cms
     virtual ClassList document_wrapper_classes() const { return {"document"}; }
 
     virtual std::string signin_button(const std::string& form_id = "") const;
+    virtual std::string admin_form_actions(std::function<std::string()> yield) const;
     virtual std::string admin_remove_button(const HtmlTemplate&, const std::string& url, std::string label = "") const;
     virtual std::string admin_submit_button(const std::string& form_id = "") const;
     virtual std::string admin_preview_button(const std::string& action) const;
