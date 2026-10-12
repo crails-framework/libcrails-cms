@@ -59,7 +59,6 @@ using namespace Crails::Cms;
   <%= form.i18n_text_area<i18n::String>("body", model.get_body()) %>
 
   <%= form.hidden_field("has_footer", std::string(model.get_has_footer() ? "1" : "0")) %>
-  </div>
 <% yields-end %>
 
 <%= style.admin_form_actions() yields %>
