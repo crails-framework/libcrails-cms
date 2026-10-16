@@ -13,16 +13,14 @@ namespace Crails::Cms
   public:
     virtual ~MenuManager() = default;
 
-    virtual std::shared_ptr<Menu> find_menu(const std::string& name) const { return nullptr; }
+    virtual std::shared_ptr<Menu> find_menu(Crails::Odb::Connection&, const std::string& name) const { return nullptr; }
 
   protected:
     template<typename MENU>
-    std::shared_ptr<MENU> find_menu_with_type(const std::string& name) const
+    std::shared_ptr<MENU> find_menu_with_type(Crails::Odb::Connection& database, const std::string& name) const
     {
-      Crails::Odb::ConnectionHandle database;
       std::shared_ptr<MENU> menu;
 
-      database.rollback_on_destruction = false;
       database.find_one(menu, odb::query<MENU>::name == name);
       return menu;
     }

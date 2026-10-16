@@ -34,7 +34,8 @@ namespace Crails::Cms
 
   string RenderMenu::operator()(HtmlTemplate::Yieldable yield)
   {
-    auto menu = MenuManager::singleton::require().find_menu(name);
+    Odb::Connection* database = tpl->var<Odb::Connection*>("database");
+    auto menu = MenuManager::singleton::require().find_menu(*database, name);
 
     if (menu)
       return style->render_menu(*menu, direction, classes, yield());
