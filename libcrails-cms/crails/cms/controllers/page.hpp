@@ -88,6 +88,7 @@ namespace Crails::Cms
         );
 
         Super::prepare_open_graph(model);
+        injectable.set_standalone(true);
         injectable.run();
       }
       else

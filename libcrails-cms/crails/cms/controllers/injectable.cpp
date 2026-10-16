@@ -8,12 +8,13 @@ using namespace Crails::Cms;
     
 Injectable::Injectable(Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& sink) : vars(vars), sink(sink), database(database)
 {
-  this->vars.erase("layout");
 }
 
 void Injectable::render(const std::string_view view, Crails::SharedVars local_vars)
 {
   local_vars = Crails::merge(local_vars, vars);
+  if (!standalone)
+    local_vars.erase("layout");
   renderer = Crails::Renderer::pick_renderer(string(view), formats);
   if (renderer)
     renderer->render_template(string(view), sink, local_vars);

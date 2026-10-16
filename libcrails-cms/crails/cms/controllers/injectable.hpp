@@ -67,6 +67,7 @@ namespace Crails::Cms
     friend class Crails::Cms::Injector;
   protected:
     bool                          injecting = false;
+    bool                          standalone = false;
     Crails::SharedVars            vars;
     Crails::RenderTarget&         sink;
     const Crails::Renderer*       renderer;
@@ -80,6 +81,7 @@ namespace Crails::Cms
     void render(const std::string_view view, Crails::SharedVars local_vars = {});
     void render_text(const std::string_view text);
     void set_accepted_formats(const std::string& value) { formats = value; }
+    void set_standalone(bool value) { standalone = value; }
   };
 
   struct InjectableTraits
