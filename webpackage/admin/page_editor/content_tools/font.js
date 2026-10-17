@@ -59,6 +59,26 @@ function makeFontSizeInput(dialog) {
   return makeFormGroup("size", input);
 }
 
+function makeLineHeightInput(dialog) {
+  const input = document.createElement("input");
+
+  dialog.lineHeightInput = input;
+  input.type = "number";
+  input.value = parseFloat(dialog.element.style.lineHeight);
+  input.addEventListener("change", dialog.updatePreview.bind(dialog));
+  return makeFormGroup("line-height", input);
+}
+
+function makeLetterSpacingInput(dialog) {
+  const input = document.createElement("input");
+
+  dialog.letterSpacingInput = input;
+  input.type = "number";
+  input.value = parseFloat(dialog.element.style.letterSpacing);
+  input.addEventListener("change", dialog.updatePreview.bind(dialog));
+  return makeFormGroup("letter-spacing", input);
+}
+
 function makeFontColorInput(dialog) {
   const input = document.createElement("input");
   const checkbox = document.createElement("input");
@@ -95,7 +115,7 @@ class FontDialog extends CmsDialog {
     Style.apply("modalContent", content);
     Style.apply("modalControls", controls);
     Style.apply("confirmButton", confirmButton);
-    preview.textContent = "The quick brown fox jumps over a lazy dog.";
+    preview.innerHTML = "The quick brown fox jumps over a lazy dog.<br>Sphinx of black quartz, judge my vow!";
     content.appendChild(title);
     controls.appendChild(confirmButton);
     super();
@@ -110,6 +130,8 @@ class FontDialog extends CmsDialog {
     confirmButton.textContent = i18n.t("admin.confirm");
     content.appendChild(makeFontFamilyInput(this));
     content.appendChild(makeFontSizeInput(this));
+    content.appendChild(makeLineHeightInput(this));
+    content.appendChild(makeLetterSpacingInput(this));
     content.appendChild(makeFontColorInput(this));
     content.appendChild(preview);
     confirmButton.addEventListener("click", this.accepted.bind(this));
@@ -141,11 +163,15 @@ class FontDialog extends CmsDialog {
 
   applyStyleOnElement(target) {
     const size = parseInt(this.sizeInput.value);
+    const lineHeight = parseInt(this.lineHeightInput.value);
+    const letterSpacing = parseInt(this.letterSpacingInput.value);
     const font = this.selectedFont;
     const hasColor = this.colorCheckbox.checked;
 
     this.setStyle(target, "fontSize", !isNaN(size) ? `${size}px` : null);
     this.setStyle(target, "fontFamily", font ? font : null);
+    this.setStyle(target, "lineHeight", !isNaN(lineSize) ? `${size}px` : null);
+    this.setStyle(target, "letterSpacing", !isNaN(letterSpacing) ? `${size}px` : null);
     this.setStyle(target, "color", hasColor ? this.colorInput.value : null);
   }
 

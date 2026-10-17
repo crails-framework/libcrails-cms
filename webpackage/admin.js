@@ -6,7 +6,6 @@ import {adminCKEditorButton} from "./admin/ckeditor_dialog.js";
 import {CKEditorExports} from "./admin/ckeditor_exports.js";
 import TomSelect from "tom-select/dist/js/tom-select.base.js";
 import previewPost from "./admin/preview.js";
-import pageEditor from "./admin/page_editor.js";
 import ProudCmsDialog from "./admin/dialog.js";
 import ProudCmsPicker from "./admin/file_picker.js";
 import filePickerField from "./admin/file_picker_field.js";
