@@ -145,7 +145,7 @@ function initialize() {
   Turbo.config.drive.progressBarDelay = 0;
   Turbo.cache.exemptPageFromCache();
   if (mainForm) {
-    window.mainFormWatcher = new DirtyForm(mainForm);
+    i18n.ready.then(function() { window.mainFormWatcher = new DirtyForm(mainForm); });
   }
   Promise.all([Style.ready, i18n.ready]).then(function() {
     for (let formGroup of document.querySelectorAll(".file-form-group")) {
@@ -207,8 +207,6 @@ function teardownPage() {
   delete window.pageEditor;
   delete window.picker;
   delete window.translatableInputs;
-  delete window.tr_locales;
-  delete window.tr_current_locale;
 }
 
 onPageLoad(initialize);
