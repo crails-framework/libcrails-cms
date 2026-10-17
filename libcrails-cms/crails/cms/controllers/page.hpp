@@ -18,7 +18,8 @@ namespace Crails::Cms
     class InjectablePage : public Crails::Cms::Injectable
     {
       typedef std::shared_ptr<typename Super::Model> ModelPtr;
-      ModelPtr model;
+      ModelPtr model_container;
+      const Super::Model* model = nullptr;
     public:
       InjectablePage(Crails::Odb::Connection& database, const Crails::SharedVars& vars, Crails::RenderTarget& sink)
         : Injectable(database, vars, sink)
@@ -36,8 +37,16 @@ namespace Crails::Cms
       bool require_model()
       {
         if (!model)
-          database.find_one(model, page_id());
+        {
+          database.find_one(model_container, page_id());
+          model = model_container.get();
+        }
         return model != nullptr;
+      }
+
+      void set_page(const Super::Model& model)
+      {
+        this->model = &model;
       }
 
       void run() override
@@ -60,7 +69,7 @@ namespace Crails::Cms
             vars["render_footer"] = !model->get_has_footer();
           }
           render(page_view, {
-            {"page", reinterpret_cast<const Crails::Cms::Page*>(model.get())}
+            {"page", reinterpret_cast<const Crails::Cms::Page*>(model)}
           });
         }
         else
@@ -89,6 +98,7 @@ namespace Crails::Cms
 
         Super::prepare_open_graph(model);
         injectable.set_standalone(true);
+        injectable.set_page(model);
         injectable.run();
       }
       else

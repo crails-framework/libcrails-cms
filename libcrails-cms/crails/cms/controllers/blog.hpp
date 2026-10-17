@@ -61,7 +61,7 @@ namespace Crails::Cms
       virtual void run_with_paginator(Data params, Crails::Paginator& paginator)
       {
         using namespace std;
-        Crails::SharedVars view_vars;
+        Crails::SharedVars view_vars = this->vars;
         odb::result<IndexPost> posts;
         PostList models;
         odb::query<Post> query = Post::template make_index_query<odb::query<Post>>(params);
