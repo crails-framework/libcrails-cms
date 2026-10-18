@@ -14,7 +14,8 @@ using namespace Crails::Cms;
 <%= form({
   {"action", "/session"},
   {"method", "post"},
-  {"class", style.form_classes()}
+  {"class", style.form_classes(),
+  {"data-turbo", "false"}}
 }) yields %>
   <%= tag("input", {
     {"type", "hidden"},
