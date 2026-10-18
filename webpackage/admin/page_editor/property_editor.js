@@ -5,6 +5,7 @@ import UrlPicker from "../url_picker.js";
 import InjectorOptionPicker from "../injector_option_picker.js";
 import MultiplePictureInput from "./multiple_picture_input.js";
 import VideoInput from "./video_input.js";
+import makeIconPickerInput from "./icon_picker_input.js";
 import Style from "../../style.js";
 
 function makeUrlPickerInput(input) {
@@ -245,6 +246,9 @@ export default class {
     case "images":
     case "pictures":
       new MultiplePictureInput(input);
+      break ;
+    case "icon":
+      makeIconPickerInput(inputGroup, input, definition);
       break ;
     case "bool":
     case "boolean":

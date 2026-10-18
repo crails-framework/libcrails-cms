@@ -40,6 +40,18 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: require.resolve('@migliori/universal-icon-picker/assets/js/universal-icon-picker.js'),
+        use: [{
+          loader: 'expose-loader',
+          options: {
+            exposes: {
+              globalName: 'UniversalIconPicker',
+              override: true,
+            },
+          },
+        }],
       }
     ]
   }
