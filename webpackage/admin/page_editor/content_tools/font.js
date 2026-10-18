@@ -170,7 +170,7 @@ class FontDialog extends CmsDialog {
 
     this.setStyle(target, "fontSize", !isNaN(size) ? `${size}px` : null);
     this.setStyle(target, "fontFamily", font ? font : null);
-    this.setStyle(target, "lineHeight", !isNaN(lineSize) ? `${size}px` : null);
+    this.setStyle(target, "lineHeight", !isNaN(lineHeight) ? `${size}px` : null);
     this.setStyle(target, "letterSpacing", !isNaN(letterSpacing) ? `${size}px` : null);
     this.setStyle(target, "color", hasColor ? this.colorInput.value : null);
   }
