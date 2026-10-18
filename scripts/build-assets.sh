@@ -22,7 +22,7 @@ $SASS -s compressed $STYLE_ROOT/admin.scss > $OUTPUT/admin.css
 $SASS -s compressed $STYLE_ROOT/content_tools.scss > $OUTPUT/content_tools.css
 $SASS -s compressed $STYLE_ROOT/proudcms.scss > $OUTPUT/proudcms.css
 
-node_modules/.bin/webpack --progress
+npm run build
 
 if [ -x node_modules/.bin/terser ] ; then
   node_modules/.bin/terser "$TURBO_SOURCE" --compress --mangle -o "$OUTPUT/turbo.js" || exit 1
