@@ -8,7 +8,8 @@ export TURBO_SOURCE=node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
 
 mkdir -p "$OUTPUT"
 
-npm install
+npm install -g pnpm
+pnpm install
 
 if [ ! -f "$TURBO_SOURCE" ] ; then
   echo "build-assets.sh: $TURBO_SOURCE not found (npm install @hotwired/turbo)" >&2
