@@ -186,6 +186,48 @@ export default class extends NestedComponentEditor {
     element.value = clone.innerHTML;
   }
 
+  // Same serialization as save(), without writing it anywhere.
+  serialize() {
+    const wasEditing = this.editMode;
+
+    if (wasEditing)
+      this.contentEditor.stop(true);
+    const html = stripInjectionPreviews(this.root.cloneNode(true)).innerHTML;
+    if (wasEditing)
+      this.startContentEditor();
+    return html;
+  }
+
+  startContentEditor() {
+    this.contentEditor.start();
+    this.contentEditor.toolbox().unmount();
+  }
+
+  // Replaces the page and binds the components again. Everything that holds
+  // on to the previous components (selection, history) is released.
+  loadHtml(html) {
+    const wasEditing = this.editMode;
+
+    if (wasEditing)
+      this.contentEditor.stop(true);
+    if (this.anchors.enabled)
+      this.anchors.disable();
+    this.toolbar?.setActiveComponent(null);
+    this.root.innerHTML = html;
+    this.components = [];
+    this.bindElements();
+    this.updateEditableComponents();
+    if (wasEditing)
+      this.startContentEditor();
+    if (window.mainFormWatcher)
+      window.mainFormWatcher.isDirty = true;
+  }
+
+  // Set by page_editor.js when the page is stored in several languages.
+  get canSyncLanguages() {
+    return Boolean(this.localeController) && (window.tr_locales || []).length > 1;
+  }
+
   updateEditableComponents() {
     this.contentEditor.syncRegions(this.collectEditableElements());
   }

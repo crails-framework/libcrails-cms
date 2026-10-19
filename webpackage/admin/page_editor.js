@@ -30,8 +30,6 @@ export default function(layout, form, fieldName, mode, resources) {
 
     return iframe.ready.then(function() {
       setIframeHTML(iframe, textarea);
-      if (textarea.dataset.localized == '1')
-        textarea.$localeController.onLocaleChanged(() => { setIframeHTML(iframe, textarea) });
       if (themeVariables)
         iframe.contentDocument.head.appendChild(themeVariables);
       Cms.initializers.ContentTools(iframe);
@@ -39,8 +37,20 @@ export default function(layout, form, fieldName, mode, resources) {
       const pageEditor = new layout(iframe, mode);
       const textAreaInitializer = function() { initializeTextArea(textarea, pageEditor); };
 
-      textarea?.$localeController?.onLocaleChanged(textAreaInitializer);
       textAreaInitializer();
+      if (textarea.dataset.localized == '1') {
+        pageEditor.localeController = textarea.$localeController;
+        textarea.$localeController.onLocaleChanged(function() {
+          const previous = pageEditor.targetInput;
+
+          // Keep what was done on the page in the language we're leaving, then
+          // load the other one and bind its components.
+          if (previous && previous !== textarea.$localeController.currentInput)
+            previous.value = pageEditor.serialize();
+          textAreaInitializer();
+          pageEditor.loadHtml(textarea.$localeController.currentInput.value);
+        });
+      }
       pageEditor.toolbar = createToolbar(pageEditor);
       pageEditor.ctToolbox = overloadCtToolbox(pageEditor.window.Cms.ContentTools);
       pageEditor.bindElements();

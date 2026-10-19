@@ -5,6 +5,7 @@ import PropertyEditor from "./property_editor.js";
 import StructurePreview from "./structure_preview.js";
 import GridComponentEditor from "./grid_component_editor.js";
 import ComponentControls from "./component_controls.js";
+import openSyncDialog from "./sync/dialog.js";
 
 function displaySizeAction(pageEditor) {
   const group = new MetaAction("device");
@@ -58,6 +59,11 @@ function createMainMenu(pageEditor) {
   menu.addAction(swapEditorLayoutAction(pageEditor));
   if (pageEditor.settingsComponent)
     menu.addAction(layoutSettingsMenu(pageEditor));
+  if (pageEditor.canSyncLanguages) {
+    menu.addAction(new Action("sync", () => {
+      openSyncDialog(pageEditor);
+    }));
+  }
   menu.addAction(new Action("exit", () => {
     pageEditor.setEditorActive(false);
   }));

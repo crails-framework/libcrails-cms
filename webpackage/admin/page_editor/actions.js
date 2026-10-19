@@ -51,6 +51,20 @@ export default actions = new class {
     return this.done;
   }
 
+  // Forget everything: used when the whole page is rebuilt, which leaves
+  // earlier actions pointing at components that don't exist anymore.
+  reset() {
+    this.actions = [];
+    this.actionsIndex = 0;
+  }
+
+  dropAfter(action) {
+    const index = this.actions.indexOf(action);
+
+    if (index >= 0)
+      this.actions.length = index + 1;
+  }
+
   store(action) {
     this.actions = this.actions.splice(0, this.actionsIndex);
     this.actions.push(action);
@@ -71,6 +85,35 @@ export class HistoryAction {
   run() {
     actions.store(this);
     return this.apply();
+  }
+}
+
+// Replaces the whole page. Used by the language synchronization.
+// Since the components are rebuilt each time, it's the only action that can
+// remain in the history around it: older actions are forgotten when it runs,
+// and the ones that were done after it are forgotten when it's undone.
+export class PageSnapshotAction extends HistoryAction {
+  constructor(layout, oldHtml, newHtml) {
+    super("page-snapshot");
+    this.layout = layout;
+    this.oldHtml = oldHtml;
+    this.newHtml = newHtml;
+  }
+
+  run() {
+    actions.reset();
+    return super.run();
+  }
+
+  apply() {
+    this.layout.loadHtml(this.newHtml);
+    return super.apply();
+  }
+
+  unapply() {
+    actions.dropAfter(this);
+    this.layout.loadHtml(this.oldHtml);
+    return super.unapply();
   }
 }
 
