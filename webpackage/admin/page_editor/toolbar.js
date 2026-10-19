@@ -2,6 +2,7 @@ import i18n from "../../i18n.js";
 import Style from "../../style.js";
 import {Action, MetaAction, ControlMenu} from "./controls.js";
 import PropertyEditor from "./property_editor.js";
+import StructurePreview from "./structure_preview.js";
 import GridComponentEditor from "./grid_component_editor.js";
 import ComponentControls from "./component_controls.js";
 
@@ -178,6 +179,31 @@ class Toolbar {
       crailscms_on_content_unload(this.controlsWrapper);
     this.controlsWrapper.innerHTML = "";
     this.controlsWrapper.appendChild(content);
+  }
+
+  showStructurePreview(mode, target) {
+    if (!this.structurePreview) {
+      this.structurePreview = new StructurePreview(this.pageEditor.anchors);
+    } else {
+      this.structurePreview.update();
+    }
+    this.setControls(this.structurePreview.root);
+  }
+
+  hideStructurePreview() {
+    if (this.structurePreview && this.controlsWrapper.contains(this.structurePreview.root)) {
+      if (this.currentComponent) {
+        this.setControls(this.propertyEditor.content);
+      } else {
+        this.setControls(document.createElement("div"));
+      }
+    }
+  }
+
+  updateStructurePreview() {
+    if (this.structurePreview) {
+      this.structurePreview.update();
+    }
   }
 }
 

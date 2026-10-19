@@ -166,11 +166,17 @@ export default class {
     this.context = mode == 'add' ? this.component : this.target.parent;
     this.autoPickAttempted = false;
     this.scheduleAnchorsUpdate();
+    if (this.component.toolbar) {
+      this.component.toolbar.showStructurePreview(mode, this.target);
+    }
   }
 
   disable() {
     this.container.style.display = "none";
     this.target = this.actionType = undefined;
+    if (this.component.toolbar) {
+      this.component.toolbar.hideStructurePreview();
+    }
   }
 
   clear() {
@@ -189,7 +195,11 @@ export default class {
     this.context = context;
     this.autoPickAttempted = false;
     this.scheduleAnchorsUpdate();
+    if (this.component.toolbar) {
+      this.component.toolbar.updateStructurePreview();
+    }
   }
+
 
   behaviorForAnchor(anchor) {
     return anchor.newContext
