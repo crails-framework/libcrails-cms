@@ -59,6 +59,7 @@ function openIconPicker(definition, handler) {
 
 export default function makeIconPickerInput(inputGroup, input, definition) {
   const preview = document.createElement("span");
+  const buttonGroup = document.createElement("div");
   const chooseButton = document.createElement("button");
   const clearButton = document.createElement("button");
   const update = function() {
@@ -76,6 +77,7 @@ export default function makeIconPickerInput(inputGroup, input, definition) {
 
   input.type = "hidden";
   Style.apply("badge", preview);
+  Style.apply("buttonGroup", buttonGroup);
   [chooseButton, clearButton].forEach(button => {
     Style.apply("button", button);
     button.type = "button";
@@ -91,8 +93,9 @@ export default function makeIconPickerInput(inputGroup, input, definition) {
     setValue("");
   });
   inputGroup.appendChild(preview);
-  inputGroup.appendChild(chooseButton);
-  inputGroup.appendChild(clearButton);
+  inputGroup.appendChild(buttonGroup);
+  buttonGroup.appendChild(chooseButton);
+  buttonGroup.appendChild(clearButton);
   // Instantiating loads the icon fonts' CSS, needed for the preview.
   ensurePicker(definition);
   update();
