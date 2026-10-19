@@ -7,7 +7,11 @@ import actions from "./actions.js";
 import Sticky from "sticky-js";
 import {stripInjectionPreviews} from "./injected_component_editor.js";
 
-function onRootComponentMutation() {
+function onRootComponentMutation(records = []) {
+  const filters = (window.Cms && window.Cms.PageEditor.mutationFilters) || [];
+
+  if (records.length > 0 && records.every(record => filters.some(filter => filter(record))))
+    return ;
   if (window.mainFormWatcher) {
     window.mainFormWatcher.isDirty = true;
   }
@@ -177,9 +181,9 @@ export default class extends NestedComponentEditor {
   save(element) {
     if (this.editMode)
       this.contentEditor.stop(true);
-    element.value = 
-      stripInjectionPreviews(this.root.cloneNode(true))
-      .innerHTML;
+    const clone = stripInjectionPreviews(this.root.cloneNode(true));
+    ((window.Cms && window.Cms.PageEditor.saveCleaners) || []).forEach(cleaner => cleaner(clone));
+    element.value = clone.innerHTML;
   }
 
   updateEditableComponents() {

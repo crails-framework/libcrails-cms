@@ -55,7 +55,7 @@ std::string @mode = "default";
     stylesheets.push(<%= [](std::ostream& ss) { ss << std::quoted(CrailsCmsAssets::content_tools_css); } %>);
 
     <% for (const auto& javascript : cms_layout.get_javascripts()) do -%>
-      //javascripts.push(<%= [&javascript](std::ostream& ss) { ss << std::quoted(javascript); } %>);
+      javascripts.push(<%= [&javascript](std::ostream& ss) { ss << std::quoted(javascript); } %>);
     <% end -%>
     <% for (const auto& stylesheet : cms_layout.get_stylesheets()) do -%>
       stylesheets.push(<%= [&stylesheet](std::ostream& ss) { ss << std::quoted(stylesheet); } %>);
