@@ -68,6 +68,11 @@ using namespace Crails::Cms;
     <%= form.text_field("public_url", &Crails::Cms::Settings::get_public_url) %>
   <% yields-end %>
 
+  <%= style.form_group() yields %>
+    <%= form.label_for("max_versions", i18n::t("form.label.max-version-history-size")) %>
+    <%= form.text_field("max_versions", &Crails::Cms::Settings::get_max_version) %>
+  <% yields-end %>
+
   <% if (plugins && plugins->has_available_plugins()) do -%>
     <%= style.form_group() yields %>
       <%= form.label_for("plugins", i18n::t("form.label.plugins")) %>
