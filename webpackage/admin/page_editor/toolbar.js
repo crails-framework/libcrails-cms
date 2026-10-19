@@ -60,7 +60,7 @@ function createMainMenu(pageEditor) {
   if (pageEditor.settingsComponent)
     menu.addAction(layoutSettingsMenu(pageEditor));
   if (pageEditor.canSyncLanguages) {
-    menu.addAction(new Action("sync", () => {
+    menu.addAction(new Action("translate", () => {
       openSyncDialog(pageEditor);
     }));
   }

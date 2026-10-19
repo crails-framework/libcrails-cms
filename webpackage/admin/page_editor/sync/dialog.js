@@ -82,8 +82,9 @@ class SyncDialog extends CmsDialog {
     const apply = element("button", null, t("apply"));
     const importAll = element("button", null, t("import-all"));
     const cancel = element("button", null, i18n.t("admin.cancel"));
-    const selectAll = element("button", null, t("select-all"));
-    const selectNone = element("button", null, t("select-none"));
+    const selectGroup = document.createElement("div");
+    const selectAll = element("button", null, i18n.t("admin.select-all"));
+    const selectNone = element("button", null, i18n.tt("admin.select-none"));
     const option = element("label", "cms-sync-option");
     const link = document.createElement("input");
 
@@ -114,15 +115,20 @@ class SyncDialog extends CmsDialog {
 
     Style.apply("modalTitle", title);
     Style.apply("formGroup", picker);
+    Style.apply("buttonGroup", selectGroup);
     Style.apply("modalControls", controls);
     Style.apply("confirmButton", apply);
     Style.apply("button", importAll, selectAll, selectNone);
     Style.apply("dangerButton", cancel);
     picker.appendChild(label);
     picker.appendChild(select);
+    selectGroup.appendChild(selectAll);
+    selectGroup.appendChild(selectNone);
     controls.append(apply, importAll, cancel);
-    this.popup.append(title, picker, this.summary, selectAll, selectNone, this.list, option, controls);
+    this.popup.append(title, picker, this.summary, selectGroup, this.list, option, controls);
     this.compare();
+    if (typeof crailscms_on_content_loaded == "function")
+      crailscms_on_content_loaded(this.popup);
   }
 
   compare() {

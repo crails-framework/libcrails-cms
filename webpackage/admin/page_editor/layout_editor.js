@@ -83,6 +83,7 @@ export default class extends NestedComponentEditor {
   constructor(iframe, componentTypes) {
     super(null, iframe.contentDocument.body, componentTypes);
     window.pageEditor = this;
+    this.componentType = "layout";
     this.history = actions;
     this.ctWatcher = new ContentToolsWatcher(this);
     this.iframe = iframe;

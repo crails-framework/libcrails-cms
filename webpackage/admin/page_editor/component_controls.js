@@ -14,11 +14,21 @@ export default class extends ControlMenu {
   }
 
   initializeActions() {
+    const parent = this.componentEditor.parent;
+
     this.clear();
+    if (parent)
+      this.addAction(new Action("parent", this.moveToParent.bind(this)));
     this.addAction(new Action("move", this.startMove.bind(this)));
     this.addAction(new Action("up", this.moveUp.bind(this)));
     this.addAction(new Action("down", this.moveDown.bind(this)));
     this.addAction(new Action("remove", this.remove.bind(this)));
+  }
+
+  moveToParent() {
+    const parent = this.componentEditor.parent;
+    const toolbar = this.componentEditor.layout.toolbar;
+    toolbar.setActiveComponent(parent);
   }
 
   startMove() {

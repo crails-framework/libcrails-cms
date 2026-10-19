@@ -7,6 +7,29 @@ function componentTitle(component) {
   return i18n.t(`admin.page-editor.components.${typename}`);
 }
 
+function isElementVisible(element, win) {
+  if (!element || !win) return false;
+  const rect = element.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (win.innerHeight || win.document.documentElement.clientHeight) &&
+    rect.right <= (win.innerWidth || win.document.documentElement.clientWidth)
+  );
+}
+
+function scrollToComponent(component) {
+  const win = component.window;
+  const el = component.root;
+  if (el && win && !isElementVisible(el, win)) {
+    const rect = el.getBoundingClientRect();
+    win.scrollTo({
+      top: rect.top + win.scrollY - 60,
+      behavior: 'smooth'
+    });
+  }
+}
+
 export default class StructurePreview {
   constructor(anchorsController) {
     this.anchorsController = anchorsController;
@@ -21,7 +44,7 @@ export default class StructurePreview {
     const heading = document.createElement("div");
     heading.classList.add("property-section-title");
     Style.apply("menuHeading", heading);
-    heading.textContent = i18n.t("admin.page-editor.document-structure") || "Document Structure";
+    heading.textContent = i18n.t("admin.page-editor.document-structure");
     this.root.appendChild(heading);
 
     const rootComponent = this.anchorsController.component;
@@ -68,7 +91,30 @@ export default class StructurePreview {
     } else {
       link.addEventListener("click", (event) => {
         event.preventDefault();
+        scrollToComponent(component);
         this.anchorsController.changeContext(component);
+      });
+
+      // Highlight corresponding anchors in the anchor view on hover
+      link.addEventListener("mouseenter", () => {
+        scrollToComponent(component);
+        if (this.anchorsController.$actions) {
+          this.anchorsController.$actions.forEach(item => {
+            if (item.anchor.newContext === component || item.anchor.container === component) {
+              item.action.root.classList.add("hovered");
+            }
+          });
+        }
+      });
+
+      link.addEventListener("mouseleave", () => {
+        if (this.anchorsController.$actions) {
+          this.anchorsController.$actions.forEach(item => {
+            if (item.anchor.newContext === component || item.anchor.container === component) {
+              item.action.root.classList.remove("hovered");
+            }
+          });
+        }
       });
     }
 
