@@ -1,4 +1,4 @@
-i// Diff & merge engine used to synchronize a PageEditor page with the same
+// Diff & merge engine used to synchronize a PageEditor page with the same
 // page written in another language.
 //
 // This module only deals with serialized HTML and the DOM. It knows nothing

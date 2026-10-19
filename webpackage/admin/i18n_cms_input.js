@@ -52,6 +52,8 @@ export default function initialize() {
   manager.setCurrentLocale(window.tr_current_locale);
   manager.onInputsChanged = emplaceLocalePicker.bind(manager, manager, localePicker);
   manager.onInputsChanged();
-  crailscms_on_content_loaded(localePicker);
+  i18n.ready.then(function() {
+    crailscms_on_content_loaded(localePicker);
+  });
   return manager;
 }

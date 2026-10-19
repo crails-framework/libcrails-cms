@@ -70,7 +70,7 @@ using namespace Crails::Cms;
 
   <%= style.form_group() yields %>
     <%= form.label_for("max_versions", i18n::t("form.label.max-version-history-size")) %>
-    <%= form.text_field("max_versions", &Crails::Cms::Settings::get_max_version) %>
+    <%= form.number_field("max_versions", &Crails::Cms::Settings::get_max_versions) %>
   <% yields-end %>
 
   <% if (plugins && plugins->has_available_plugins()) do -%>
