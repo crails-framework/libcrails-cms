@@ -29,6 +29,9 @@ string OpenGraph::render() const
 
   stream
     << HtmlTemplate::tag("meta", map<string,string>{
+      {"name", "description"}, {"content", description}
+    })
+    << HtmlTemplate::tag("meta", map<string,string>{
       {"property", "og:title"}, {"content", title}
     })
     << HtmlTemplate::tag("meta", map<string,string>{
