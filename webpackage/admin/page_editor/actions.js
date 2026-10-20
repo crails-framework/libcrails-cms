@@ -168,7 +168,7 @@ export class ComponentPropertyAction extends HistoryAction {
   apply() {
     if (this.input)
       this.input.value = this.newValue;
-    this.component.updateProperty(this.property, this.newValue);
+    this.component.updateProperty(this.property, this.newValue, this.input);
     return super.apply();
   }
 

@@ -27,6 +27,12 @@ export default class extends GridComponentEditor() {
     super.bindElements();
   }
 
+  updateProperty(property, newValue, input) {
+    super.updateProperty(property, newValue, input);
+    if (property == "image" && input.dataset.alt.length > 0)
+      this.updateProperty("imageAlt", input.dataset.alt);
+  }
+
   get imageWidth() {
     return this.root.dataset.width;
   }

@@ -32,6 +32,7 @@ function makeFilePickerInput(input, title, options) {
     dialog.title = title;
     dialog.plugin.filePicked = function(file) {
       input.value = file.url;
+      input.dataset.alt = file.description;
     };
     dialog.open();
   });
