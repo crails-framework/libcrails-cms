@@ -104,6 +104,9 @@ class LocalizedInputManager {
   constructor(root) {
     this.root = root;
     this.inputs = [];
+    this.currentLocale = null;
+    this.localeListeners = [];
+    this.pickerRequests = 0;
     this.observer = new MutationObserver(this.initializeNewInputs.bind(this));
     this.observer.observe(root, {
       childList: true,
@@ -131,8 +134,34 @@ class LocalizedInputManager {
     this.onInputsChanged();
   }
 
+  // True when something on the page needs the language picker: either localized
+  // inputs, or a custom editor that asked for it with requireLocalePicker().
+  get hasLocalizedContent() {
+    return this.inputs.length > 0 || this.pickerRequests > 0;
+  }
+
+  // For editors that manage their own translated data (such as the menu editor)
+  // and aren't made of data-localized inputs. Shows the language picker.
+  requireLocalePicker() {
+    this.pickerRequests++;
+    this.onInputsChanged();
+  }
+
+  onLocaleChanged(callback) {
+    this.localeListeners.push(callback);
+  }
+
+  offLocaleChanged(callback) {
+    const index = this.localeListeners.indexOf(callback);
+
+    if (index >= 0)
+      this.localeListeners.splice(index, 1);
+  }
+
   setCurrentLocale(locale) {
+    this.currentLocale = locale;
     this.inputs.forEach(input => input.$localeController.setCurrentLocale(locale));
+    this.localeListeners.slice().forEach(callback => callback(locale));
   }
 
   onInputsChanged() {

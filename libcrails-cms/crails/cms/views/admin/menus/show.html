@@ -4,6 +4,7 @@
 #include "../../../routes.hpp"
 #include "../../../models/menu.hpp"
 #include "../../../views/style.hpp"
+#include "../../../views/admin/script_initializer.hpp"
 
 const Crails::Cms::Style& style = Crails::Cms::Style::singleton::require();
 const Crails::Cms::Menu& @model;
@@ -12,7 +13,7 @@ Crails::FormBuilder<Crails::Cms::Menu> form = Crails::FormBuilder<Crails::Cms::M
 
 using namespace Crails::Cms;
 // END LINKING
-<%= form_for(model, route(), {{"class",style.form_classes()},{"id","menuForm"}}) yields %>
+<%= form_for(model, route(), {{"class",style.form_classes()},{"id","main-form"}}) yields %>
   <%= style.form_group() yields %>
     <%= form.label_for("name", i18n::t("form.label.name")) %>
     <%= form.text_field("name", &Crails::Cms::Menu::get_name) %>
@@ -37,45 +38,98 @@ using namespace Crails::Cms;
 <% yields-end %>
 
 <%= style.admin_form_actions() yields %>
-  <%= style.admin_submit_button("menuForm") %>
+  <%= style.admin_submit_button("main-form") %>
   <% if (model.is_persistent()) do %>
     <%= style.admin_remove_button(*this, "/admin/menus/" + std::to_string(model.get_id())) %>
   <% end %>
 <% yields-end %>
 
-<script>
-var menuEditor = new Cms.MenuEditor('myEditor', { 
-  maxLevel: 2,
-  labelEdit: '<%= Crails::fonticon_tag(Crails::FontIcon::Edit) %>',
-  labelRemove: '<%= Crails::fonticon_tag(Crails::FontIcon::Destroy) %>',
-  labelMoveUp: '<%= Crails::fonticon_tag(Crails::FontIcon::ChevronUp) %>',
-  labelMoveDown: '<%= Crails::fonticon_tag(Crails::FontIcon::ChevronDown) %>',
-  buttonGroupClass: '<%= style.button_group_classes() %>',
-  secondaryButtonClass: '<%= style.button_classes() + style.small_button_classes() %>',
-  primaryButtonClass: '<%= style.confirm_button_classes() + style.small_button_classes() %>',
-  dangerButtonClass: '<%= style.danger_button_classes() + style.small_button_classes() %>',
-  textConfirmDelete: '<%= i18n::t("admin.confirm-remove-item") %>',
-  onChanged: function() { document.querySelector("#menuEditorOutput").value = menuEditor.getString(); },
-  listOptions: {
-    opener: {
-      as: 'html',
-      close: '<%= Crails::fonticon_tag(Crails::FontIcon::MinusBox) %>',
-      open: '<%= Crails::fonticon_tag(Crails::FontIcon::PlusBox) %>',
-      openerClass: '<%= style.button_classes() + style.small_button_classes() + "opener" %>'
-    }
-  }
-});
-menuEditor.setForm(document.querySelector("#menuForm"));
-menuEditor.setInputContainer(document.querySelector("#menuEditorForm"));
-menuEditor.setUpdateButton(document.querySelector("#btnUpdate"));
-menuEditor.setAddButton(document.querySelector("#btnAdd"));
-menuEditor.setData(<%= model.get_data_as_json() %>);
+<%= Crails::Cms::inline_script_tag() yields %>
+  // When the site is translated (window.tr_locales is set by the admin layout), the menu is
+  // stored as one list of items per locale: {"en": [...], "fr": [...]}. Otherwise, it is a
+  // plain list of items.
+  var menuOutput = document.querySelector("#menuEditorOutput");
+  var menuLocalized = window.tr_locales != undefined;
+  var menuTranslations = menuLocalized ? <%= model.get_translations_as_json() %> : {};
+  var menuLocale = window.tr_current_locale;
+  var menuSwitching = false;
 
-var urlInput = document.querySelector(".form-group.url-group input");
-var urlSearchButton = urlInput.nextElementSibling;
-urlSearchButton.addEventListener("click", function(event) {
-  var urlDialog = new Cms.UrlPickerDialog(function(url) { urlInput.value = url; });
-  event.preventDefault();
-  urlDialog.open();
-});
-</script>
+  function syncMenuOutput() {
+    if (menuSwitching || typeof menuEditor == "undefined" || !menuEditor)
+      return;
+    if (menuLocalized) {
+      const serialized = menuEditor.getString();
+
+      menuTranslations[menuLocale] = serialized ? JSON.parse(serialized) : [];
+      menuOutput.value = JSON.stringify(menuTranslations);
+    }
+    else
+      menuOutput.value = menuEditor.getString();
+  }
+
+  var menuEditor = new Cms.MenuEditor('myEditor', { 
+    maxLevel: 2,
+    labelEdit: '<%= Crails::fonticon_tag(Crails::FontIcon::Edit) %>',
+    labelRemove: '<%= Crails::fonticon_tag(Crails::FontIcon::Destroy) %>',
+    labelMoveUp: '<%= Crails::fonticon_tag(Crails::FontIcon::ChevronUp) %>',
+    labelMoveDown: '<%= Crails::fonticon_tag(Crails::FontIcon::ChevronDown) %>',
+    buttonGroupClass: '<%= style.button_group_classes() %>',
+    secondaryButtonClass: '<%= style.button_classes() + style.small_button_classes() %>',
+    primaryButtonClass: '<%= style.confirm_button_classes() + style.small_button_classes() %>',
+    dangerButtonClass: '<%= style.danger_button_classes() + style.small_button_classes() %>',
+    textConfirmDelete: '<%= i18n::t("admin.confirm-remove-item") %>',
+    onChanged: syncMenuOutput,
+    listOptions: {
+      opener: {
+        as: 'html',
+        close: '<%= Crails::fonticon_tag(Crails::FontIcon::MinusBox) %>',
+        open: '<%= Crails::fonticon_tag(Crails::FontIcon::PlusBox) %>',
+        openerClass: '<%= style.button_classes() + style.small_button_classes() + "opener" %>'
+      }
+    }
+  });
+  menuEditor.setForm(document.querySelector("#main-form"));
+  menuEditor.setInputContainer(document.querySelector("#menuEditorForm"));
+  menuEditor.setUpdateButton(document.querySelector("#btnUpdate"));
+  menuEditor.setAddButton(document.querySelector("#btnAdd"));
+  menuEditor.setData(menuLocalized ? (menuTranslations[menuLocale] || []) : <%= model.get_data_as_json() %>);
+  syncMenuOutput();
+
+  function setupMenuLocalePicker() {
+    const manager = window.translatableInputs;
+
+    if (!manager)
+      return ;
+    manager.requireLocalePicker();
+    manager.onLocaleChanged(function(locale) {
+      if (locale == menuLocale)
+        return ;
+      // Keep what was done in the language we're leaving, then load the other one.
+      syncMenuOutput();
+      menuLocale = locale;
+      menuSwitching = true;
+      try {
+        menuEditor.setData(menuTranslations[locale] || []);
+      } finally {
+        menuSwitching = false;
+      }
+      syncMenuOutput();
+    });
+  }
+
+  if (menuLocalized) {
+    // The language picker is created by admin.js once the page is loaded
+    if (window.translatableInputs)
+      setupMenuLocalePicker();
+    else
+      Cms.onPageLoad(setupMenuLocalePicker, { once: true });
+  }
+
+  var urlInput = document.querySelector(".form-group.url-group input");
+  var urlSearchButton = urlInput.nextElementSibling;
+  urlSearchButton.addEventListener("click", function(event) {
+    var urlDialog = new Cms.UrlPickerDialog(function(url) { urlInput.value = url; });
+    event.preventDefault();
+    urlDialog.open();
+  });
+<% yields-end %>

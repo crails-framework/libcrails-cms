@@ -33,10 +33,12 @@ function createLocalePicker(input) {
 function emplaceLocalePicker(manager, localePicker) {
   const form = document.querySelector("#main-form");
 
-  if (!localePicker.parentElement && manager.inputs.length > 0)
-    form.insertBefore(localePicker, form.firstChild);
-  else if (localePicker.parentElement && !manager.inputs.length)
-    form.removeChild(localePicker);
+  if (form) {
+    if (!localePicker.parentElement && manager.hasLocalizedContent)
+      form.insertBefore(localePicker, form.firstChild);
+    else if (localePicker.parentElement && !manager.hasLocalizedContent)
+      form.removeChild(localePicker);
+  }
 }
 
 export default function initialize() {
