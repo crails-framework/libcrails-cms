@@ -101,7 +101,7 @@ export default class extends CmsDialog {
       caption.textContent = urlData.href;
       li.addEventListener("click", event => {
         event.preventDefault();
-        this.callback(urlData.href);
+        this.callback(urlData.href, urlData.title);
         this.close();
       });
       li.appendChild(name);

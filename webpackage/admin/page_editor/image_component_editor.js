@@ -15,6 +15,7 @@ export default class extends GridComponentEditor() {
     const image = this.document.createElement("img");
 
     image.src = defaultImage;
+    image.alt = "";
     image.onerror = function() {
       image.src = defaultImage;
     };
@@ -29,7 +30,7 @@ export default class extends GridComponentEditor() {
 
   updateProperty(property, newValue, input) {
     super.updateProperty(property, newValue, input);
-    if (property == "image" && input.dataset.alt.length > 0)
+    if (property == "image" && input && input.dataset.alt.length > 0)
       this.updateProperty("imageAlt", input.dataset.alt);
   }
 

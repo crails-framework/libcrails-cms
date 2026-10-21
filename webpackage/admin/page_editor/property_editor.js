@@ -15,7 +15,10 @@ function makeUrlPickerInput(input) {
   button.textContent = i18n.t("admin.search");
   button.addEventListener("click", function(event) {
     event.preventDefault();
-    const dialog = new UrlPicker(function(url) { input.value = url; });
+    const dialog = new UrlPicker(function(url, title) {
+      input.value = url;
+      input.dataset.alt = title;
+    });
     dialog.open();
   });
   return button;
