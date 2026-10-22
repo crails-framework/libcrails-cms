@@ -90,13 +90,13 @@ namespace Crails::Cms
     {
       if (model.can_read(Super::get_current_user()))
       {
+        Super::prepare_open_graph(model);
         InjectablePage injectable(
           Super::database,
           Super::vars,
           Super::response
         );
 
-        Super::prepare_open_graph(model);
         injectable.set_standalone(true);
         injectable.set_page(model);
         injectable.run();
