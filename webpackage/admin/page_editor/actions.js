@@ -39,28 +39,28 @@ export default actions = new class {
     return this.actions[this.actions.length - 1];
   }
 
-  undo() {
-    const action = this.actions[this.actionsIndex - 1];
+  enqueue(task) {
+    const result = this.done.then(task);
+    this.done = result.catch(() => {});
+    return result;
+  }
 
-    if (action && action.state) {
+  undo() {
+    return this.enqueue(() => {
+      const action = this.actions[this.actionsIndex - 1];
+      if (!action) return;
       this.actionsIndex -= 1;
-      return this.done.then(() => {
-        return action.unapply();
-      });
-    }
-    return this.done;
+      return action.unapply();
+    });
   }
 
   redo() {
-    const action = this.actions[this.actionsIndex];
-
-    if (action && !action.state) {
+    return this.enqueue(() => {
+      const action = this.actions[this.actionsIndex];
+      if (!action) return;
       this.actionsIndex += 1;
-      return this.done.then(() => {
-        return action.apply();
-      });
-    }
-    return this.done;
+      return action.apply();
+    });
   }
 
   // Forget everything: used when the whole page is rebuilt, which leaves
@@ -96,7 +96,7 @@ export class HistoryAction {
   apply() { this.state = 1; return Promise.resolve(true); }
   run() {
     actions.store(this);
-    return this.apply();
+    return actions.enqueue(() => this.apply());
   }
 }
 
