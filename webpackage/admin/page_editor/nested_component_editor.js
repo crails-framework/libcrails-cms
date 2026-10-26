@@ -102,6 +102,7 @@ export default class NestedComponentEditor extends ComponentEditor {
   }
 
   bindElements() {
+    this.components = [];
     for (let i = 0 ; i < this.componentElements.length ; ++i) {
       const element = this.componentElements[i];
       const typename = element.dataset.component;

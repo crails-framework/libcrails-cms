@@ -77,6 +77,19 @@ function clearContentToolsFocus(root) {
   });
 }
 
+function stripEditorChrome(root) {
+  root.querySelectorAll(".ct-app").forEach(el => el.remove());
+  return root;
+}
+
+function cleanedClone(element) {
+  const clone = stripEditorChrome(stripInjectionPreviews(element.cloneNode(true)));
+  const cleaners = (window.Cms && window.Cms.PageEditor && window.Cms.PageEditor.saveCleaners) || [];
+
+  cleaners.forEach(cleaner => cleaner(clone));
+  return clone;
+}
+
 import {ContentToolsWatcher} from "./content_tools/history.js";
 
 export default class extends NestedComponentEditor {
@@ -182,18 +195,15 @@ export default class extends NestedComponentEditor {
   save(element) {
     if (this.editMode)
       this.contentEditor.stop(true);
-    const clone = stripInjectionPreviews(this.root.cloneNode(true));
-    ((window.Cms && window.Cms.PageEditor.saveCleaners) || []).forEach(cleaner => cleaner(clone));
-    element.value = clone.innerHTML;
+    element.value = cleanedClone(this.root).innerHTML;
   }
 
-  // Same serialization as save(), without writing it anywhere.
   serialize() {
     const wasEditing = this.editMode;
 
     if (wasEditing)
       this.contentEditor.stop(true);
-    const html = stripInjectionPreviews(this.root.cloneNode(true)).innerHTML;
+    const html = cleanedClone(this.root).innerHTML;
     if (wasEditing)
       this.startContentEditor();
     return html;

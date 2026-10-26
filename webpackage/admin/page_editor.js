@@ -10,6 +10,7 @@ function setIframeHTML(iframe, textarea) {
     ? textarea.$localeController.currentInput.value
     : textarea.value;
   iframe.contentDocument.body.innerHTML = html;
+  iframe.contentDocument.body.querySelectorAll(".ct-app").forEach(el => el.remove());
 }
 
 function initializeTextArea(textarea, pageEditor) {
@@ -53,7 +54,6 @@ export default function(layout, form, fieldName, mode, resources) {
       }
       pageEditor.toolbar = createToolbar(pageEditor);
       pageEditor.ctToolbox = overloadCtToolbox(pageEditor.window.Cms.ContentTools);
-      pageEditor.bindElements();
       pageEditor.updateEditableComponents();
       overloadCtHistoryTools(pageEditor);
       form.addEventListener("submit", function(event) {
