@@ -275,13 +275,12 @@ export default class extends NestedComponentEditor {
   }
 
   addComponent(type, insertAnchor) {
-    const hadFooter = this.hasFooter;
+    const Type = this.componentTypes[type];
 
-    return super.addComponent(type, insertAnchor).then(component => {
-      if (component.isFooter && hadFooter) {
-        alert(i18n.t("admin.page-editor.only-one-footer-allowed"));
-        this.removeComponent(component);
-      }
-    });
+    if (Type && Type.isFooter && this.hasFoote) {
+      alert(i18n.t("admin.page-editor.only-one-footer-allowed"));
+      return Promise.resolve(null);
+    }
+    return super.addComponent(type, insertAnchor);
   }
 }
