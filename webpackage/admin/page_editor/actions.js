@@ -16,6 +16,7 @@ export default actions = new class {
   constructor() {
     this.actions = [];
     this.actionsIndex = 0;
+    this.pending = 0;
     this.done = Promise.resolve();
   }
 
@@ -40,8 +41,9 @@ export default actions = new class {
   }
 
   enqueue(task) {
+    this.pending++;
     const result = this.done.then(task);
-    this.done = result.catch(() => {});
+    this.done = result.catch(() => {}).then(() => { this.pending--; });
     return result;
   }
 
@@ -49,8 +51,7 @@ export default actions = new class {
     return this.enqueue(() => {
       const action = this.actions[this.actionsIndex - 1];
       if (!action) return;
-      this.actionsIndex -= 1;
-      return action.unapply();
+      return Promise.resolve(action.unapply()).then(() => { this.actionsIndex--; });
     });
   }
 
@@ -58,8 +59,7 @@ export default actions = new class {
     return this.enqueue(() => {
       const action = this.actions[this.actionsIndex];
       if (!action) return;
-      this.actionsIndex += 1;
-      return action.apply();
+      return Promise.resolve(action.apply()).then(() => { this.actionsIndex++; });
     });
   }
 
@@ -95,8 +95,12 @@ export class HistoryAction {
   unapply() { this.state = 0; return Promise.resolve(true); }
   apply() { this.state = 1; return Promise.resolve(true); }
   run() {
-    actions.store(this);
-    return actions.enqueue(() => this.apply());
+    return actions.enqueue(() => {
+      return Promise.resolve(this.apply()).then(result => {
+        actions.store(this);
+        return result;
+      });
+    });
   }
 }
 
