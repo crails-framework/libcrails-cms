@@ -118,6 +118,9 @@ export default class {
   disableEditMode() {
   }
 
+  willDetach() {
+  }
+
   componentAnchors() {
     return [];
   }

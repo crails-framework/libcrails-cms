@@ -1,5 +1,17 @@
 let actions;
 
+function releaseSelection(component) {
+  try {
+    const toolbar = component.layout.toolbar;
+    const current = toolbar && toolbar.currentComponent;
+
+    if (current && (current === component || component.isAncestorOf(current)))
+      toolbar.setActiveComponent(component.parent || null);
+  } catch (err) {
+    console.error("failed to releaseSelection for", component, err);
+  }
+}
+
 export default actions = new class {
   constructor() {
     this.actions = [];
@@ -191,6 +203,7 @@ export class ComponentRemovalAction extends HistoryAction {
   apply() {
     return this.parent.removeComponent(this.component).then(() => {
       this.state = 1;
+      releaseSelection(this.component);
     });
   }
 
@@ -224,6 +237,7 @@ export class ComponentInsertAction extends HistoryAction {
       promise = this.oldParent.insertComponent(this.component, this.oldSibling);
     } else {
       promise = this.newParent.removeComponent(this.component);
+      releaseSelection(this.component);
     }
     return promise.then(() => {
       this.state = 0;

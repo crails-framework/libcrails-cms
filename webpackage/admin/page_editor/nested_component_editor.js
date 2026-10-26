@@ -131,6 +131,7 @@ export default class NestedComponentEditor extends ComponentEditor {
   }
 
   componentsChanged() {
+    this.layout.updateEditableComponents();
   }
 
   componentAnchors() {
@@ -206,13 +207,15 @@ export default class NestedComponentEditor extends ComponentEditor {
 
     if (previousParent && previousParent !== this) {
       startPosition = component.root.getBoundingClientRect();
-      previousParent.removeComponent(component);
+      previousParent.detachComponent(component);
     } else {
       this.detachComponent(component);
     }
     component.parent = this;
     this.components.push(component);
     this.container.insertBefore(component.root, insertAnchor);
+    if (previousParent && previousParent !== this)
+      previousParent.componentsChanged();
     component.enableEditMode();
     component.root.style.top = startPosition.top;
     component.root.style.left = startPosition.left;
@@ -256,8 +259,10 @@ export default class NestedComponentEditor extends ComponentEditor {
     return animate(component.root, "left", 500, () => {
       component.root.style.left = window.outerWidth - component.root.offsetLeft + 100;
     }).then(() => {
-      if (component.root.parentElement === this.container)
+      if (component.root.parentElement === this.container) {
+        component.willDetach();
         this.container.removeChild(component.root);
+      }
       this.detachComponent(component);
       this.componentsChanged();
     });
@@ -320,5 +325,10 @@ export default class NestedComponentEditor extends ComponentEditor {
   disableEditMode() {
     this.components.forEach(component => component.disableEditMode());
     super.disableEditMode();
+  }
+
+  willDetach() {
+    this.components.forEach(component => component.willDetach());
+    super.willDetach();
   }
 }
