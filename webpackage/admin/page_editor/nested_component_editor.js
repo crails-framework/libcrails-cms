@@ -136,6 +136,7 @@ export default class NestedComponentEditor extends ComponentEditor {
 
   componentAnchors() {
     let anchors = [];
+    const last = this.lastComponentElement && this.lastComponentElement.$component;
 
     this.components.forEach(child => {
       if (typeof child.componentTypes == "object") {
@@ -154,13 +155,15 @@ export default class NestedComponentEditor extends ComponentEditor {
         nextSibling:     child.root
       });
     });
-    anchors.push({
-      parent:          this,
-      container:       this.container,
-      component:       this,
-      previousSibling: this.lastComponentElement,
-      nextSibling:     this.lastAnchor
-    });
+    if (!(last && last.isFooter)) {
+      anchors.push({
+        parent:          this,
+        container:       this.container,
+        component:       this,
+        previousSibling: this.lastComponentElement,
+        nextSibling:     this.lastAnchor
+      });
+    }
     return anchors;
   }
 
@@ -203,7 +206,7 @@ export default class NestedComponentEditor extends ComponentEditor {
 
   insertComponent(component, insertAnchor) {
     const previousParent = component.parent;
-    let startPosition = { top: window.innerHeight, left: 0 };
+    let startPosition = { top: this.window.innerHeight, left: 0 };
 
     if (previousParent && previousParent !== this) {
       startPosition = component.root.getBoundingClientRect();
@@ -217,14 +220,14 @@ export default class NestedComponentEditor extends ComponentEditor {
     if (previousParent && previousParent !== this)
       previousParent.componentsChanged();
     component.enableEditMode();
-    component.root.style.top = startPosition.top;
-    component.root.style.left = startPosition.left;
+    component.root.style.top = `${startPosition.top}px`;
+    component.root.style.left = `${startPosition.left}px`;
     return animate(component.root, "all", 500, () => {
       component.root.style.top = 0;
       component.root.style.left = 0;
     }).then(() => {
-      window.scroll({
-        top: component.root.getBoundingClientRect().top + window.scrollY,
+      this.window.scroll({
+        top: component.root.getBoundingClientRect().top + this.window.scrollY,
         behavior: 'smooth'
       });
       this.componentsChanged();

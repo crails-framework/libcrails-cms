@@ -38,7 +38,7 @@ function keyUpManager(pageEditor, event) {
           pageEditor.startComponentAdder();
           return ;
         case 77: // M
-          if (pageEditor.toolbar.currentComponent.root) {
+          if (pageEditor.toolbar?.currentComponent?.root) {
             pageEditor.anchors.target = pageEditor.toolbar.currentComponent;
             pageEditor.anchors.enable('insert');
             event.preventDefault();

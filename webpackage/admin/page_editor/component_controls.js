@@ -19,9 +19,11 @@ export default class extends ControlMenu {
     this.clear();
     if (parent)
       this.addAction(new Action("parent", this.moveToParent.bind(this)));
-    this.addAction(new Action("move", this.startMove.bind(this)));
-    this.addAction(new Action("up", this.moveUp.bind(this)));
-    this.addAction(new Action("down", this.moveDown.bind(this)));
+    if (!this.componentEditor.isFooter) {
+      this.addAction(new Action("move", this.startMove.bind(this)));
+      this.addAction(new Action("up", this.moveUp.bind(this)));
+      this.addAction(new Action("down", this.moveDown.bind(this)));
+    }
     this.addAction(new Action("remove", this.remove.bind(this)));
   }
 
