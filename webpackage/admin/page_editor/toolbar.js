@@ -132,16 +132,29 @@ class Toolbar {
     Style.apply("horizontalMenuWrapper", this.crumbs);
   }
 
+  get previewVisible() {
+    return this.structurePreview && this.controlsWrapper.contains(this.structurePreview.root);
+  }
+
   setActiveComponent(component, force = false) {
+    const previousComponent = this.currentComponent;
     let menu;
 
-    if (this.currentComponent == component && !force)
+    if (previousComponent == component && !force)
       return ;
-    if (this.currentComponent) {
-      if (this.currentComponent.root)
-        delete this.currentComponent.root.dataset.cmsActive;
-      if (this.currentComponent.customEditor)
-        this.componentMenuWrapper.removeChild(this.currentComponent.customEditor);
+    if (previousComponent) {
+      if (this.propertyEditor) {
+        if (previousComponent.root?.isConnected)
+          this.propertyEditor.apply();
+        this.propertyEditor.dispose();
+        this.propertyEditor = null;
+      }
+      if (previousComponent.root)
+        delete previousComponent.root.dataset.cmsActive;
+      if (previousComponent.customEditor)
+        previousComponent.customEditor.remove();
+      if (previousComponent.customEditor)
+        this.componentMenuWrapper.removeChild(previousComponent.customEditor);
       if (typeof crailscms_on_content_unload == "function") {
         crailscms_on_content_unload(this.crumbs);
         crailscms_on_content_unload(this.componentMenuWrapper);
@@ -166,16 +179,11 @@ class Toolbar {
         this.componentMenuWrapper.appendChild(component.customEditor);
       if (menu)
         menu.initializeActions();
+    } else if (!this.previewVisible) {
+      this.setControls(document.createElement("div"));
     }
   }
 
-  // setActiveComponent() is a no-op when called with the component that's
-  // already active, since normally nothing about that component's
-  // properties would have changed just by re-selecting it. Some components
-  // (e.g. an injected component whose injector type just changed) do need a
-  // full rebuild of the PropertyEditor though, since which properties even
-  // exist depends on state internal to the component. This forces exactly
-  // that, without disturbing anything else (crumbs, component controls...).
   reloadActiveComponent() {
     this.setActiveComponent(this.currentComponent, true);
   }
@@ -197,9 +205,10 @@ class Toolbar {
   }
 
   hideStructurePreview() {
-    if (this.structurePreview && this.controlsWrapper.contains(this.structurePreview.root)) {
-      if (this.currentComponent) {
+    if (this.previewVisible) {
+      if (this.currentComponent && this.propertyEditor) {
         this.setControls(this.propertyEditor.content);
+        this.propertyEditor.scheduleAutoUpdate();
       } else {
         this.setControls(document.createElement("div"));
       }

@@ -1,4 +1,4 @@
-import {ComponentPropertyAction} from "./actions.js";
+import actions, {ComponentPropertyAction} from "./actions.js";
 import i18n from "../../i18n.js";
 import FilePicker from "../file_picker.js";
 import UrlPicker from "../url_picker.js";
@@ -290,13 +290,24 @@ export default class {
   }
 
   scheduleAutoUpdate() {
-    if (this.content.parentElement) {
-      setTimeout(this.scheduleAutoUpdate.bind(this), 1500);
-      this.apply();
-    }
+    if (this.timer || this.disposed) return;
+    this.timer = setTimeout(() => {
+      this.timer = null;
+      if (this.content.isConnected) {
+        this.apply();
+        this.scheduleAutoUpdate();
+      }
+    }, 1500);
+  }
+
+  dispose() {
+    this.disposed = true;
+    clearTimeout(this.timer);
+    this.timer = null;
   }
 
   apply(debug = false) {
+    if (actions.pending) return ;
     for (let property in this.inputs) {
       const input = this.inputs[property];
       const oldValue = this.component.propertyValue(property);
