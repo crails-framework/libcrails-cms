@@ -71,6 +71,9 @@ function makeSelectInput(inputGroup, input, property) {
   });
   inputGroup.appendChild(select);
   input.value = select.value;
+  input.addEventListener("change", function() {
+    select.value = input.value;
+  });
 }
 
 function makeRangeInput(inputGroup, input, property) {

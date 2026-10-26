@@ -12,6 +12,14 @@ function releaseSelection(component) {
   }
 }
 
+function writeInput(input, value) {
+  if (input.type == "checkbox")
+    input.checked = Boolean(value);
+  else
+    input.value = value == null ? "" : value;
+  input.dispatchEvent(new Event("change"));
+}
+
 export default actions = new class {
   constructor() {
     this.actions = [];
@@ -183,14 +191,14 @@ export class ComponentPropertyAction extends HistoryAction {
 
   apply() {
     if (this.input)
-      this.input.value = this.newValue;
+      writeInput(this.input, this.newValue);
     this.component.updateProperty(this.property, this.newValue, this.input);
     return super.apply();
   }
 
   unapply() {
     if (this.input)
-      this.input.value = this.oldValue;
+      writeInput(this.input, this.oldValue);
     this.component.updateProperty(this.property, this.oldValue);
     return super.unapply();
   }
