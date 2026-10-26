@@ -9,7 +9,7 @@ function purgeTagsFromContentTools(el) {
   const imageClass = "ce-element--type-image";
   const isImage = el.classList.contains(imageClass);
 
-  el.className = el.className.replace(ctClassMatcher, '').trim();
+  el.setAttribute("class", el.getAttribute("class").replace(ctClassMatcher, '').trim());
   el.removeAttribute('contenteditable');
   if (isImage) {
     el.classList.add("ce-element");
@@ -27,6 +27,15 @@ function getNormalizedHtml(el) {
   return clone.innerHTML;
 }
 
+function unwatchComponent(component) {
+  getOwnedEditableContent(component).forEach(function(editable) {
+    delete editable.$snapshot;
+    delete editable.$snapshotPending;
+  });
+  if (component.components)
+    component.components.forEach(unwatchComponent);
+}
+
 export class ContentToolsWatcher {
   constructor(layout) {
     this.layout = layout;
@@ -40,12 +49,7 @@ export class ContentToolsWatcher {
   }
 
   unwatch() {
-    this.layout.components.forEach(function(component) {
-      getOwnedEditableContent(component).forEach(function(editable) {
-        delete editable.$snapshot;
-        delete editable.$snapshotPending;
-      });
-    });
+    this.layout.components.forEach(unwatchComponent);
   }
 
   watchComponent(component) {

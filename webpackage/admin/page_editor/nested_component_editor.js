@@ -44,24 +44,11 @@ function createAddComponentAction(componentEditor) {
 }
 
 export function getOwnedEditableContent(componentEditor) {
-  const list = [];
-  const candidates = componentEditor.root.querySelectorAll("[data-editable]");
+  const children = componentEditor.components || [];
+  const ownedByChild = function(el) { return children.some(child => child.root.contains(el)); };
 
-  if (componentEditor.components) {
-    for (let i = 0 ; i < candidates.length ; ++i) {
-      const candidate = candidates[i];
-      let owned = true;
-      for (let component of componentEditor.components) {
-        if (component.root.contains(candidate)) {
-          owned = false;
-          break ;
-        }
-      }
-      if (owned)
-        list.push(candidate);
-    }
-  }
-  return list;
+  return Array.from(componentEditor.root.querySelectorAll("[data-editable]"))
+    .filter(el => !ownedByChild(el));
 }
 
 export class ControlMenu extends DefaultControlMenu {
