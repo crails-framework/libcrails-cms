@@ -181,6 +181,18 @@ body.cms-page-editor-active {
 
   .cms-page-editor-toolbar {
     display: block;
+    .toolbar-controls {
+      display: flex;
+      > .page-property-editor {
+        flex-grow: 1;
+      }
+      > .ct-toolbox {
+        position: initial;
+        align-self: end;
+        padding: 0;
+        .ct-grip { display: none; }
+      }
+    }
   }
 
   &.cms-page-editor-vertical {
@@ -196,8 +208,13 @@ body.cms-page-editor-active {
       bottom: 0;
       width: $cms-page-editor-toolbar-width;
       .toolbar-controls {
+        flex-direction: column;
         flex-grow: 1;
         overflow-y: auto;
+        overflow-x: hidden;
+        > .ct-toolbox {
+          width: 100%;
+        }
       }
     }
   }
@@ -219,6 +236,9 @@ body.cms-page-editor-active {
       }
       .toolbar-controls {
         transition: height 250ms ease-in-out;
+        > .ct-toolbox {
+          margin-left: 10px;
+        }
       }
       &:not(:hover) {
         .toolbar-controls {

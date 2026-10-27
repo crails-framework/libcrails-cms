@@ -136,6 +136,10 @@ class Toolbar {
     return this.structurePreview && this.controlsWrapper.contains(this.structurePreview.root);
   }
 
+  get toolbox() {
+    return this.pageEditor.layout.ctToolbox._domElement;
+  }
+
   setActiveComponent(component, force = false) {
     const previousComponent = this.currentComponent;
     let menu;
@@ -188,11 +192,13 @@ class Toolbar {
     this.setActiveComponent(this.currentComponent, true);
   }
 
-  setControls(content) {
+  setControls(content, { withToolbox = true } = {}) {
     if (typeof crailscms_on_content_unload == "function")
       crailscms_on_content_unload(this.controlsWrapper);
     this.controlsWrapper.innerHTML = "";
     this.controlsWrapper.appendChild(content);
+    if (withToolbox && this.toolbox != null)
+      this.controlsWrapper.appendChild(this.toolbox);
   }
 
   showStructurePreview(mode, target) {
@@ -201,7 +207,7 @@ class Toolbar {
     } else {
       this.structurePreview.update();
     }
-    this.setControls(this.structurePreview.root);
+    this.setControls(this.structurePreview.root, { withToolbox: false });
   }
 
   hideStructurePreview() {

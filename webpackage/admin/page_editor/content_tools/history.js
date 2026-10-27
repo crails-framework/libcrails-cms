@@ -8,8 +8,10 @@ const ctClassMatcher = /\bce-element[^\s]*\b/g;
 function purgeTagsFromContentTools(el) {
   const imageClass = "ce-element--type-image";
   const isImage = el.classList.contains(imageClass);
+  const currentClass = el.getAttribute("class");
 
-  el.setAttribute("class", el.getAttribute("class").replace(ctClassMatcher, '').trim());
+  if (currentClass)
+    el.setAttribute("class", currentClass.replace(ctClassMatcher, '').trim());
   el.removeAttribute('contenteditable');
   if (isImage) {
     el.classList.add("ce-element");
