@@ -12,6 +12,13 @@ namespace Crails::Cms
   std::list<std::filesystem::path> find_plugin_paths();
   void find_plugins_at(const std::filesystem::path&, std::list<std::filesystem::path>& output);
 
+  class PluginsBuiltinAssetsHandler : public BuiltinAssetsHandler
+  {
+  public:
+    using BuiltinAssetsHandler::BuiltinAssetsHandler;
+    void set_headers_for_file(BuildingResponse& response, const std::string_view path) const override;
+  };
+
   class Plugins
   {
     SINGLETON(Plugins)

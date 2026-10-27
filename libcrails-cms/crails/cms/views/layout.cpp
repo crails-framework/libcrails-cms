@@ -163,7 +163,7 @@ void Layouts::load_assets(function<void (Crails::RequestHandler*)> callback) con
       AssetsGetter* library_getter = plugin->get_function<AssetsGetter>(symbol);
       const Crails::BuiltinAssets& library = *(*library_getter)();
 
-      callback(new Crails::BuiltinAssetsHandler(library));
+      callback(new Crails::Cms::PluginsBuiltinAssetsHandler(library));
     }
   }
 }

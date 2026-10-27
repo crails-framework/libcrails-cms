@@ -124,4 +124,10 @@ namespace Crails::Cms
 #endif
     return roots;
   }
+
+  void PluginsBuiltinAssetsHandler::set_headers_for_file(BuildingResponse& response, const string_view path) const
+  {
+    if (path.ends_with(".js"))
+      response.set_header(HttpHeader::content_security_policy, "script-src 'self' blob:");
+  }
 }
