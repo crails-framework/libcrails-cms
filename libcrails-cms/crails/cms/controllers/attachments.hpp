@@ -1,12 +1,15 @@
 #pragma once
+#include "./controller.hpp"
 #include "../models/attachment.hpp"
 
 namespace Crails::Cms
 {
   template<typename TRAITS, typename SUPER>
-  class AttachmentController : public Crails::Odb::Controller<SUPER>
+  class AttachmentController : public SUPER
   {
-    typedef Crails::Odb::Controller<SUPER> Super;
+    static_assert(std::is_base_of_v<Crails::Cms::Controller, SUPER>, "SUPER must inherit Crails::Cms::Controller");
+  protected:
+    typedef SUPER                  Super;
     typedef typename TRAITS::Model Model;
   public:
     AttachmentController(Crails::Context& context) : Super(context)

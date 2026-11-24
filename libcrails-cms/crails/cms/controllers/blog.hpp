@@ -1,21 +1,23 @@
 #pragma once
-#include <crails/odb/controller.hpp>
 #include <crails/odb/to_vector.hpp>
 #include <crails/paginator.hpp>
 #include <crails/renderer.hpp>
 #include <crails/any_cast.hpp>
 #include <crails/shared_vars.hpp>
-#include "injectable.hpp"
+#include "./controller.hpp"
+#include "./injectable.hpp"
 #include "../models/blog/post.hpp"
 #include "../local_route.hpp"
 
 namespace Crails::Cms
 {
   template<typename TRAITS, typename SUPER>
-  class BlogController : public Crails::Odb::Controller<SUPER>
+  class BlogController : public SUPER
   {
-    typedef Crails::Odb::Controller<SUPER> Super;
-    typedef typename TRAITS::Model Post;
+    static_assert(std::is_base_of_v<Crails::Cms::Controller, SUPER>, "SUPER must inherit Crails::Cms::Controller");
+  protected:
+    typedef SUPER                       Super;
+    typedef typename TRAITS::Model      Post;
     typedef typename TRAITS::IndexModel IndexPost;
   public:
     BlogController(Crails::Context& context) : Super(context), paginator(Super::params)

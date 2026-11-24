@@ -1,14 +1,15 @@
 #pragma once
-#include <crails/odb/controller.hpp>
+#include "./controller.hpp"
 #include "../local_route.hpp"
 
 namespace Crails::Cms
 {
   template<typename TRAITS, typename SUPER>
-  class ResourceController : public Crails::Odb::Controller<SUPER>
+  class ResourceController : public SUPER
   {
+    static_assert(std::is_base_of_v<Crails::Cms::Controller, SUPER>, "SUPER must inherit Crails::Cms::Controller");
   protected:
-    typedef Crails::Odb::Controller<SUPER> Super;
+    typedef SUPER                  Super;
     typedef typename TRAITS::Model Model;
   public:
     ResourceController(Crails::Context& context) : Super(context)

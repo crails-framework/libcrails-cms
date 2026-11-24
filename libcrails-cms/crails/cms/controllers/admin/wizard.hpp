@@ -9,9 +9,11 @@ namespace Crails::Cms
   std::string_view get_wizard_template_path();
 
   template<typename TRAITS, typename SUPER>
-  class AdminWizardController : public Crails::Odb::Controller<SUPER>
+  class AdminWizardController : public SUPER
   {
-    typedef Crails::Odb::Controller<SUPER> Super;
+    static_assert(std::is_base_of_v<Crails::Cms::Controller, SUPER>, "SUPER must inherit Crails::Cms::Controller");
+  protected:
+    typedef SUPER                      Super;
     typedef typename TRAITS::UserModel UserModel;
     typedef typename TRAITS::Model     SettingsModel;
   public:
